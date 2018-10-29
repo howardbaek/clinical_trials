@@ -6,11 +6,11 @@
 #' EXAMPLE RUN ON CLUSTER:
 #' -----------------------
 #' 
-#' source ~/Scripts/bash/submit_Rjob.sh download_clinicaltrials_govdata.R
+#' Rscript clinicaltrials_govdata_download.R
 
 
-data_dir <- "../../data/"
-out_dir <- paste0(data_dir,"ClinicalTrialsdotGov/")
+data_dir <- "data/"
+out_dir <- paste0(data_dir)
 
 destfile <- paste0(out_dir,"AllPublicXML.zip")
 download.file("https://clinicaltrials.gov/AllPublicXML.zip",
