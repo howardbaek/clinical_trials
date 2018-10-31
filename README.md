@@ -2,7 +2,7 @@
 
 ## Description
 
-Analyze clinical trials data on clinicaltrials.gov via the cloud-based platform [AGGREGATE ANALYSIS OF CLINCALTRIALS.GOV (AACT)](https://aact.ctti-clinicaltrials.org/points_to_consider) from the [Clinical Trials Transformative Initiative](https://www.ctti-clinicaltrials.org/)
+Analyze clinical trials data on clinicaltrials.gov via the cloud-based platform [AGGREGATE ANALYSIS OF CLINICALTRIALS.GOV (AACT)](https://aact.ctti-clinicaltrials.org/points_to_consider) from the [Clinical Trials Transformative Initiative](https://www.ctti-clinicaltrials.org/)
 
 ## Goal
 
