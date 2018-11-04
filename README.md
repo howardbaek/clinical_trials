@@ -10,5 +10,5 @@ The goal of this repository is to show and share a collection of notebooks that 
 
 ## Required (Free) CTTI registration
 
-In order to access the cloud based database, you must register at the CTTI website and use the provided credentials when logging into the cloud server to access database.
+In order to access the cloud based database, you must [register](https://aact.ctti-clinicaltrials.org/users/sign_up) and use the provided credentials when logging into the cloud server to access database.
 
