@@ -8,7 +8,7 @@ Analyze clinical trials data on clinicaltrials.gov via the cloud-based platform 
 
 The goal of this repository is to show and share a collection of notebooks that analyze readily-avalaible, processed clinicaltrials.gov data 
 
-## Required (Free) CTTI registration
+## Required (Free) AACT-CTTI registration
 
 In order to access the cloud based database, you must [register](https://aact.ctti-clinicaltrials.org/users/sign_up) and use the provided credentials when logging into the cloud server to access database.
 
