@@ -1,0 +1,63 @@
+---
+title: "Analysis"
+author: "Jason Baik"
+date: "10/29/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load packages
+```{r}
+library(tidyverse)
+library(XML)
+
+source("try_aact_ct_database_download.R")
+```
+
+### What Nick wants to analyze
+
+* Latent Direchlet Allocation with MeSH terms from trials
+* Assess the life cycle of a clinical trial
+* Aq  ssess the investigation of drugs across clinical trials for different conditions
+
+### Description of List of Tables / Columns
+www.ctti-clinicaltrials.org/files/aact201603_comprehensive_data_dictionary_1.xlsx
+
+### Github Repos
+
+1) https://github.com/statwonk/aact 
+
+* txt format files of AACT data
+
+2) https://github.com/kchis/AACT-Sample-Graphs
+
+* example graphs summarizing characteristics of interventional trials in ClinicalTrials.gov, 2008-2017
+
+3) https://github.com/datasciences1/aact
+4) https://github.com/Shou-Yu-YAN/AACT_database
+
+* Some analysis in R !!!
+
+### Prove AACT pulled data from clinicaltrials.org
+```{r}
+# id_information table from AACT
+aact_nct_id <- tbl(con, "id_information") %>% 
+  collect() %>% 
+  select(nct_id) %>% 
+  pull() %>% 
+  unique()
+
+
+# Name (NCT IDs) of all the XML files
+test <- list.files(path = "data/AllPublicXML/", pattern = "^NCT",
+           recursive = TRUE)
+orig_nct_id <- substr(test, 13, nchar(test) - 4)
+orig_nct_id <- orig_nct_id %>% unique()
+
+# Intersection
+intersect(aact_nct_id, orig_nct_id) %>% length()
+```
+
