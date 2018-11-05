@@ -2,7 +2,7 @@
 title: "Analysis"
 author: "Jason Baik"
 date: "10/29/2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(XML)
 
-# source("try_aact_ct_database_download.R")
+source("try_aact_ct_database_download.R")
 ```
 
 ### What Nick wants to analyze
