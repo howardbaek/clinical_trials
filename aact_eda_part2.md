@@ -1,11 +1,5 @@
----
-title: "AACT database EDA -- Part II"
-output: github_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+AACT database EDA – Part II
+================
 
 ## Introduction
 
@@ -18,6 +12,3 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Short descriptions of target tables
 
 ## Outline going forward
-
-
-
