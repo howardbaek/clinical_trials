@@ -3,6 +3,21 @@ AACT database EDA – Part II
 
 ## Introduction
 
+The [Clinical Trials Transformatiion
+Initiative’s](https://www.ctti-clinicaltrials.org/who-we-are/strategic-plan)
+mission is to “To develop and drive adoption of practices that will
+increase the quality and efficiency of clinical trials”.
+
+One of their projects is the [Aggregated Content of Clinical
+Trials](https://aact.ctti-clinicaltrials.org/), which is “AACT is a
+publicly available relational database that contains all information
+(protocol and result data elements) about every study registered in
+ClinicalTrials.gov.”
+
+The purpose if this notebook is to serve as Part II of the exploratory
+data analysis of the tables within this relational
+database.
+
 ## List tables in database and target tables being explored in this notebook
 
 ## Brief overview of target tables
