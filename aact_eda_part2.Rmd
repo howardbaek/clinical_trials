@@ -158,6 +158,17 @@ apply(tab,2,skimr::n_missing)
 
 This table contains study baseline counts information for `r length(unique(tab$nct_id))` clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean...
 
+### browse interventions
+
+```{r}
+tab <- tables[["browse_interventions"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains study baseline counts information for `r length(unique(tab$nct_id))` clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean...
+
 ## Outline going forward
 
 Great! I'm able to collect these tables and I can go through them to better understand their content to do an analysis
