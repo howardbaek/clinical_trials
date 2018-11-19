@@ -12,9 +12,20 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Load packages
 ```{r}
 library(tidyverse)
-library(XML)
+if(require("RPostgreSQL")){library(RPostgreSQL)}else{install.packages("RPostgreSQL");library(RPostgreSQL)}
+if(require("DBI")){library(DBI)}else{install.packages("DBI");library(DBI)}
+if(require("tidyverse")){library(tidyverse)}else{install.packages("tidyverse");library(tidyverse)}
 
-source("try_aact_ct_database_download.R")
+drv <- dbDriver('PostgreSQL')
+con <- dbConnect(drv, 
+                 dbname="aact",
+                 host="aact-db.ctti-clinicaltrials.org", 
+                 port=5432,
+                 user=readr::read_csv("id_pw.csv")$id, 
+                 password=readr::read_csv("id_pw.csv")$pw
+                 )
+
+dbListTables(con) %>% View("List of Tables")
 ```
 
 ### What Nick wants to analyze
@@ -39,10 +50,9 @@ www.ctti-clinicaltrials.org/files/aact201603_comprehensive_data_dictionary_1.xls
 3) https://github.com/datasciences1/aact
 4) https://github.com/Shou-Yu-YAN/AACT_database
 
-* Some analysis in R !!!
 
 ### Prove AACT pulled data from clinicaltrials.org
-```{r}
+```{r, eval = FALSE}
 # id_information table from AACT
 aact_nct_id <- tbl(con, "id_information") %>% 
   collect() %>% 
@@ -60,4 +70,43 @@ orig_nct_id <- orig_nct_id %>% unique()
 # Intersection
 intersect(aact_nct_id, orig_nct_id) %>% length()
 ```
+
+
+### EDA
+```{r}
+# Observe the first 22 tables
+tbl(con, "documents") %>% 
+  collect() %>% 
+  head()
+```
+
+eligibilities -> `minimum_age` is a quantitative variable
+brief_summaries -> text values of summaries
+facilities -> text description of institutions where study was held
+browse_conditions -> `nct_id` / mesh terms
+schema_migrations -> Does not exist
+links -> `url` of study
+result_contacts -> contact info for researchers
+design_outcomes -> text description of outcomes
+mesh_headings -> heading / subcategory
+result_groups -> text descriptions (example: Subjects were administered with insulin glargine (IGlar: 100 U/mL) subcutaneously (s.c.) once daily for a duration of 26 weeks)
+sponsors -> list of all the sponsors
+designs -> design of experiment
+milestones -> 
+studies -> date values of dates related to study
+detailed_descriptions -> more detailed descriptions...
+documents -> `document_type` seems important / interesting
+
+```{r}
+# purrr
+list_tables <- dbListTables(con)
+# Take out schema_migrations table, which does not exist
+list_tables <- list_tables[-9] 
+
+list_tables_head <- map(list_tables, function(x) x %>% 
+      tbl(con, .) %>% 
+      collect() %>% 
+      head())
+```
+
 
