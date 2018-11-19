@@ -17,13 +17,148 @@ The purpose if this notebook is to serve as Part II of the exploratory data anal
 
 ## List tables in database and target tables being explored in this notebook
 
+Here I am connecting to the AACT database and just listing the tables to be investigated in this notebook.
+
+```{r}
+
+if(require("RPostgreSQL")){library(RPostgreSQL)}else{install.packages("RPostgreSQL");library(RPostgreSQL)}
+if(require("DBI")){library(DBI)}else{install.packages("DBI");library(DBI)}
+if(require("tidyverse")){library(tidyverse)}else{install.packages("tidyverse");library(tidyverse)}
+if(require("skimr")){library(skimr)}else{devtools::install_github("ropenscilabs/skimr");library(skimr)}
+
+drv <- dbDriver('PostgreSQL')
+
+con <- dbConnect(drv, 
+                 dbname="aact",
+                 host="aact-db.ctti-clinicaltrials.org", 
+                 port=5432,
+                 user=readr::read_tsv(".my.aact.cnf")$u, 
+                 password=readr::read_tsv(".my.aact.cnf")$pw
+                 )
+
+dbTables <- dbListTables(con)
+
+target_tables <- dbTables[floor(length(dbTables)/2):length(dbTables)]
+
+
+target_tables
+
+```
+
+## Collect AACT tables
+
+Here I'm looping through the tables and collecting their contents from the AACT database.
+
+```{r}
+
+tables <- list()
+for(i in 1:length(target_tables)){
+  try(tables[[target_tables[i]]] <- tbl(con,target_tables[i]) %>% collect())
+}
+
+```
+
 ## Brief overview of target tables
+
+In this section, I'm giving brief points and showing a bit of the data from each table. 
 
 ### Skim target tables
 
-### Short descriptions of target tables
+### study references
+
+```{r}
+tab <- tables[["study_references"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains the publication records (i.e. citations) for `r nrow(tab)` clinical trials. There are `r skimr::n_missing(tab$pmid)` trials without references.
+
+### outcome analyses
+
+```{r}
+tab <- tables[["outcome_analyses"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains `r nrow(tab)` outcome analyses from `r nrow(tab)` clinical trials. I'm not sure what each column means...Luckily, this [document](ClinicalTrials.gov Results Data Element...terventional and Observational Studies) contains that information! The different columns list the types of statistical tests used and their parameters. Alot of these parameters are missing.
+
+### facility investigators
+
+```{r}
+tab <- tables[["facility_investigators"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains `r nrow(tab)` facility roles for `r nrow(tab)` clinical trials. 
+
+```{r}
+tab %>% group_by(role) %>% count() %>% ggplot() + geom_bar(stat="identity",aes(role,n,fill=role)) + coord_flip()
+```
+
+Apparently, mostly principal investigators are listed and then sub-investigators. But no study chairs. 
+
+### outcome counts
+
+```{r}
+tab <- tables[["outcome_counts"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains the counts of outcomes, about `r nrow(tab)`, for `r length(unique(tab$nct_id))` clinical trials. This table is completely filled but only has information on a relatively few clinical trials.
+
+### drop withdrawals
+
+```{r}
+tab <- tables[["drop_withdrawals"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains study drop information for `r length(unique(tab$nct_id))` clinical trials. This table is completely filled but only has information on a relatively few clinical trials.
+
+###baseline measurements
+
+```{r}
+tab <- tables[["baseline_measurements"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains study measurement info for `r length(unique(tab$nct_id))` clinical trials. This table is missing some parameter values and only has information on a relatively few clinical trials.
+
+### outcome analysis groups
+
+```{r}
+tab <- tables[["outcome_analysis_groups"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains study outcome analysis information for `r length(unique(tab$nct_id))` clinical trials. This table is completely filled but only has information on a relatively few clinical trials. And I'm not sire what the ctgov_group_code means...
+
+### baseline counts
+
+```{r}
+tab <- tables[["baseline_counts"]]
+nrow(tab)
+head(tab)
+apply(tab,2,skimr::n_missing)
+```
+
+This table contains study baseline counts information for `r length(unique(tab$nct_id))` clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean...
 
 ## Outline going forward
 
-
+Great! I'm able to collect these tables and I can go through them to better understand their content to do an analysis
 
