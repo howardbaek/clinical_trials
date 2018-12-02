@@ -86,29 +86,29 @@ dbTables
 ```
 
 ``` 
- [1] "schema_migrations"          "outcome_analyses"          
- [3] "result_contacts"            "central_contacts"          
- [5] "facility_investigators"     "result_groups"             
- [7] "outcome_counts"             "design_groups"             
- [9] "interventions"              "outcomes"                  
-[11] "outcome_analysis_groups"    "studies"                   
-[13] "browse_conditions"          "eligibilities"             
-[15] "baseline_measurements"      "documents"                 
-[17] "mesh_headings"              "reported_events"           
-[19] "brief_summaries"            "drop_withdrawals"          
-[21] "id_information"             "countries"                 
-[23] "study_references"           "responsible_parties"       
-[25] "design_outcomes"            "ipd_information_types"     
-[27] "overall_officials"          "designs"                   
-[29] "keywords"                   "participant_flows"         
-[31] "browse_interventions"       "facilities"                
-[33] "milestones"                 "result_agreements"         
-[35] "calculated_values"          "facility_contacts"         
-[37] "baseline_counts"            "mesh_terms"                
-[39] "design_group_interventions" "intervention_other_names"  
-[41] "outcome_measurements"       "sponsors"                  
-[43] "conditions"                 "detailed_descriptions"     
-[45] "links"                      "pending_results"           
+ [1] "schema_migrations"          "studies"                   
+ [3] "study_references"           "detailed_descriptions"     
+ [5] "responsible_parties"        "browse_interventions"      
+ [7] "sponsors"                   "baseline_measurements"     
+ [9] "drop_withdrawals"           "outcome_measurements"      
+[11] "eligibilities"              "facility_contacts"         
+[13] "overall_officials"          "facility_investigators"    
+[15] "facilities"                 "outcomes"                  
+[17] "result_agreements"          "result_contacts"           
+[19] "result_groups"              "ipd_information_types"     
+[21] "conditions"                 "countries"                 
+[23] "design_group_interventions" "documents"                 
+[25] "id_information"             "participant_flows"         
+[27] "baseline_counts"            "intervention_other_names"  
+[29] "pending_results"            "brief_summaries"           
+[31] "interventions"              "reported_events"           
+[33] "browse_conditions"          "keywords"                  
+[35] "calculated_values"          "links"                     
+[37] "central_contacts"           "mesh_headings"             
+[39] "mesh_terms"                 "milestones"                
+[41] "outcome_analyses"           "design_groups"             
+[43] "outcome_analysis_groups"    "design_outcomes"           
+[45] "designs"                    "outcome_counts"            
 ```
 
 ## Collect AACT tables
@@ -141,1310 +141,1250 @@ for(name in dbTables){
 }
 ```
 
-    table schema_migrations doesn't exist
-    
-    outcome_analyses table exists
-    
-    # A tibble: 6 x 22
-          id nct_id outcome_id non_inferiority… non_inferiority… param_type
-       <int> <chr>       <int> <chr>            <chr>            <chr>     
-    1 286582 NCT03…     514922 Superiority      ""               Least Squ…
-    2 286583 NCT03…     514922 Superiority      ""               Least Squ…
-    3 287410 NCT02…     516351 Superiority      ""               ""        
-    4 286549 NCT03…     514896 Superiority      Test of interac… Mean Diff…
-    5 286550 NCT03…     514896 Superiority      ""               Mean Diff…
-    6 286551 NCT03…     514896 Superiority      ""               Mean Diff…
-    # ... with 16 more variables: param_value <dbl>, dispersion_type <chr>,
-    #   dispersion_value <dbl>, p_value_modifier <chr>, p_value <dbl>,
-    #   ci_n_sides <chr>, ci_percent <dbl>, ci_lower_limit <dbl>,
-    #   ci_upper_limit <dbl>, ci_upper_limit_na_comment <chr>,
-    #   p_value_description <chr>, method <chr>, method_description <chr>,
-    #   estimate_description <chr>, groups_description <chr>,
-    #   other_analysis_description <chr>
-    Skim summary statistics
-     n obs: 139228 
-     n variables: 22 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-                        variable missing complete      n min max  empty
-                      ci_n_sides       0   139228 139228   0   7  61250
-       ci_upper_limit_na_comment       0   139228 139228   0 174 139187
-                 dispersion_type       0   139228 139228   0  26 113257
-            estimate_description       0   139228 139228   0 250 108772
-              groups_description       0   139228 139228   0 500  59703
-                          method       0   139228 139228   0  40  24721
-              method_description       0   139228 139228   0 150 107039
-                          nct_id       0   139228 139228  11  11      0
-     non_inferiority_description       0   139228 139228   0 500 127901
-            non_inferiority_type       0   139228 139228   5  30      0
-      other_analysis_description       0   139228 139228   0 988 138822
-             p_value_description       0   139228 139228   0 250  97722
-                p_value_modifier  100550    38678 139228   1   2      0
-                      param_type       0   139228 139228   0  40  46255
-     n_unique
-            3
-            9
-            3
-         8739
-        38156
-         2103
-         6707
-        11952
-         4063
-            6
-          249
-        11220
-           10
-         3265
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-       variable missing complete      n      mean       sd     p0       p25
-             id       0   139228 139228 359284.68 41543.7  286549 323690.75
-     outcome_id       0   139228 139228 650903.51 74178.85 514896 589852   
-          p50       p75   p100     hist
-     359527.5 394467.25 436063 ▇▇▇▇▇▇▇▆
-     650638.5 717433    779325 ▆▅▆▇▆▆▇▆
-    
-    ── Variable type:numeric ───────────────────────────────────────────────────────────────
-             variable missing complete      n    mean        sd         p0
-       ci_lower_limit   51875    87353 139228  -51.37   4194.42 -855009   
-           ci_percent   49700    89528 139228   94.19      4.12     -42.88
-       ci_upper_limit   52194    87034 139228  320.59  38710.97  -20139   
-     dispersion_value  113257    25971 139228   17.81    457.09      -1.6 
-              p_value   24721   114507 139228    0.44      6.4      -30.79
-          param_value   46255    92973 139228 2158.8  630477.78  -63419.4 
-        p25   p50   p75        p100     hist
-     -2.77  -0.13  0.8  75583.74    ▁▁▁▁▁▁▁▇
-     95     95    95      595       ▁▇▁▁▁▁▁▁
-      0.19   1.29  6.41 1e+07       ▇▁▁▁▁▁▁▁
-      0.13   0.58  2.92 34677.86    ▇▁▁▁▁▁▁▁
-      0.001  0.07  0.46  1789       ▇▁▁▁▁▁▁▁
-     -0.4    0.43  1.94     1.9e+08 ▇▁▁▁▁▁▁▁
-    
-    result_contacts table exists
-    
-    # A tibble: 6 x 6
-         id nct_id   organization           name           phone   email      
-      <int> <chr>    <chr>                  <chr>          <chr>   <chr>      
-    1 68842 NCT0367… Auerbach Hematology a… Michael Auerb… 410780… mauerbachm…
-    2 68843 NCT0364… Montefiore Medical Ce… Lisa Wiechmann <NA>    lwiechma@m…
-    3 68846 NCT0358… Medical University of… Dr. Angela De… 843-76… dempsear@m…
-    4 68847 NCT0358… Washington University… Dr. Catherine… 314-28… langc@wust…
-    5 68848 NCT0357… Portola Pharmaceutica… Head of Clini… 650-24… <NA>       
-    6 68849 NCT0355… Portola Pharmaceutica… Head of Clini… 650-24… <NA>       
-    Skim summary statistics
-     n obs: 33740 
-     n variables: 6 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-         variable missing complete     n min max empty n_unique
-            email    4718    29022 33740   9  78     0    14045
-             name       0    33740 33740   1 100     0    16884
-           nct_id       0    33740 33740  11  11     0    33740
-     organization       3    33737 33740   2 213     0     8147
-            phone    3289    30451 33740   3  39     0    14760
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete     n    mean      sd    p0      p25     p50
-           id       0    33740 33740 86093.1 9904.99 68842 77561.75 86113.5
-          p75  p100     hist
-     94625.25 1e+05 ▇▇▇▇▇▇▇▆
-    
-    central_contacts table exists
-    
-    # A tibble: 6 x 6
-          id nct_id    contact_type name          phone    email              
-       <int> <chr>     <chr>        <chr>         <chr>    <chr>              
-    1 270597 NCT03725… primary      Nicholas D'C… +321637… nicholas.dcruz@kul…
-    2 270598 NCT03725… backup       Pieter Ginis… +321637… pieter.ginis@kuleu…
-    3 270599 NCT03725… primary      ABBVIE CALL … 847.283… abbvieclinicaltria…
-    4 270600 NCT03725… primary      Ryan Abbott,… 310-794… CEWM@mednet.ucla.e…
-    5 270601 NCT03725… primary      Jeremiah E F… 435-797… jeremiah.fruge@agg…
-    6 270602 NCT03725… primary      David Church… 0190269… david.churchill1@n…
-    Skim summary statistics
-     n obs: 112989 
-     n variables: 6 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-         variable missing complete      n min max empty n_unique
-     contact_type       0   112989 112989   6   7     0        2
-            email    3908   109081 112989   8  68     0    78152
-             name       0   112989 112989   1 131     0    90067
-           nct_id       0   112989 112989  11  11     0    75949
-            phone    8487   104502 112989   1  44     0    77009
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n      mean       sd     p0   p25    p50
-           id       0   112989 112989 333817.91 36482.49 270597 3e+05 333505
-        p75   p100     hist
-     363615 406879 ▇▇▇▇▇▇▆▃
-    
-    facility_investigators table exists
-    
-    # A tibble: 6 x 5
-           id nct_id     facility_id role             name                    
-        <int> <chr>            <int> <chr>            <chr>                   
-    1 1314488 NCT037502…     8588624 Principal Inves… Guillaume Sood, MD      
-    2 1355605 NCT037593…     8733928 Principal Inves… Marja Mäkinen, PhD      
-    3 1355606 NCT037593…     8733928 Sub-Investigator Heini Harve-Rytsälä, MD…
-    4 1314491 NCT037502…     8588627 Principal Inves… Carlo E Traverso, MD    
-    5 1314492 NCT037502…     8588628 Principal Inves… Augusto Azuara-Blanco, …
-    6 1314493 NCT037500…     8588635 Principal Inves… Klaus Pfeifer, Prof. Dr.
-    Skim summary statistics
-     n obs: 182365 
-     n variables: 5 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-     variable missing complete      n min max empty n_unique
-         name       0   182365 182365   2  75     0   115137
-       nct_id       0   182365 182365  11  11     0    33735
-         role       0   182365 182365  11  22     0        3
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-        variable missing complete      n       mean        sd      p0     p25
-     facility_id       0   182365 182365 6856923.53 974181.69 5842261 6095613
-              id       0   182365 182365 1078949.44 126630.51  921727  987530
-         p50     p75    p100     hist
-     6446384 7405351 8765614 ▇▅▃▁▁▁▁▃
-       1e+06 1099113 1358613 ▇▇▇▃▁▁▁▅
-    
-    result_groups table exists
-    
-    # A tibble: 6 x 6
-           id nct_id  ctgov_group_code result_type title    description       
-        <int> <chr>   <chr>            <chr>       <chr>    <chr>             
-    1 1709255 NCT027… O1               Outcome     Contrast "All subjects wil…
-    2 1709256 NCT027… E1               Reported E… Contrast "All subjects wil…
-    3 1709257 NCT027… B3               Baseline    Total    Total of all repo…
-    4 1709258 NCT027… B2               Baseline    Muse De… "Participants in …
-    5 1709259 NCT027… B1               Baseline    Spire D… "Participants wil…
-    6 1709260 NCT027… P2               Participan… Muse De… "Participants in …
-    Skim summary statistics
-     n obs: 828340 
-     n variables: 6 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-             variable missing complete      n min max empty n_unique
-     ctgov_group_code       0   828340 828340   2   3     0      136
-          description       0   828340 828340   0 999 17177   137123
-               nct_id       0   828340 828340  11  11     0    33740
-          result_type       0   828340 828340   7  16     0        4
-                title       0   828340 828340   0  62    13    93879
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n      mean        sd      p0        p25
-           id       0   828340 828340 2126583.1 244760.48 1699204 1916630.75
-           p50        p75    p100     hist
-     2128026.5 2336702.25 2573729 ▇▇▇▇▇▇▇▆
-    
-    outcome_counts table exists
-    
-    # A tibble: 6 x 8
-          id nct_id outcome_id result_group_id ctgov_group_code scope units
-       <int> <chr>       <int>           <int> <chr>            <chr> <chr>
-    1 1.21e6 NCT03…     514878         1699206 O1               Meas… Part…
-    2 1.21e6 NCT03…     514879         1699210 O1               Meas… Part…
-    3 1.21e6 NCT03…     514880         1699211 O1               Meas… Part…
-    4 1.21e6 NCT03…     514881         1699212 O1               Meas… Part…
-    5 1.21e6 NCT03…     514893         1699279 O2               Meas… Part…
-    6 1.21e6 NCT03…     514893         1699280 O1               Meas… Part…
-    # ... with 1 more variable: count <int>
-    Skim summary statistics
-     n obs: 587670 
-     n variables: 8 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-             variable missing complete      n min max empty n_unique
-     ctgov_group_code       0   587670 587670   2   3     0       39
-               nct_id       0   587670 587670  11  11     0    33740
-                scope       0   587670 587670   7   7     0        1
-                units       0   587670 587670   2  40     0      979
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-            variable missing complete      n       mean        sd      p0
-               count       0   587670 587670     449.13  23432.72       0
-                  id       0   587670 587670 1510646.67 173845.07 1206838
-          outcome_id       0   587670 587670  643709.75  74185.28  514878
-     result_group_id       0   587670 587670 2126414.03 245050.31 1699206
-            p25       p50        p75    p100     hist
-          15         43       120    4432481 ▇▁▁▁▁▁▁▁
-     1361722.25 1511825.5 1659721.75 1828842 ▇▇▇▇▇▇▇▆
-      580331.25  644149    706836.75  779325 ▇▇▇▇▇▇▇▆
-     1916651.25 2127939.5 2337367.75 2573727 ▇▇▇▇▇▇▇▆
-    
-    design_groups table exists
-    
-    # A tibble: 6 x 5
-           id nct_id   group_type   title          description                
-        <int> <chr>    <chr>        <chr>          <chr>                      
-    1 1113104 NCT0372… <NA>         Participants … <NA>                       
-    2 1112406 NCT0372… Active Comp… Magnesium Sul… Continuous intravenous inf…
-    3 1112407 NCT0372… Experimental Lidocaine      Continuous intravenous inf…
-    4 1112408 NCT0372… Experimental Split-Belt Tr… Split-Belt Training with a…
-    5 1112409 NCT0372… Experimental Split-Belt Tr… Split-Belt Training with a…
-    6 1112410 NCT0372… Experimental Split-Belt Tr… Split-Belt Training with c…
-    Skim summary statistics
-     n obs: 504501 
-     n variables: 5 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-        variable missing complete      n min max empty n_unique
-     description   70331   434170 504501   1 999     0   402602
-      group_type   65295   439206 504501   4  20     0        9
-          nct_id       0   504501 504501  11  11     0   243276
-           title       0   504501 504501   1  62     0   304202
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n       mean        sd      p0     p25
-           id       0   504501 504501 1381467.57 152501.37 1112406 1251103
-         p50     p75    p100     hist
-     1382465 1510718 1673804 ▇▇▇▇▇▇▇▃
-    
-    interventions table exists
-    
-    # A tibble: 6 x 5
-           id nct_id   intervention_type name          description            
-        <int> <chr>    <chr>             <chr>         <chr>                  
-    1 1129179 NCT0362… Other             tVNS          Intervention           
-    2 1116946 NCT0372… Drug              Magnesium Su… Magnesium Sulfate 15mg…
-    3 1116947 NCT0372… Drug              Lidocaine     Lidocaine 1,5mg/kg/h   
-    4 1116948 NCT0372… Behavioral        Split-Belt T… One session of 6 x 5 m…
-    5 1116949 NCT0372… Drug              Upadacitinib  It will be administere…
-    6 1116950 NCT0372… Drug              Corticostero… It will be administere…
-    Skim summary statistics
-     n obs: 505405 
-     n variables: 5 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-              variable missing complete      n min  max empty n_unique
-           description   91629   413776 505405   1 1000     0   353419
-     intervention_type       0   505405 505405   4   19     0       11
-                  name       0   505405 505405   1  200     0   249905
-                nct_id       0   505405 505405  11   11     0   258668
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n       mean        sd      p0     p25
-           id       0   505405 505405 1386890.83 152875.28 1116946 1256340
-         p50     p75    p100     hist
-     1388010 1516352 1680168 ▇▇▇▇▇▇▇▃
-    
-    outcomes table exists
-    
-    # A tibble: 6 x 13
-          id nct_id outcome_type title description time_frame population
-       <int> <chr>  <chr>        <chr> <chr>       <chr>      <chr>     
-    1 525132 NCT02… Secondary    Abso… The TSQM i… Baseline,… FAS. Here…
-    2 525133 NCT02… Secondary    Abso… Z-score is… Baseline,… FAS. Here…
-    3 525134 NCT02… Secondary    Abso… ""          Baseline,… FAS. Here…
-    4 543969 NCT02… Primary      Chan… ""          Baseline … ""        
-    5 525135 NCT02… Secondary    Abso… Z-score is… Baseline,… FAS. Here…
-    6 525136 NCT02… Secondary    Abso… ""          Baseline,… FAS. Here…
-    # ... with 6 more variables: anticipated_posting_date <date>,
-    #   anticipated_posting_month_year <chr>, units <chr>,
-    #   units_analyzed <chr>, dispersion_type <chr>, param_type <chr>
-    Skim summary statistics
-     n obs: 250587 
-     n variables: 13 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-                           variable missing complete      n min max  empty
-     anticipated_posting_month_year       0   250587 250587   0   7 249505
-                        description       0   250587 250587   0 999  26962
-                    dispersion_type       0   250587 250587   0  34 100525
-                             nct_id       0   250587 250587  11  11      0
-                       outcome_type       0   250587 250587   7  19      0
-                         param_type       0   250587 250587   0  28  17108
-                         population       0   250587 250587   0 350  54955
-                         time_frame       0   250587 250587   0 255     71
-                              title       0   250587 250587   2 255      0
-                              units       0   250587 250587   0  40  17137
-                     units_analyzed       0   250587 250587   0  40 246142
-     n_unique
-          122
-       183159
-           23
-        33740
-            4
-           10
-        77354
-        73559
-       206182
-        20986
-          516
-    
-    ── Variable type:Date ──────────────────────────────────────────────────────────────────
-                     variable missing complete      n        min        max
-     anticipated_posting_date  249508     1079 250587 2007-04-30 3333-12-31
-         median n_unique
-     2018-12-31      119
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n      mean       sd     p0      p25
-           id       0   250587 250587 644198.16 73994.38 514878 580621.5
-        p50      p75   p100     hist
-     644555 707702.5 779325 ▇▇▇▇▇▇▇▆
-    
-    outcome_analysis_groups table exists
-    
-    # A tibble: 6 x 5
-          id nct_id      outcome_analysis_id result_group_id ctgov_group_code
-       <int> <chr>                     <int>           <int> <chr>           
-    1 553325 NCT03582943              286549         1699292 O2              
-    2 553326 NCT03582943              286549         1699293 O1              
-    3 553327 NCT03582943              286550         1699292 O2              
-    4 553328 NCT03582943              286550         1699293 O1              
-    5 553329 NCT03582943              286551         1699292 O2              
-    6 553330 NCT03582943              286551         1699293 O1              
-    Skim summary statistics
-     n obs: 268970 
-     n variables: 5 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-             variable missing complete      n min max empty n_unique
-     ctgov_group_code       0   268970 268970   2   3     0       39
-               nct_id       0   268970 268970  11  11     0    11952
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-                variable missing complete      n       mean        sd      p0
-                      id       0   268970 268970  693865.98  80321.74  553325
-     outcome_analysis_id       0   268970 268970  359281.46  41592.12  286549
-         result_group_id       0   268970 268970 2150066.61 245266.24 1699292
-            p25       p50        p75    p100     hist
-      625020.25  694324.5  761817.75  842501 ▇▇▇▇▇▇▇▆
-      323402.25  359782    394412     436063 ▇▇▇▇▇▇▇▆
-     1945908.25 2154399.5 2371312    2573727 ▆▅▆▇▆▆▇▆
-    
-    studies table exists
-    
-    # A tibble: 6 x 64
-      nct_id nlm_download_da… study_first_sub… results_first_s…
-      <chr>  <chr>            <date>           <date>          
-    1 NCT00… ClinicalTrials.… 2007-03-18       NA              
-    2 NCT00… ClinicalTrials.… 2007-03-19       NA              
-    3 NCT00… ClinicalTrials.… 2007-03-17       NA              
-    4 NCT00… ClinicalTrials.… 2007-03-19       NA              
-    5 NCT00… ClinicalTrials.… 2007-03-19       NA              
-    6 NCT00… ClinicalTrials.… 2007-03-19       NA              
-    # ... with 60 more variables: disposition_first_submitted_date <date>,
-    #   last_update_submitted_date <date>,
-    #   study_first_submitted_qc_date <date>, study_first_posted_date <date>,
-    #   study_first_posted_date_type <chr>,
-    #   results_first_submitted_qc_date <date>,
-    #   results_first_posted_date <date>,
-    #   results_first_posted_date_type <chr>,
-    #   disposition_first_submitted_qc_date <date>,
-    #   disposition_first_posted_date <date>,
-    #   disposition_first_posted_date_type <chr>,
-    #   last_update_submitted_qc_date <date>, last_update_posted_date <date>,
-    #   last_update_posted_date_type <chr>, start_month_year <chr>,
-    #   start_date_type <chr>, start_date <date>,
-    #   verification_month_year <chr>, verification_date <date>,
-    #   completion_month_year <chr>, completion_date_type <chr>,
-    #   completion_date <date>, primary_completion_month_year <chr>,
-    #   primary_completion_date_type <chr>, primary_completion_date <date>,
-    #   target_duration <chr>, study_type <chr>, acronym <chr>,
-    #   baseline_population <chr>, brief_title <chr>, official_title <chr>,
-    #   overall_status <chr>, last_known_status <chr>, phase <chr>,
-    #   enrollment <int>, enrollment_type <chr>, source <chr>,
-    #   limitations_and_caveats <chr>, number_of_arms <int>,
-    #   number_of_groups <int>, why_stopped <chr>, has_expanded_access <lgl>,
-    #   expanded_access_type_individual <lgl>,
-    #   expanded_access_type_intermediate <lgl>,
-    #   expanded_access_type_treatment <lgl>, has_dmc <lgl>,
-    #   is_fda_regulated_drug <lgl>, is_fda_regulated_device <lgl>,
-    #   is_unapproved_device <lgl>, is_ppsd <lgl>, is_us_export <lgl>,
-    #   biospec_retention <chr>, biospec_description <chr>,
-    #   ipd_time_frame <chr>, ipd_access_criteria <chr>, ipd_url <chr>,
-    #   plan_to_share_ipd <chr>, plan_to_share_ipd_description <chr>,
-    #   created_at <dttm>, updated_at <dttm>
-    Skim summary statistics
-     n obs: 291016 
-     n variables: 64 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-                               variable missing complete      n min  max
-                                acronym  217017    73999 291016   1   14
-                    baseline_population       0   291016 291016   0  350
-                    biospec_description       0   291016 291016   0 1143
-                      biospec_retention  277367    13649 291016  13   19
-                            brief_title       0   291016 291016   7  300
-                   completion_date_type   26125   264891 291016   6   11
-                  completion_month_year   19217   271799 291016   8   18
-     disposition_first_posted_date_type  284667     6349 291016   6    8
-                        enrollment_type   16884   274132 291016   6   11
-                    ipd_access_criteria  289138     1878 291016   3 1000
-                         ipd_time_frame  288866     2150 291016   1  806
-                                ipd_url  289759     1257 291016   9  156
-                      last_known_status  262593    28423 291016  10   23
-           last_update_posted_date_type       0   291016 291016   6    8
-                limitations_and_caveats       0   291016 291016   0  250
-                                 nct_id       0   291016 291016  11   11
-          nlm_download_date_description       0   291016 291016  58   59
-                         official_title   10328   280688 291016  18  598
-                         overall_status       0   291016 291016   8   25
-                                  phase   60098   230918 291016   3   15
-                      plan_to_share_ipd  213758    77258 291016   2    9
-          plan_to_share_ipd_description  276395    14621 291016   1 1000
-           primary_completion_date_type   22357   268659 291016   6   11
-          primary_completion_month_year   22292   268724 291016   8   18
-         results_first_posted_date_type  257276    33740 291016   6    8
-                                 source       0   291016 291016   2  147
-                        start_date_type  204319    86697 291016   6   11
-                       start_month_year    4731   286285 291016   8   18
-           study_first_posted_date_type       0   291016 291016   6    8
-                             study_type       0   291016 291016   3   32
-                        target_duration  286605     4411 291016   5   10
-                verification_month_year     803   290213 291016   8   18
-                            why_stopped  271670    19346 291016   2  175
-      empty n_unique
-          0    59809
-     281979     7672
-     277298    10598
-          0        3
-          0   289104
-          0        2
-          0     6673
-          0        2
-          0        2
-          0     1162
-          0     1334
-          0      240
-          0        4
-          0        2
-     283561     7047
-          0   291016
-          0       16
-          0   278230
-          0       14
-          0        8
-          0        3
-          0     9164
-          0        2
-          0     6245
-          0        2
-          0    18538
-          0        2
-          0     6017
-          0        2
-          0        5
-          0      131
-          0     1315
-          0    14490
-    
-    ── Variable type:Date ──────────────────────────────────────────────────────────────────
-                                variable missing complete      n        min
-                         completion_date   19217   271799 291016 1900-01-31
-           disposition_first_posted_date  284667     6349 291016 2009-08-10
-        disposition_first_submitted_date  284667     6349 291016 2008-10-09
-     disposition_first_submitted_qc_date  284667     6349 291016 2009-07-10
-                 last_update_posted_date       0   291016 291016 2005-06-24
-              last_update_submitted_date       0   291016 291016 2005-06-23
-           last_update_submitted_qc_date       0   291016 291016 2005-06-23
-                 primary_completion_date   22292   268724 291016 1900-01-31
-               results_first_posted_date  257276    33740 291016 2008-09-26
-            results_first_submitted_date  257276    33740 291016 2008-09-25
-         results_first_submitted_qc_date  257276    33740 291016 2008-09-25
-                              start_date    4731   286285 291016 1900-01-31
-                 study_first_posted_date       0   291016 291016 1999-09-20
-              study_first_submitted_date       0   291016 291016 1999-09-17
-           study_first_submitted_qc_date       0   291016 291016 1999-09-17
-                       verification_date     803   290213 291016 1981-10-31
-            max     median n_unique
-     2100-12-31 2015-12-31     6329
-     2018-11-29 2014-03-03     1522
-     2018-11-27 2014-01-15     1919
-     2018-11-27 2014-01-30     1922
-     2018-11-29 2016-11-02     3312
-     2018-11-28 2016-10-28     4544
-     2018-11-28 2016-10-28     4544
-     2100-12-31 2015-10-31     5920
-     2018-11-29 2015-04-15     2424
-     2018-11-02 2014-12-12     3134
-     2018-11-27 2015-04-07     3079
-     2100-01-31 2012-10-31     5811
-     2018-11-29 2013-05-24     4428
-     2018-11-28 2013-04-29     6110
-     2018-11-28 2013-05-22     5910
-     2018-11-30 2016-08-31     1286
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-             variable missing complete      n     mean         sd p0 p25 p50
-           enrollment    6583   284433 291016 24981.38 2928973.87  0  30  70
-       number_of_arms   84297   206719 291016     2.12       1.27  1   1   2
-     number_of_groups  254459    36557 291016     1.79       1.19  1   1   1
-     p75  p100     hist
-     200 1e+09 ▇▁▁▁▁▁▁▁
-       2    32 ▇▁▁▁▁▁▁▁
-       2    30 ▇▁▁▁▁▁▁▁
-    
-    ── Variable type:logical ───────────────────────────────────────────────────────────────
-                              variable missing complete      n    mean
-       expanded_access_type_individual  290937       79 291016 1      
-     expanded_access_type_intermediate  290987       29 291016 1      
-        expanded_access_type_treatment  290973       43 291016 1      
-                               has_dmc   52863   238153 291016 0.38   
-                   has_expanded_access    5064   285952 291016 0.0014 
-               is_fda_regulated_device  225692    65324 291016 0.063  
-                 is_fda_regulated_drug  225629    65387 291016 0.23   
-                               is_ppsd  287764     3252 291016 0.00062
-                  is_unapproved_device  286949     4067 291016 0.21   
-                          is_us_export  280175    10841 291016 0.28   
-                                  count
-                    NA: 290937, TRU: 79
-                    NA: 290987, TRU: 29
-                    NA: 290973, TRU: 43
-     FAL: 147590, TRU: 90563, NA: 52863
-        FAL: 285553, NA: 5064, TRU: 399
-      NA: 225692, FAL: 61231, TRU: 4093
-     NA: 225629, FAL: 50584, TRU: 14803
-          NA: 287764, FAL: 3250, TRU: 2
-        NA: 286949, FAL: 3226, TRU: 841
-       NA: 280175, FAL: 7768, TRU: 3073
-    
-    ── Variable type:POSIXct ───────────────────────────────────────────────────────────────
-       variable missing complete      n        min        max     median
-     created_at       0   291016 291016 2018-11-01 2018-11-30 2018-11-01
-     updated_at       0   291016 291016 2018-11-01 2018-11-30 2018-11-01
-     n_unique
-       291016
-       291016
-    
-    browse_conditions table exists
-    
-    # A tibble: 6 x 4
-           id nct_id      mesh_term        downcase_mesh_term
-        <int> <chr>       <chr>            <chr>             
-    1 1551968 NCT00684931 Disease          disease           
-    2 1316644 NCT02462213 Cardiomyopathies cardiomyopathies  
-    3 1426813 NCT01612039 Colitis          colitis           
-    4 1171652 NCT03594994 Obesity          obesity           
-    5 1428716 NCT01597245 Psoriasis        psoriasis         
-    6 1290356 NCT02666391 Ischemia         ischemia          
-    Skim summary statistics
-     n obs: 516627 
-     n variables: 4 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-               variable missing complete      n min max empty n_unique
-     downcase_mesh_term       0   516627 516627   4  58     0     3886
-              mesh_term       0   516627 516627   4  58     0     3886
-                 nct_id       0   516627 516627  11  11     0   235257
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n       mean        sd      p0       p25
-           id       0   516627 516627 1431241.31 157080.47 1155006 1297337.5
-         p50       p75    p100     hist
-     1431952 1563374.5 1739486 ▇▇▇▇▇▇▇▃
-    
-    eligibilities table exists
-    
-    # A tibble: 6 x 11
-          id nct_id sampling_method gender minimum_age maximum_age
-       <int> <chr>  <chr>           <chr>  <chr>       <chr>      
-    1 649126 NCT03… ""              Female 18 Years    75 Years   
-    2 649127 NCT03… ""              All    18 Years    N/A        
-    3 649161 NCT03… ""              Female 18 Years    N/A        
-    4 649129 NCT03… ""              All    20 Years    64 Years   
-    5 649130 NCT03… ""              All    18 Years    70 Years   
-    6 649131 NCT03… ""              All    18 Years    80 Years   
-    # ... with 5 more variables: healthy_volunteers <chr>, population <chr>,
-    #   criteria <chr>, gender_description <chr>, gender_based <lgl>
-    Skim summary statistics
-     n obs: 291016 
-     n variables: 11 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-               variable missing complete      n min   max  empty n_unique
-               criteria       0   291016 291016   0 18929    884   286706
-                 gender       0   291016 291016   0     6    820        4
-     gender_description       0   291016 291016   0   918 289015     1601
-     healthy_volunteers       0   291016 291016   0    26   4424        3
-            maximum_age       0   291016 291016   0    11    820      432
-            minimum_age       0   291016 291016   0    10    820      235
-                 nct_id       0   291016 291016  11    11      0   291016
-             population       0   291016 291016   0  1160 236907    51606
-        sampling_method       0   291016 291016   0    22 236870        3
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n      mean       sd     p0       p25
-           id       0   291016 291016 792016.25 87551.83 637958 717120.75
-          p50       p75   p100     hist
-     792471.5 866294.25 960392 ▇▇▇▇▇▇▇▃
-    
-    ── Variable type:logical ───────────────────────────────────────────────────────────────
-         variable missing complete      n mean                 count
-     gender_based  287989     3027 291016    1 NA: 287989, TRU: 3027
-    
-    baseline_measurements table exists
-    
-    # A tibble: 6 x 18
-          id nct_id result_group_id ctgov_group_code classification category
-       <int> <chr>            <int> <chr>            <chr>          <chr>   
-    1 1.77e6 NCT02…         1706744 B5               ""             ""      
-    2 1.77e6 NCT02…         1706745 B4               ""             ""      
-    3 1.77e6 NCT02…         1706746 B3               ""             ""      
-    4 1.77e6 NCT02…         1706747 B2               White          ""      
-    5 1.77e6 NCT02…         1706747 B2               ""             ""      
-    6 1.77e6 NCT02…         1706748 B1               ""             ""      
-    # ... with 12 more variables: title <chr>, description <chr>, units <chr>,
-    #   param_type <chr>, param_value <chr>, param_value_num <dbl>,
-    #   dispersion_type <chr>, dispersion_value <chr>,
-    #   dispersion_value_num <dbl>, dispersion_lower_limit <dbl>,
-    #   dispersion_upper_limit <dbl>, explanation_of_na <chr>
-    Skim summary statistics
-     n obs: 860935 
-     n variables: 18 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-              variable missing complete      n min max  empty n_unique
-              category       0   860935 860935   0  50 617698     4140
-        classification       0   860935 860935   0  50 374913    24677
-      ctgov_group_code       0   860935 860935   2   3      0       33
-           description       0   860935 860935   0 600 764422    12950
-       dispersion_type       0   860935 860935   0  20 720442        4
-      dispersion_value  739525   121410 860935   1  15      0    12897
-     explanation_of_na       0   860935 860935   0 246 858223      470
-                nct_id       0   860935 860935  11  11      0    33631
-            param_type       0   860935 860935   0  28    109       10
-           param_value       0   860935 860935   1  11      0    21126
-                 title       0   860935 860935   2 100      0    19675
-                 units       0   860935 860935   0  40    140     2812
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-            variable missing complete      n       mean        sd      p0
-                  id       0   860935 860935 2205745.63 255898.02 1758403
-     result_group_id       0   860935 860935 2125005.83 251331.54 1699204
-         p25     p50       p75    p100     hist
-       2e+06 2207203 2424901.5 2676482 ▇▇▇▇▇▇▇▆
-     1904425 2121826 2343863   2573695 ▇▇▇▇▇▇▇▆
-    
-    ── Variable type:numeric ───────────────────────────────────────────────────────────────
-                   variable missing complete      n    mean        sd    p0
-     dispersion_lower_limit  841170    19765 860935  152.47   4103.32 -36.7
-     dispersion_upper_limit  841204    19731 860935 6216.12 253398.44 -10.1
-       dispersion_value_num  739550   121385 860935  196.83  21703.02   0  
-            param_value_num    2590   858345 860935  209.61   9949.36 -58  
-      p25   p50   p75       p100     hist
-      8.7 25    43.6   272000    ▇▁▁▁▁▁▁▁
-     29   67    82      3e+07    ▇▁▁▁▁▁▁▁
-      4.4  9.05 12.31 3395777.02 ▇▁▁▁▁▁▁▁
-      2   14    52    2510890    ▇▁▁▁▁▁▁▁
-    
-    documents table exists
-    
-    # A tibble: 6 x 6
-         id nct_id  document_id  document_type    url         comment         
-      <int> <chr>   <chr>        <chr>            <chr>       <chr>           
-    1 20547 NCT037… StateData001 Clinical Study … http://www… These are measu…
-    2 20548 NCT037… <NA>         Individual Part… https://cl… <NA>            
-    3 20549 NCT037… <NA>         Study Protocol   https://cl… <NA>            
-    4 20550 NCT037… <NA>         Statistical Ana… https://cl… <NA>            
-    5 20551 NCT037… <NA>         Informed Consen… https://cl… <NA>            
-    6 20552 NCT037… <NA>         Clinical Study … https://cl… <NA>            
-    Skim summary statistics
-     n obs: 9874 
-     n variables: 6 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-          variable missing complete    n min max empty n_unique
-           comment    1015     8859 9874   6 942     0      478
-       document_id    1133     8741 9874   1  30     0     1604
-     document_type       0     9874 9874   4 177     0      246
-            nct_id       0     9874 9874  11  11     0     2347
-               url       0     9874 9874  13 885     0     1030
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete    n     mean      sd    p0      p25     p50
-           id       0     9874 9874 25556.35 2877.97 20547 23067.25 25557.5
-          p75  p100     hist
-     28040.75 30685 ▇▇▇▇▇▇▇▇
-    
-    mesh_headings table exists
-    
-    # A tibble: 6 x 4
-         id qualifier heading                subcategory                      
-      <int> <chr>     <chr>                  <chr>                            
-    1     1 ""        ""                     2017 MeSH Headings by Subcategory
-    2     2 A02       Musculoskeletal System Abdominal Oblique Muscles        
-    3     3 A02       Musculoskeletal System Annulus Fibrosus                 
-    4     4 A02       Musculoskeletal System Aponeurosis                      
-    5     5 A02       Musculoskeletal System Collateral Ligament, Ulnar       
-    6     6 A02       Musculoskeletal System Coracoid Process                 
-    Skim summary statistics
-     n obs: 2727 
-     n variables: 4 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-        variable missing complete    n min max empty n_unique
-         heading       0     2727 2727   0  63     3       88
-       qualifier       0     2727 2727   0   3     3       88
-     subcategory       0     2727 2727   0  68     9      632
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete    n mean     sd p0   p25  p50    p75 p100
-           id       0     2727 2727 1364 787.36  1 682.5 1364 2045.5 2727
-         hist
-     ▇▇▇▇▇▇▇▇
-    
-    reported_events table exists
-    
-    # A tibble: 6 x 17
-          id nct_id result_group_id ctgov_group_code time_frame event_type
-       <int> <chr>            <int> <chr>            <chr>      <chr>     
-    1 8.82e6 NCT02…         1708460 E5               NHV: from… other     
-    2 8.82e6 NCT02…         1708461 E4               NHV: from… other     
-    3 8.82e6 NCT02…         1708462 E3               NHV: from… other     
-    4 8.82e6 NCT02…         1708463 E2               NHV: from… other     
-    5 8.82e6 NCT02…         1708464 E1               NHV: from… other     
-    6 8.82e6 NCT02…         1708454 E11              NHV: from… other     
-    # ... with 11 more variables: default_vocab <chr>,
-    #   default_assessment <chr>, subjects_affected <int>,
-    #   subjects_at_risk <int>, description <chr>, event_count <int>,
-    #   organ_system <chr>, adverse_event_term <chr>,
-    #   frequency_threshold <int>, vocab <chr>, assessment <chr>
-    Skim summary statistics
-     n obs: 4233645 
-     n variables: 17 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-               variable missing complete       n min max   empty n_unique
-     adverse_event_term      11  4233634 4233645   1 100       0   102646
-             assessment       0  4233645 4233645   0  25 4196522        3
-       ctgov_group_code       0  4233645 4233645   2   3       0       32
-     default_assessment       0  4233645 4233645   0  25  301649        3
-          default_vocab       0  4233645 4233645   0  20  489419     1390
-            description       0  4233645 4233645   0 500 1867511    10049
-             event_type       0  4233645 4233645   5   7       0        2
-                 nct_id       0  4233645 4233645  11  11       0    33523
-           organ_system       0  4233645 4233645   5  67       0       28
-             time_frame       0  4233645 4233645   0 500 1383982    14587
-                  vocab 4204852    28793 4233645   1  20       0      818
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-                variable missing complete       n          mean         sd
-             event_count 2836164  1397481 4233645       5.14         56.81
-     frequency_threshold       0  4233645 4233645       1.49          2.23
-                      id       0  4233645 4233645       1.1e+07 1265427.37
-         result_group_id       0  4233645 4233645 2201646.55     237621.18
-       subjects_affected       2  4233643 4233645       4.72         41.43
-        subjects_at_risk    1614  4232031 4233645     526.97       1832.19
-          p0     p25           p50           p75          p100     hist
-           0       0       1             2         22562       ▇▁▁▁▁▁▁▁
-           0       0       0             5            20       ▇▃▁▁▁▁▁▁
-     8811072 9942920       1.1e+07       1.2e+07       1.3e+07 ▇▇▇▇▇▇▇▆
-     1699207   2e+06 2226407       2414334       2573729       ▃▅▅▆▆▆▇▇
-           0       0       1             2          9360       ▇▁▁▁▁▁▁▁
-           0      19      66           244        124139       ▇▁▁▁▁▁▁▁
-    
-    brief_summaries table exists
-    
-    # A tibble: 6 x 3
-          id nct_id     description                                           
-       <int> <chr>      <chr>                                                 
-    1 669392 NCT032908… "\n      Recently published work has suggested that m…
-    2 669393 NCT032908… "\n      Prospectively evaluate newly established gui…
-    3 669394 NCT032908… "\n      15 healthy males will be studied with PET/CT…
-    4 951336 NCT037506… "\n      Age-related cognitive decline has a profound…
-    5 669395 NCT032908… "\n      The effectiveness of robotic over convention…
-    6 669396 NCT032908… "\n      Nasopharyngeal carcinoma (NPC) is one of the…
-    Skim summary statistics
-     n obs: 290212 
-     n variables: 3 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-        variable missing complete      n min  max empty n_unique
-     description       0   290212 290212  15 5540     0   288613
-          nct_id       0   290212 290212  11   11     0   290212
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n      mean      sd     p0       p25
-           id       0   290212 290212 789794.79 87308.6 636172 715107.75
-          p50       p75   p100     hist
-     790247.5 863866.25 957714 ▇▇▇▇▇▇▇▃
-    
-    drop_withdrawals table exists
-    
-    # A tibble: 6 x 7
-          id nct_id  result_group_id ctgov_group_code period  reason     count
-       <int> <chr>             <int> <chr>            <chr>   <chr>      <int>
-    1 526522 NCT036…         1699205 P1               Overal… Protocol …     1
-    2 526523 NCT036…         1699209 P1               Overal… Study was…    95
-    3 526524 NCT035…         1699277 P2               Overal… Lost to F…    29
-    4 526525 NCT035…         1699278 P1               Overal… Lost to F…    26
-    5 526526 NCT035…         1699290 P2               Analyz… Protocol …     1
-    6 526527 NCT035…         1699291 P1               Analyz… Protocol …     4
-    Skim summary statistics
-     n obs: 253674 
-     n variables: 7 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-             variable missing complete      n min max empty n_unique
-     ctgov_group_code       0   253674 253674   2   3     0       26
-               nct_id       0   253674 253674  11  11     0    21434
-               period       0   253674 253674   4  40     0     4631
-               reason       0   253674 253674   2  40     0    15689
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-            variable missing complete      n       mean        sd      p0
-               count       0   253674 253674      57.13  23155.33       0
-                  id       0   253674 253674  658682.39  75318.68  526522
-     result_group_id       0   253674 253674 2170539.18 238948.07 1699205
-           p25       p50        p75          p100     hist
-          0          1         4          1.2e+07 ▇▁▁▁▁▁▁▁
-     594050.25  659283.5  723258.75   8e+05       ▇▇▇▇▇▇▇▆
-      2e+06    2186959   2382654    2573697       ▅▅▆▆▆▆▇▆
-    
-    id_information table exists
-    
-    # A tibble: 6 x 4
-          id nct_id      id_type      id_value      
-       <int> <chr>       <chr>        <chr>         
-    1 908403 NCT03724383 org_study_id H18-01441     
-    2 908327 NCT03725228 org_study_id tccRenato2018 
-    3 908328 NCT03725215 org_study_id S60876        
-    4 908329 NCT03725202 org_study_id M16-852       
-    5 908330 NCT03725202 secondary_id 2017-003978-13
-    6 908331 NCT03725189 org_study_id 00000         
-    Skim summary statistics
-     n obs: 402761 
-     n variables: 4 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-     variable missing complete      n min max empty n_unique
-      id_type       0   402761 402761   9  12     0        3
-     id_value       0   402761 402761   1  30     0   375017
-       nct_id       0   402761 402761  11  11     0   290988
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n       mean        sd     p0   p25
-           id       0   402761 402761 1124173.59 122771.96 908327 1e+06
-         p50     p75    p100     hist
-     1124528 1227032 1367998 ▇▇▇▇▇▇▇▃
-    
-    countries table exists
-    
-    # A tibble: 6 x 4
-          id nct_id      name      removed
-       <int> <chr>       <chr>     <lgl>  
-    1 998917 NCT03725228 Brazil    NA     
-    2 998918 NCT03725215 Belgium   NA     
-    3 998919 NCT03725215 Germany   NA     
-    4 998920 NCT03725202 Australia NA     
-    5 998921 NCT03725202 Austria   NA     
-    6 998922 NCT03725202 Belgium   NA     
-    Skim summary statistics
-     n obs: 421725 
-     n variables: 4 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-     variable missing complete      n min max empty n_unique
-         name       0   421725 421725   4  44     0      213
-       nct_id       0   421725 421725  11  11     0   261267
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n       mean        sd    p0     p25
-           id       0   421725 421725 1236322.42 133657.42 1e+06 1124987
-         p50     p75    p100     hist
-     1237017 1344685 1505883 ▆▇▇▇▇▇▆▃
-    
-    ── Variable type:logical ───────────────────────────────────────────────────────────────
-     variable missing complete      n mean                  count
-      removed  394618    27107 421725    1 NA: 394618, TRU: 27107
-    
-    study_references table exists
-    
-    # A tibble: 6 x 5
-          id nct_id   pmid    reference_type citation                         
-       <int> <chr>    <chr>   <chr>          <chr>                            
-    1 817770 NCT0372… 8161995 reference      Goel AR, Kriger J, Bronfman R, L…
-    2 819457 NCT0371… 2296123 reference      Stafford RS. Alternative strateg…
-    3 819663 NCT0371… <NA>    reference      Agostini P, Knowles N. Autogenic…
-    4 817771 NCT0372… 2008387 reference      Rud B, Pedersen NW, Thomsen PB. …
-    5 817696 NCT0372… 200822… reference      Unger RZ, Amstutz SP, Seo DH, Hu…
-    6 817694 NCT0372… 176521… reference      Rex DK. Dosing considerations in…
-    Skim summary statistics
-     n obs: 371456 
-     n variables: 5 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-           variable missing complete      n min  max empty n_unique
-           citation       0   371456 371456   2 5662     0   297510
-             nct_id       0   371456 371456  11   11     0    59130
-               pmid   21801   349655 371456   1    8     0   276469
-     reference_type       0   371456 371456   9   17     0        2
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n  mean        sd     p0       p25   p50
-           id       0   371456 371456 1e+06 112148.04 817694 916910.75 1e+06
-            p75    p100     hist
-     1108009.25 1231784 ▇▇▇▇▇▇▇▃
-    
-    responsible_parties table exists
-    
-    # A tibble: 6 x 7
-          id nct_id  responsible_part… name   title  organization affiliation 
-       <int> <chr>   <chr>             <chr>  <chr>  <chr>        <chr>       
-    1 596986 NCT037… Sponsor           <NA>   <NA>   <NA>         <NA>        
-    2 597207 NCT037… Sponsor           <NA>   <NA>   <NA>         <NA>        
-    3 596937 NCT037… Principal Invest… Gabri… Head … <NA>         Brasilia Un…
-    4 596938 NCT037… Principal Invest… Alice… Senio… <NA>         KU Leuven   
-    5 596939 NCT037… Sponsor           <NA>   <NA>   <NA>         <NA>        
-    6 596940 NCT037… Principal Invest… Kakit… Princ… <NA>         University …
-    Skim summary statistics
-     n obs: 271676 
-     n variables: 7 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-                   variable missing complete      n min max empty n_unique
-                affiliation  173157    98519 271676   3 120     0     7138
-                       name  145768   125908 271676   1 215     0    67082
-                     nct_id       0   271676 271676  11  11     0   271676
-               organization  244381    27295 271676   1 206     0    11605
-     responsible_party_type   27500   244176 271676   7  22     0        3
-                      title  173165    98511 271676   1 254     0    29406
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n      mean       sd    p0       p25
-           id       0   271676 271676 741097.46 81930.35 6e+05 670977.75
-          p50       p75  p100     hist
-     741551.5 810556.25 9e+05 ▇▇▇▇▇▇▇▃
-    
-    design_outcomes table exists
-    
-    # A tibble: 6 x 7
-           id nct_id  outcome_type measure  time_frame population description 
-        <int> <chr>   <chr>        <chr>    <chr>      <chr>      <chr>       
-    1 3288799 NCT036… primary      Percent… 16 weeks   <NA>       The effect …
-    2 3288800 NCT036… secondary    Effect … 16 weeks   <NA>       Sleep archi…
-    3 3288801 NCT036… secondary    Effect … 16 weeks   <NA>       Sleep archi…
-    4 3289029 NCT036… secondary    Energy … 10 minutes <NA>       The energy …
-    5 3288802 NCT036… secondary    Effect … 16 weeks   <NA>       Sleep archi…
-    6 3288803 NCT036… secondary    Effect … 16 weeks   <NA>       Sleep archi…
-
-    Warning in min(characters, na.rm = TRUE): no non-missing arguments to min;
-    returning Inf
-
-    Warning in max(characters, na.rm = TRUE): no non-missing arguments to max;
-    returning -Inf
-
 ``` 
+table schema_migrations doesn't exist
+
+studies table exists
+
+# A tibble: 6 x 64
+  nct_id nlm_download_da… study_first_sub… results_first_s…
+  <chr>  <chr>            <date>           <date>          
+1 NCT03… ClinicalTrials.… 2018-03-21       NA              
+2 NCT03… ClinicalTrials.… 2018-04-02       NA              
+3 NCT03… ClinicalTrials.… 2018-02-14       NA              
+4 NCT03… ClinicalTrials.… 2018-04-10       NA              
+5 NCT03… ClinicalTrials.… 2018-03-27       NA              
+6 NCT03… ClinicalTrials.… 2018-03-09       NA              
+# ... with 60 more variables: disposition_first_submitted_date <date>,
+#   last_update_submitted_date <date>,
+#   study_first_submitted_qc_date <date>, study_first_posted_date <date>,
+#   study_first_posted_date_type <chr>,
+#   results_first_submitted_qc_date <date>,
+#   results_first_posted_date <date>,
+#   results_first_posted_date_type <chr>,
+#   disposition_first_submitted_qc_date <date>,
+#   disposition_first_posted_date <date>,
+#   disposition_first_posted_date_type <chr>,
+#   last_update_submitted_qc_date <date>, last_update_posted_date <date>,
+#   last_update_posted_date_type <chr>, start_month_year <chr>,
+#   start_date_type <chr>, start_date <date>,
+#   verification_month_year <chr>, verification_date <date>,
+#   completion_month_year <chr>, completion_date_type <chr>,
+#   completion_date <date>, primary_completion_month_year <chr>,
+#   primary_completion_date_type <chr>, primary_completion_date <date>,
+#   target_duration <chr>, study_type <chr>, acronym <chr>,
+#   baseline_population <chr>, brief_title <chr>, official_title <chr>,
+#   overall_status <chr>, last_known_status <chr>, phase <chr>,
+#   enrollment <int>, enrollment_type <chr>, source <chr>,
+#   limitations_and_caveats <chr>, number_of_arms <int>,
+#   number_of_groups <int>, why_stopped <chr>, has_expanded_access <lgl>,
+#   expanded_access_type_individual <lgl>,
+#   expanded_access_type_intermediate <lgl>,
+#   expanded_access_type_treatment <lgl>, has_dmc <lgl>,
+#   is_fda_regulated_drug <lgl>, is_fda_regulated_device <lgl>,
+#   is_unapproved_device <lgl>, is_ppsd <lgl>, is_us_export <lgl>,
+#   biospec_retention <chr>, biospec_description <chr>,
+#   ipd_time_frame <chr>, ipd_access_criteria <chr>, ipd_url <chr>,
+#   plan_to_share_ipd <chr>, plan_to_share_ipd_description <chr>,
+#   created_at <dttm>, updated_at <dttm>
 Skim summary statistics
- n obs: 1448570 
+ n obs: 291109 
+ n variables: 64 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+                           variable missing complete      n min  max
+                            acronym  217081    74028 291109   1   14
+                baseline_population       0   291109 291109   0  350
+                biospec_description       0   291109 291109   0 1143
+                  biospec_retention  277454    13655 291109  13   19
+                        brief_title       0   291109 291109   7  300
+               completion_date_type   26118   264991 291109   6   11
+              completion_month_year   19211   271898 291109   8   18
+ disposition_first_posted_date_type  284758     6351 291109   6    8
+                    enrollment_type   16884   274225 291109   6   11
+                ipd_access_criteria  289225     1884 291109   3 1000
+                     ipd_time_frame  288951     2158 291109   1  806
+                            ipd_url  289847     1262 291109   9  156
+                  last_known_status  262094    29015 291109  10   23
+       last_update_posted_date_type       0   291109 291109   6    8
+            limitations_and_caveats       0   291109 291109   0  250
+                             nct_id       0   291109 291109  11   11
+      nlm_download_date_description       0   291109 291109  59   59
+                     official_title   10327   280782 291109  18  598
+                     overall_status       0   291109 291109   8   25
+                              phase   60124   230985 291109   3   15
+                  plan_to_share_ipd  213764    77345 291109   2    9
+      plan_to_share_ipd_description  276463    14646 291109   1 1000
+       primary_completion_date_type   22356   268753 291109   6   11
+      primary_completion_month_year   22291   268818 291109   8   18
+     results_first_posted_date_type  257354    33755 291109   6    8
+                             source       0   291109 291109   2  147
+                    start_date_type  204273    86836 291109   6   11
+                   start_month_year    4731   286378 291109   8   18
+       study_first_posted_date_type       0   291109 291109   6    8
+                         study_type       0   291109 291109   3   32
+                    target_duration  286691     4418 291109   5   10
+            verification_month_year     803   290306 291109   8   18
+                        why_stopped  271768    19341 291109   2  175
+  empty n_unique
+      0    59832
+ 282067     7676
+ 277385    10603
+      0        3
+      0   289201
+      0        2
+      0     6677
+      0        2
+      0        2
+      0     1164
+      0     1336
+      0      240
+      0        4
+      0        2
+ 283650     7051
+      0   291109
+      0        1
+      0   278331
+      0       14
+      0        8
+      0        3
+      0     9172
+      0        2
+      0     6247
+      0        2
+      0    18537
+      0        2
+      0     6020
+      0        2
+      0        5
+      0      131
+      0     1314
+      0    14483
+
+── Variable type:Date ──────────────────────────────────────────────────────────────────
+                            variable missing complete      n        min
+                     completion_date   19211   271898 291109 1900-01-31
+       disposition_first_posted_date  284758     6351 291109 2009-08-10
+    disposition_first_submitted_date  284758     6351 291109 2008-10-09
+ disposition_first_submitted_qc_date  284758     6351 291109 2009-07-10
+             last_update_posted_date       0   291109 291109 2005-06-24
+          last_update_submitted_date       0   291109 291109 2005-06-23
+       last_update_submitted_qc_date       0   291109 291109 2005-06-23
+             primary_completion_date   22291   268818 291109 1900-01-31
+           results_first_posted_date  257354    33755 291109 2008-09-26
+        results_first_submitted_date  257354    33755 291109 2008-09-25
+     results_first_submitted_qc_date  257354    33755 291109 2008-09-25
+                          start_date    4731   286378 291109 1900-01-31
+             study_first_posted_date       0   291109 291109 1999-09-20
+          study_first_submitted_date       0   291109 291109 1999-09-17
+       study_first_submitted_qc_date       0   291109 291109 1999-09-17
+                   verification_date     803   290306 291109 1981-10-31
+        max     median n_unique
+ 2100-12-31 2015-12-31     6333
+ 2018-11-30 2014-03-04     1523
+ 2018-11-29 2014-01-16     1921
+ 2018-11-29 2014-01-30     1924
+ 2018-11-30 2016-11-02     3313
+ 2018-11-29 2016-10-30     4545
+ 2018-11-29 2016-10-30     4545
+ 2100-12-31 2015-10-31     5922
+ 2018-11-30 2015-04-16     2425
+ 2018-11-02 2014-12-12     3134
+ 2018-11-29 2015-04-07     3081
+ 2100-01-31 2012-10-31     5814
+ 2018-11-30 2013-05-27     4429
+ 2018-11-29 2013-04-29     6111
+ 2018-11-29 2013-05-23     5911
+ 2018-11-30 2016-08-31     1285
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+         variable missing complete      n     mean         sd p0 p25 p50
+       enrollment    6583   284526 291109 24999.22 2928526.12  0  30  70
+   number_of_arms   84319   206790 291109     2.12       1.27  1   1   2
+ number_of_groups  254532    36577 291109     1.79       1.19  1   1   1
+ p75  p100     hist
+ 200 1e+09 ▇▁▁▁▁▁▁▁
+   2    32 ▇▁▁▁▁▁▁▁
+   2    30 ▇▁▁▁▁▁▁▁
+
+── Variable type:logical ───────────────────────────────────────────────────────────────
+                          variable missing complete      n    mean
+   expanded_access_type_individual  291030       79 291109 1      
+ expanded_access_type_intermediate  291080       29 291109 1      
+    expanded_access_type_treatment  291066       43 291109 1      
+                           has_dmc   52882   238227 291109 0.38   
+               has_expanded_access    5067   286042 291109 0.0014 
+           is_fda_regulated_device  225665    65444 291109 0.063  
+             is_fda_regulated_drug  225602    65507 291109 0.23   
+                           is_ppsd  287851     3258 291109 0.00061
+              is_unapproved_device  287034     4075 291109 0.21   
+                      is_us_export  280249    10860 291109 0.28   
+                              count
+                NA: 291030, TRU: 79
+                NA: 291080, TRU: 29
+                NA: 291066, TRU: 43
+ FAL: 147645, TRU: 90582, NA: 52882
+    FAL: 285643, NA: 5067, TRU: 399
+  NA: 225665, FAL: 61343, TRU: 4101
+ NA: 225602, FAL: 50676, TRU: 14831
+      NA: 287851, FAL: 3256, TRU: 2
+    NA: 287034, FAL: 3234, TRU: 841
+   NA: 280249, FAL: 7783, TRU: 3077
+
+── Variable type:POSIXct ───────────────────────────────────────────────────────────────
+   variable missing complete      n        min        max     median
+ created_at       0   291109 291109 2018-12-01 2018-12-02 2018-12-01
+ updated_at       0   291109 291109 2018-12-01 2018-12-02 2018-12-01
+ n_unique
+   291109
+   291109
+
+study_references table exists
+
+# A tibble: 6 x 5
+       id nct_id   pmid   reference_type citation                         
+    <int> <chr>    <chr>  <chr>          <chr>                            
+1 1231961 NCT0375… <NA>   reference      Castell BD, Kazantzis N, Moss‐Mo…
+2 1232158 NCT0375… 14508… reference      Sundin EC, Horowitz MJ. Horowitz…
+3 1231941 NCT0375… 26093… reference      Wallace G, Jodele S, Howell J, M…
+4 1231942 NCT0375… 29782… reference      Wallace G, Jodele S, Myers KC, D…
+5 1231943 NCT0375… 24910… reference      Hansson ME, Norlin AC, Omazic B,…
+6 1231944 NCT0375… 27358… reference      Caballero-Velázquez T, Montero I…
+Skim summary statistics
+ n obs: 371571 
+ n variables: 5 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+       variable missing complete      n min  max empty n_unique
+       citation       0   371571 371571   2 5662     0   297634
+         nct_id       0   371571 371571  11   11     0    59148
+           pmid   21826   349745 371571   1    8     0   276569
+ reference_type       0   371571 371571   9   17     0        2
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean        sd      p0       p25
+       id       0   371571 371571 1418262.52 107407.04 1231941 1325361.5
+     p50       p75    p100     hist
+ 1418305 1511283.5 1604199 ▇▇▇▇▇▇▇▇
+
+detailed_descriptions table exists
+
+# A tibble: 6 x 3
+      id nct_id     description                                           
+   <int> <chr>      <chr>                                                 
+1 635895 NCT035771… "\n      This SONABRE registry is an ongoing observat…
+2 635896 NCT035771… "\n      Galvecta Plus is a combination of Vildaglipt…
+3 635897 NCT035771… "\n      This is a Phase 2a, Multi-center, Double-bli…
+4 635898 NCT035771… "\n      Polyphenol rich plant foods have been associ…
+5 635899 NCT035771… "\n      The overall objective of this study is to de…
+6 635900 NCT035771… "\n      Background:\n\n      Twenty percent of older…
+Skim summary statistics
+ n obs: 188396 
+ n variables: 3 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+    variable missing complete      n min   max empty n_unique
+ description       0   188396 188396  13 37641     0   187025
+      nct_id       0   188396 188396  11    11     0   188396
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n      mean       sd     p0       p25
+       id       0   188396 188396 720597.65 54466.66 626073 673460.75
+      p50       p75   p100     hist
+ 720631.5 767763.25 814882 ▇▇▇▇▇▇▇▇
+
+responsible_parties table exists
+
+# A tibble: 6 x 7
+      id nct_id  responsible_part… name   title organization affiliation  
+   <int> <chr>   <chr>             <chr>  <chr> <chr>        <chr>        
+1 898636 NCT037… Sponsor           <NA>   <NA>  <NA>         <NA>         
+2 898637 NCT037… Sponsor           <NA>   <NA>  <NA>         <NA>         
+3 898595 NCT037… Principal Invest… Marja… Rese… <NA>         Helsinki Uni…
+4 898596 NCT037… Principal Invest… Emad … Dire… <NA>         ClinAmygate  
+5 898597 NCT037… Sponsor           <NA>   <NA>  <NA>         <NA>         
+6 898599 NCT037… Sponsor           <NA>   <NA>  <NA>         <NA>         
+Skim summary statistics
+ n obs: 271770 
  n variables: 7 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
-     variable missing complete       n min  max empty n_unique
-  description  508613   939957 1448570   1  999     0   788807
-      measure       0  1448570 1448570   1  255     0  1075871
-       nct_id       0  1448570 1448570  11   11     0   273761
- outcome_type       0  1448570 1448570   5    9     0        3
-   population 1448570        0 1448570 Inf -Inf     0        0
-   time_frame   54051  1394519 1448570   1  255     0   334840
+               variable missing complete      n min max empty n_unique
+            affiliation  173199    98571 271770   3 120     0     7140
+                   name  145811   125959 271770   1 215     0    67096
+                 nct_id       0   271770 271770  11  11     0   271770
+           organization  244476    27294 271770   1 206     0    11605
+ responsible_party_type   27499   244271 271770   7  22     0        3
+                  title  173207    98563 271770   1 254     0    29420
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
- variable missing complete       n       mean        sd      p0        p25
-       id       0  1448570 1448570 4052051.64 445749.73 3264688 3672836.25
-       p50        p75    p100     hist
- 4054890.5 4425591.75 4918707 ▇▇▇▇▇▇▇▃
+ variable missing complete      n  mean       sd    p0       p25   p50
+       id       0   271770 271770 1e+06 78566.09 9e+05 966934.25 1e+06
+        p75    p100     hist
+ 1102967.75 1170938 ▇▇▇▇▇▇▇▇
+
+browse_interventions table exists
+
+# A tibble: 6 x 4
+       id nct_id      mesh_term                 downcase_mesh_term        
+    <int> <chr>       <chr>                     <chr>                     
+1 1305521 NCT03760848 Midazolam                 midazolam                 
+2 1306168 NCT02493764 MK-7655                   mk-7655                   
+3 1306293 NCT00736255 Lisdexamfetamine Dimesyl… lisdexamfetamine dimesyla…
+4 1306294 NCT00736255 Dextroamphetamine         dextroamphetamine         
+5 1306295 NCT00703326 Docetaxel                 docetaxel                 
+6 1306296 NCT00703326 Ramucirumab               ramucirumab               
+Skim summary statistics
+ n obs: 300923 
+ n variables: 4 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+           variable missing complete      n min max empty n_unique
+ downcase_mesh_term       0   300923 300923   3 161     0     3165
+          mesh_term       0   300923 300923   3 161     0     3165
+             nct_id       0   300923 300923  11  11     0   129711
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean       sd    p0       p25
+       id       0   300923 300923 1155740.54 86989.29 1e+06 1080469.5
+     p50       p75    p100     hist
+ 1155804 1231067.5 1306316 ▇▇▇▇▇▇▇▇
+
+sponsors table exists
+
+# A tibble: 6 x 5
+       id nct_id    agency_class lead_or_collabora… name                  
+    <int> <chr>     <chr>        <chr>              <chr>                 
+1 1509569 NCT03759… Other        lead               Helsinki University C…
+2 1509570 NCT03759… Other        collaborator       Helsinki University   
+3 1509571 NCT03759… Other        lead               ClinAmygate           
+4 1509572 NCT03759… Other        collaborator       National Research Cen…
+5 1509573 NCT03759… Industry     lead               Allergan              
+6 1509599 NCT03759… Other        lead               Children's Hospital L…
+Skim summary statistics
+ n obs: 460941 
+ n variables: 5 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+             variable missing complete      n min max empty n_unique
+         agency_class     803   460138 460941   3   8     0        4
+ lead_or_collaborator       0   460941 460941   4  12     0        2
+                 name       0   460941 460941   2 160     0    52924
+               nct_id       0   460941 460941  11  11     0   291109
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean        sd      p0     p25
+       id       0   460941 460941 1740699.24 133223.74 1509569 1625387
+     p50     p75  p100     hist
+ 1740779 1856063 2e+06 ▇▇▇▇▇▇▇▇
+
+baseline_measurements table exists
+
+# A tibble: 6 x 18
+      id nct_id result_group_id ctgov_group_code classification category
+   <int> <chr>            <int> <chr>            <chr>          <chr>   
+1 2.69e6 NCT02…         2581308 B2               ""             ""      
+2 2.69e6 NCT02…         2581309 B1               ""             ""      
+3 2.69e6 NCT02…         2581307 B3               ""             Male    
+4 2.69e6 NCT02…         2581308 B2               ""             Male    
+5 2.69e6 NCT02…         2581309 B1               ""             Male    
+6 2.69e6 NCT02…         2581307 B3               ""             Female  
+# ... with 12 more variables: title <chr>, description <chr>, units <chr>,
+#   param_type <chr>, param_value <chr>, param_value_num <dbl>,
+#   dispersion_type <chr>, dispersion_value <chr>,
+#   dispersion_value_num <dbl>, dispersion_lower_limit <dbl>,
+#   dispersion_upper_limit <dbl>, explanation_of_na <chr>
+Skim summary statistics
+ n obs: 861552 
+ n variables: 18 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+          variable missing complete      n min max  empty n_unique
+          category       0   861552 861552   0  50 424672     4148
+    classification       0   861552 861552   0  50 568644    24684
+  ctgov_group_code       0   861552 861552   2   3      0       33
+       description       0   861552 861552   0 600 765005    12954
+   dispersion_type       0   861552 861552   0  20 720964        4
+  dispersion_value  739250   122302 861552   1  15      0    12910
+ explanation_of_na       0   861552 861552   0 246 858837      472
+            nct_id       0   861552 861552  11  11      0    33646
+        param_type       0   861552 861552   0  28    109       10
+       param_value       0   861552 861552   1  11      0    21134
+             title       0   861552 861552   2 100      0    19684
+             units       0   861552 861552   0  40    134     2797
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+        variable missing complete      n       mean        sd      p0
+              id       0   861552 861552 3107962.86 248923.72 2676483
+ result_group_id       0   861552 861552   3e+06    244409.52 2573730
+        p25       p50        p75    p100     hist
+ 2892446.75 3107978.5 3323605.25 3539012 ▇▇▇▇▇▇▇▇
+ 2764300      3e+06   3194335    3403195 ▇▇▇▇▇▇▇▇
+
+── Variable type:numeric ───────────────────────────────────────────────────────────────
+               variable missing complete      n    mean        sd    p0
+ dispersion_lower_limit  841548    20004 861552  150.68   4078.77 -36.7
+ dispersion_upper_limit  841556    19996 861552 6133.81 251714.66 -10.1
+   dispersion_value_num  740103   121449 861552  196.73  21697.3    0  
+        param_value_num    2590   858962 861552  209.48   9945.79 -58  
+   p25   p50   p75       p100     hist
+  8    24.6  43     272000    ▇▁▁▁▁▁▁▁
+ 27.18 66.6  82      3e+07    ▇▁▁▁▁▁▁▁
+  4.4   9.05 12.31 3395777.02 ▇▁▁▁▁▁▁▁
+  2    14    52    2510890    ▇▁▁▁▁▁▁▁
+
+drop_withdrawals table exists
+
+# A tibble: 6 x 7
+      id nct_id  result_group_id ctgov_group_code period  reason     count
+   <int> <chr>             <int> <chr>            <chr>   <chr>      <int>
+1 796856 NCT036…         2573731 P1               Overal… Protocol …     1
+2 796857 NCT036…         2573739 P1               Overal… Study was…    95
+3 796858 NCT035…         2573807 P2               Overal… Lost to F…    29
+4 796859 NCT035…         2573808 P1               Overal… Lost to F…    26
+5 796860 NCT035…         2573820 P2               Analyz… Protocol …     1
+6 796861 NCT035…         2573821 P1               Analyz… Protocol …     4
+Skim summary statistics
+ n obs: 253780 
+ n variables: 7 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+         variable missing complete      n min max empty n_unique
+ ctgov_group_code       0   253780 253780   2   3     0       26
+           nct_id       0   253780 253780  11  11     0    21445
+           period       0   253780 253780   4  40     0     4634
+           reason       0   253780 253780   2  40     0    15691
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+        variable missing complete      n      mean        sd      p0
+           count       0   253780 253780     57.11  23150.49       0
+              id       0   253780 253780 923857.75  73289.23   8e+05
+ result_group_id       0   253780 253780  3e+06    236119.75 2573731
+        p25      p50        p75          p100     hist
+       0         1         4          1.2e+07 ▇▁▁▁▁▁▁▁
+  860391.75 923870.5  987329.25 1050783       ▇▇▇▇▇▇▇▇
+ 2838488     3e+06   3245607.25 3403198       ▃▅▆▆▆▆▇▇
+
+outcome_measurements table exists
+
+# A tibble: 6 x 19
+      id nct_id outcome_id result_group_id ctgov_group_code classification
+   <int> <chr>       <int>           <int> <chr>            <chr>         
+1 5.76e6 NCT02…     780984         2579432 O1               Pancreatic: 6…
+2 5.76e6 NCT02…     780984         2579432 O1               Pancreatic: 3…
+3 5.76e6 NCT02…     780984         2579432 O1               Pancreatic: 2…
+4 5.76e6 NCT02…     780984         2579432 O1               Pancreatic: 1…
+5 5.76e6 NCT02…     780984         2579432 O1               Pancreatic: <…
+6 5.76e6 NCT02…     780984         2579432 O1               Corpus Uteri:…
+# ... with 13 more variables: category <chr>, title <chr>,
+#   description <chr>, units <chr>, param_type <chr>, param_value <chr>,
+#   param_value_num <dbl>, dispersion_type <chr>, dispersion_value <chr>,
+#   dispersion_value_num <dbl>, dispersion_lower_limit <dbl>,
+#   dispersion_upper_limit <dbl>, explanation_of_na <chr>
+Skim summary statistics
+ n obs: 1833056 
+ n variables: 19 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+          variable missing complete       n min max   empty n_unique
+          category     247  1832809 1833056   0  50 1788917     2819
+    classification       0  1833056 1833056   0  50  347087   354392
+  ctgov_group_code     247  1832809 1833056   2   3       0       39
+       description       0  1833056 1833056   0 999  109204   173567
+   dispersion_type       0  1833056 1833056   0  34  877734       23
+  dispersion_value 1141775   691281 1833056   1  14       0    93468
+ explanation_of_na     247  1832809 1833056   0 250 1798381     5032
+            nct_id       0  1833056 1833056  11  11       0    32579
+        param_type       0  1833056 1833056   0  28     457       10
+       param_value     247  1832809 1833056   1  14       0   106055
+             title       0  1833056 1833056   2 255       0   192189
+             units       0  1833056 1833056   0  40     538    20921
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+        variable missing complete       n       mean        sd      p0
+              id       0  1833056 1833056 6662721.85 529396.53 5745517
+      outcome_id       0  1833056 1833056  905153.75  72217.86  779326
+ result_group_id     247  1832809 1833056   3e+06    239135.56 2573732
+        p25       p50        p75    p100     hist
+ 6204216.75 6662755.5 7121248.25 7579568 ▇▇▇▇▇▇▇▇
+  843334     906884    968980.25   1e+06 ▇▇▇▇▇▆▇▇
+ 2787936      3e+06   3205628    3403240 ▇▇▇▇▇▆▇▇
+
+── Variable type:numeric ───────────────────────────────────────────────────────────────
+               variable missing complete       n        mean          sd
+ dispersion_lower_limit 1549738   283318 1833056 1e+05           2.4e+07
+ dispersion_upper_limit 1550344   282712 1833056     1.1e+09     3.3e+11
+   dispersion_value_num 1161568   671488 1833056 55685.43        1.7e+07
+        param_value_num   22919  1810137 1833056 16464.58    1e+07      
+             p0  p25   p50   p75        p100     hist
+ -3724434       0.18  4.2  44.4  6e+09       ▇▁▁▁▁▁▁▁
+  -172230.54    2.5  19.82 89        1.3e+14 ▇▁▁▁▁▁▁▁
+   -10966.01    0.75  3.66 17.25     1.3e+10 ▇▁▁▁▁▁▁▁
+       -4.1e+08 0     4    31.6      6.4e+09 ▇▁▁▁▁▁▁▁
+
+eligibilities table exists
+
+# A tibble: 6 x 11
+      id nct_id sampling_method gender minimum_age maximum_age
+   <int> <chr>  <chr>           <chr>  <chr>       <chr>      
+1 970321 NCT03… Probability Sa… All    3 Years     N/A        
+2 970322 NCT03… ""              All    18 Years    N/A        
+3 970323 NCT03… ""              All    30 Years    N/A        
+4 970324 NCT03… Non-Probabilit… Female 18 Years    45 Years   
+5 970325 NCT03… ""              All    21 Years    65 Years   
+6 970328 NCT03… ""              All    45 Years    85 Years   
+# ... with 5 more variables: healthy_volunteers <chr>, population <chr>,
+#   criteria <chr>, gender_description <chr>, gender_based <lgl>
+Skim summary statistics
+ n obs: 291109 
+ n variables: 11 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+           variable missing complete      n min   max  empty n_unique
+           criteria       0   291109 291109   0 18929    884   286809
+             gender       0   291109 291109   0     6    820        4
+ gender_description       0   291109 291109   0   918 289108     1601
+ healthy_volunteers       0   291109 291109   0    26   4431        3
+        maximum_age       0   291109 291109   0    11    820      432
+        minimum_age       0   291109 291109   0    10    820      235
+             nct_id       0   291109 291109  11    11      0   291109
+         population       0   291109 291109   0  1160 236973    51634
+    sampling_method       0   291109 291109   0    22 236936        3
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean       sd     p0   p25     p50
+       id       0   291109 291109 1106531.22 84146.93 960515 1e+06 1106584
+     p75    p100     hist
+ 1179399 1252199 ▇▇▇▇▇▇▇▇
+
+── Variable type:logical ───────────────────────────────────────────────────────────────
+     variable missing complete      n mean                 count
+ gender_based  288081     3028 291109    1 NA: 288081, TRU: 3028
+
+facility_contacts table exists
+
+# A tibble: 6 x 7
+       id nct_id   facility_id contact_type name      email       phone   
+    <int> <chr>          <int> <chr>        <chr>     <chr>       <chr>   
+1 1763580 NCT0375…     8765741 primary      Marja Mä… marja.maki… +358407…
+2 1763581 NCT0375…     8765742 primary      Emad Hab… emangate@g… <NA>    
+3 1764118 NCT0375…     8766495 primary      <NA>      <NA>        3225413…
+4 1763583 NCT0375…     8765745 primary      Christia… christian.… +49 30 …
+5 1763584 NCT0375…     8765745 backup       Judith B… judith.bel… <NA>    
+6 1763585 NCT0375…     8765747 primary      Paul R K… paul.king2… 716-862…
+Skim summary statistics
+ n obs: 256021 
+ n variables: 7 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+     variable missing complete      n min max empty n_unique
+ contact_type       0   256021 256021   6   7     0        2
+        email   78025   177996 256021   8  85     0   103828
+         name    6924   249097 256021   1 108     0   150169
+       nct_id       0   256021 256021  11  11     0    64764
+        phone   68657   187364 256021   1  37     0    99557
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+    variable missing complete      n       mean        sd      p0     p25
+ facility_id       0   256021 256021 9202167.95 440390.9  8765741 8894609
+          id       0   256021 256021 1893278.25  74560.56 1763580 1828846
+     p50     p75        p100     hist
+ 9059260 9356016     1.1e+07 ▇▅▂▁▁▁▁▁
+ 1893380   2e+06 2e+06       ▇▇▇▇▇▇▇▇
+
+overall_officials table exists
+
+# A tibble: 6 x 5
+      id nct_id    role          name          affiliation                
+   <int> <chr>     <chr>         <chr>         <chr>                      
+1 992735 NCT03759… Study Direct… Aparna Sahoo… Allergan                   
+2 992737 NCT03759… Principal In… Sonata Jodel… Children's Hospital Los An…
+3 992738 NCT03759… Principal In… Anna-Barbara… University of California, …
+4 992739 NCT03759… Principal In… Paul R. King… VA Western New York Health…
+5 992740 NCT03759… Study Chair   Robert Greif… University Hospital Bern, …
+6 992741 NCT03759… Principal In… Sabine Nabec… University Hospital Bern, …
+Skim summary statistics
+ n obs: 302359 
+ n variables: 5 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+    variable missing complete      n min max empty n_unique
+ affiliation    2411   299948 302359   1 255     0    81680
+        name       0   302359 302359   1 121     0   196777
+      nct_id       0   302359 302359  11  11     0   236426
+        role    1428   300931 302359  11  22     0        4
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n      mean       sd     p0       p25
+       id       0   302359 302359 1144355.2 87383.99 992735 1068728.5
+     p50       p75    p100     hist
+ 1144405 1220026.5 1295639 ▇▇▇▇▇▇▇▇
+
+facility_investigators table exists
+
+# A tibble: 6 x 5
+       id nct_id     facility_id role               name                  
+    <int> <chr>            <int> <chr>              <chr>                 
+1 1358669 NCT037593…     8765741 Principal Investi… Marja Mäkinen, PhD    
+2 1358670 NCT037593…     8765741 Sub-Investigator   Heini Harve-Rytsälä, …
+3 1358671 NCT037593…     8765741 Sub-Investigator   Jussi Pirneskoski, MD…
+4 1358672 NCT037593…     8765741 Principal Investi… Maaret Castrén, MD, P…
+5 1358673 NCT037592…     8765747 Principal Investi… Paul R. King, PhD     
+6 1358674 NCT037590…     8765759 Principal Investi… Wee Joo Chng, Prof    
+Skim summary statistics
+ n obs: 182374 
+ n variables: 5 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+ variable missing complete      n min max empty n_unique
+     name       0   182374 182374   2  75     0   115139
+   nct_id       0   182374 182374  11  11     0    33741
+     role       0   182374 182374  11  22     0        3
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+    variable missing complete      n       mean        sd      p0
+ facility_id       0   182374 182374 9271421.89 439934.15 8765741
+          id       0   182374 182374 1450406.39  52986.29 1358669
+        p25       p50        p75          p100     hist
+ 8929517.25 9151862.5 9487465.75       1.1e+07 ▇▆▃▂▁▁▁▁
+ 1404529.25 1450261.5 1496466.75 1542072       ▇▇▇▇▇▇▇▇
+
+facilities table exists
+
+# A tibble: 6 x 8
+       id nct_id   status     name           city   state   zip   country 
+    <int> <chr>    <chr>      <chr>          <chr>  <chr>   <chr> <chr>   
+1 8775697 NCT0369… ""         University of… Ottawa Ontario K1Y … Canada  
+2 8775698 NCT0369… Recruiting Vanderbilt Un… Nashv… Tennes… 37212 United …
+3 8775699 NCT0369… Not yet r… Bordeaux Univ… Borde… ""      33076 France  
+4 8775705 NCT0369… Not yet r… St. Paul's Ho… Vanco… Britis… V6Z … Canada  
+5 8775706 NCT0369… Recruiting Institut Gutt… Badal… Barcel… 08916 Spain   
+6 8775707 NCT0369… ""         IU Health Met… India… Indiana 46202 United …
+Skim summary statistics
+ n obs: 2076731 
+ n variables: 8 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+ variable missing complete       n min max   empty n_unique
+     city       0  2076731 2076731   0  63     106    58955
+  country       0  2076731 2076731   0  42     106      207
+     name  223042  1853689 2076731   1 255       0   453172
+   nct_id       0  2076731 2076731  11  11       0   256385
+    state       0  2076731 2076731   0  62  835151    10598
+   status       0  2076731 2076731   0  23 1686709        9
+      zip       0  2076731 2076731   0  30  463940    72031
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete       n       mean    sd      p0       p25
+       id       0  2076731 2076731 9816935.45 6e+05 8765741 9295607.5
+     p50   p75    p100     hist
+ 9818970 1e+07 1.1e+07 ▇▇▇▇▇▇▇▇
+
+outcomes table exists
+
+# A tibble: 6 x 13
+      id nct_id outcome_type title description time_frame population
+   <int> <chr>  <chr>        <chr> <chr>       <chr>      <chr>     
+1 789149 NCT02… Secondary    Perc… The percen… 22 Days    Safety An…
+2 789150 NCT02… Secondary    Perc… Adverse ev… 22 days    Safety An…
+3 789151 NCT02… Secondary    Perc… Participan… 22 Days    Safety An…
+4 789152 NCT02… Secondary    Geom… Geometric … Baseline … FAS inclu…
+5 789153 NCT02… Secondary    Sero… Seroprotec… Days 1 an… FAS inclu…
+6 789154 NCT02… Secondary    GMT … GMT of SRH… Days 1 an… FAS inclu…
+# ... with 6 more variables: anticipated_posting_date <date>,
+#   anticipated_posting_month_year <chr>, units <chr>,
+#   units_analyzed <chr>, dispersion_type <chr>, param_type <chr>
+Skim summary statistics
+ n obs: 250721 
+ n variables: 13 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+                       variable missing complete      n min max  empty
+ anticipated_posting_month_year       0   250721 250721   0   7 249639
+                    description       0   250721 250721   0 999  26975
+                dispersion_type       0   250721 250721   0  34 100581
+                         nct_id       0   250721 250721  11  11      0
+                   outcome_type       0   250721 250721   7  19      0
+                     param_type       0   250721 250721   0  28  17112
+                     population       0   250721 250721   0 350  54994
+                     time_frame       0   250721 250721   0 255     71
+                          title       0   250721 250721   2 255      0
+                          units       0   250721 250721   0  40  17141
+                 units_analyzed       0   250721 250721   0  40 246276
+ n_unique
+      122
+   183270
+       23
+    33755
+        4
+       10
+    77388
+    73608
+   206294
+    20995
+      516
+
+── Variable type:Date ──────────────────────────────────────────────────────────────────
+                 variable missing complete      n        min        max
+ anticipated_posting_date  249642     1079 250721 2007-04-30 3333-12-31
+     median n_unique
+ 2018-12-31      119
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n  mean      sd     p0    p25   p50    p75
+       id       0   250721 250721 9e+05 72418.3 779326 842094 9e+05 967531
+  p100     hist
+ 1e+06 ▇▇▇▇▇▇▇▇
+
+result_agreements table exists
+
+# A tibble: 6 x 4
+      id nct_id   pi_employee                  agreement                  
+   <int> <chr>    <chr>                        <chr>                      
+1 104003 NCT0367… All Principal Investigators… There is NOT an agreement …
+2 104004 NCT0365… All Principal Investigators… There is NOT an agreement …
+3 104005 NCT0364… All Principal Investigators… There is NOT an agreement …
+4 104006 NCT0364… Principal Investigators are… There is NOT an agreement …
+5 104007 NCT0361… Principal Investigators are… There is NOT an agreement …
+6 104008 NCT0358… Principal Investigators are… There is NOT an agreement …
+Skim summary statistics
+ n obs: 33755 
+ n variables: 4 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+    variable missing complete     n min max empty n_unique
+   agreement     734    33021 33755  15 500     0     2828
+      nct_id       0    33755 33755  11  11     0    33755
+ pi_employee       0    33755 33755  82  82     0        2
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete     n      mean      sd    p0      p25    p50
+       id       0    33755 33755 120896.22 9749.71 1e+05 112453.5 120896
+      p75   p100     hist
+ 129340.5 137781 ▇▇▇▇▇▇▇▇
+
+result_contacts table exists
+
+# A tibble: 6 x 6
+      id nct_id   organization            name      phone     email       
+   <int> <chr>    <chr>                   <chr>     <chr>     <chr>       
+1 104003 NCT0367… Auerbach Hematology an… Michael … 41078040… mauerbachmd…
+2 104004 NCT0365… Medical University of … Dr. Gonz… 843-792-… revuelta@mu…
+3 104005 NCT0364… Montefiore Medical Cen… Lisa Wie… <NA>      lwiechma@mo…
+4 104006 NCT0364… National University Ho… Dr. Davi… +6594550… david_chen@…
+5 104007 NCT0361… Al-Kindy College of Me… Lewai Sh… 750 659 … lewaisharki…
+6 104008 NCT0358… Medical University of … Dr. Ange… 843-762-… dempsear@mu…
+Skim summary statistics
+ n obs: 33755 
+ n variables: 6 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+     variable missing complete     n min max empty n_unique
+        email    4718    29037 33755   9  78     0    14048
+         name       0    33755 33755   1 100     0    16889
+       nct_id       0    33755 33755  11  11     0    33755
+ organization       3    33752 33755   2 213     0     8148
+        phone    3289    30466 33755   3  43     0    14764
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete     n      mean      sd    p0      p25    p50
+       id       0    33755 33755 120896.22 9749.71 1e+05 112453.5 120896
+      p75   p100     hist
+ 129340.5 137781 ▇▇▇▇▇▇▇▇
+
+result_groups table exists
+
+# A tibble: 6 x 6
+       id nct_id  ctgov_group_code result_type title  description         
+    <int> <chr>   <chr>            <chr>       <chr>  <chr>               
+1 2583691 NCT028… O1               Outcome     Faste… The subjects receiv…
+2 2583692 NCT028… O2               Outcome     NovoR… The subjects receiv…
+3 2583693 NCT028… O1               Outcome     Faste… The subjects receiv…
+4 2583694 NCT028… O2               Outcome     NovoR… The subjects receiv…
+5 2583695 NCT028… O1               Outcome     Faste… The subjects receiv…
+6 2583696 NCT028… O2               Outcome     NovoR… The subjects receiv…
+Skim summary statistics
+ n obs: 828859 
+ n variables: 6 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+         variable missing complete      n min max empty n_unique
+ ctgov_group_code       0   828859 828859   2   3     0      136
+      description       0   828859 828859   0 999 17177   137187
+           nct_id       0   828859 828859  11  11     0    33755
+      result_type       0   828859 828859   7  16     0        4
+            title       0   828859 828859   0  62    13    93924
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n  mean        sd      p0       p25   p50
+       id       0   828859 828859 3e+06 239407.75 2573730 2781265.5 3e+06
+       p75    p100     hist
+ 3195967.5 3403243 ▇▇▇▇▇▇▇▇
 
 ipd_information_types table exists
 
 # A tibble: 6 x 3
      id nct_id      name                           
   <int> <chr>       <chr>                          
-1 23432 NCT03742999 Study Protocol                 
-2 23433 NCT03742999 Statistical Analysis Plan (SAP)
-3 23434 NCT03742999 Informed Consent Form (ICF)    
-4 23435 NCT03742999 Clinical Study Report (CSR)    
-5 23436 NCT03742999 Analytic Code                  
-6 23440 NCT03742869 Clinical Study Report (CSR)    
+1 24848 NCT03758183 Study Protocol                 
+2 24849 NCT03758183 Statistical Analysis Plan (SAP)
+3 24850 NCT03758183 Informed Consent Form (ICF)    
+4 24851 NCT03758183 Clinical Study Report (CSR)    
+5 24852 NCT03758183 Analytic Code                  
+6 24858 NCT03757741 Study Protocol                 
 Skim summary statistics
- n obs: 6414 
+ n obs: 6440 
  n variables: 3 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
  variable missing complete    n min max empty n_unique
-     name       0     6414 6414  13  31     0        5
-   nct_id       0     6414 6414  11  11     0     2130
+     name       0     6440 6440  13  31     0        5
+   nct_id       0     6440 6440  11  11     0     2138
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
  variable missing complete    n     mean      sd    p0      p25     p50
-       id       0     6414 6414 19800.83 2448.65 15909 17760.25 19569.5
+       id       0     6440 6440 28088.37 1871.42 24848 26467.75 28083.5
       p75  p100     hist
- 21491.75 24832 ▇▇▇▇▇▅▃▅
+ 29712.25 31335 ▇▇▇▇▇▇▇▇
 
-overall_officials table exists
-
-# A tibble: 6 x 5
-      id nct_id    role           name            affiliation             
-   <int> <chr>     <chr>          <chr>           <chr>                   
-1 659996 NCT03725… Principal Inv… Alice Nieuwboe… KU Leuven               
-2 659997 NCT03725… Principal Inv… Christian Schl… CAU Kiel                
-3 659998 NCT03725… Study Director AbbVie Inc.     AbbVie                  
-4 659999 NCT03725… Principal Inv… Ka-Kit Hui, MD  University of Californi…
-5 660000 NCT03725… Principal Inv… Michael P Twoh… Utah State University   
-6 660001 NCT03725… Principal Inv… David Churchill The Royal Wolverhampton…
-Skim summary statistics
- n obs: 302286 
- n variables: 5 
-
-── Variable type:character ─────────────────────────────────────────────────────────────
-    variable missing complete      n min max empty n_unique
- affiliation    2411   299875 302286   1 255     0    81680
-        name       0   302286 302286   1 121     0   196720
-      nct_id       0   302286 302286  11  11     0   236368
-        role    1428   300858 302286  11  22     0        4
-
-── Variable type:integer ───────────────────────────────────────────────────────────────
- variable missing complete      n      mean       sd     p0       p25
-       id       0   302286 302286 819457.96 90506.58 659996 742066.25
-      p50   p75   p100     hist
- 819915.5 9e+05 992641 ▇▇▇▇▇▇▇▅
-
-designs table exists
-
-# A tibble: 6 x 14
-      id nct_id allocation intervention_mo… observational_m…
-   <int> <chr>  <chr>      <chr>            <chr>           
-1 640634 NCT03… <NA>       <NA>             Cohort          
-2 644860 NCT03… <NA>       <NA>             Other           
-3 637958 NCT03… Randomized Parallel Assign… <NA>            
-4 637959 NCT03… Randomized Parallel Assign… <NA>            
-5 637960 NCT03… Randomized Parallel Assign… <NA>            
-6 637961 NCT03… <NA>       Single Group As… <NA>            
-# ... with 9 more variables: primary_purpose <chr>,
-#   time_perspective <chr>, masking <chr>, masking_description <chr>,
-#   intervention_model_description <chr>, subject_masked <lgl>,
-#   caregiver_masked <lgl>, investigator_masked <lgl>,
-#   outcomes_assessor_masked <lgl>
-Skim summary statistics
- n obs: 291016 
- n variables: 14 
-
-── Variable type:character ─────────────────────────────────────────────────────────────
-                       variable missing complete      n min  max empty
-                     allocation  114427   176589 291016  10   14     0
-             intervention_model   66960   224056 291016  19   23     0
- intervention_model_description  276998    14018 291016   1 1000     0
-                        masking   65546   225470 291016   6   17     0
-            masking_description  283584     7432 291016   1  999     0
-                         nct_id       0   291016 291016  11   11     0
-            observational_model  238690    52326 291016   5   35     0
-                primary_purpose   68116   222900 291016   5   31     0
-               time_perspective  235448    55568 291016   5   42     0
- n_unique
-        3
-        5
-    13127
-        5
-     6342
-   291016
-       12
-       10
-       12
-
-── Variable type:integer ───────────────────────────────────────────────────────────────
- variable missing complete      n      mean       sd     p0       p25
-       id       0   291016 291016 792016.25 87551.83 637958 717120.75
-      p50       p75   p100     hist
- 792471.5 866294.25 960392 ▇▇▇▇▇▇▇▃
-
-── Variable type:logical ───────────────────────────────────────────────────────────────
-                 variable missing complete      n mean
-         caregiver_masked  257173    33843 291016    1
-      investigator_masked  232439    58577 291016    1
- outcomes_assessor_masked  241250    49766 291016    1
-           subject_masked  219913    71103 291016    1
-                  count
- NA: 257173, TRU: 33843
- NA: 232439, TRU: 58577
- NA: 241250, TRU: 49766
- NA: 219913, TRU: 71103
-
-keywords table exists
+conditions table exists
 
 # A tibble: 6 x 4
-       id nct_id      name   downcase_name
-    <int> <chr>       <chr>  <chr>        
-1 2118642 NCT02068599 OA     oa           
-2 2187750 NCT01754948 cough  cough        
-3 2397775 NCT00889538 Autism autism       
-4 1840489 NCT03708926 PTH    pth          
-5 2116934 NCT02076438 c diff c diff       
-6 2490364 NCT00519506 PE     pe           
+       id nct_id    name                      downcase_name               
+    <int> <chr>     <chr>                     <chr>                       
+1 2099444 NCT03599… Fall                      fall                        
+2 2099565 NCT03481… Obesity                   obesity                     
+3 2100024 NCT02390… Sarcoma                   sarcoma                     
+4 2100251 NCT00159… Chronic Obstructive Pulm… chronic obstructive pulmona…
+5 2100252 NCT00102… HIV Infections            hiv infections              
+6 2100253 NCT00073… Thrombocytopenia          thrombocytopenia            
 Skim summary statistics
- n obs: 828525 
+ n obs: 476863 
  n variables: 4 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
       variable missing complete      n min max empty n_unique
- downcase_name       0   828525 828525   1 160     0   191213
-          name       0   828525 828525   1 160     0   237738
-        nct_id       0   828525 828525  11  11     0   195798
+ downcase_name       0   476863 476863   2 160     0    73239
+          name       0   476863 476863   2 160     0    74418
+        nct_id       0   476863 476863  11  11     0   290295
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
- variable missing complete      n      mean        sd      p0     p25
-       id       0   828525 828525 2277158.7 250036.22 1837971 2064038
-     p50     p75    p100     hist
- 2277706 2488320 2767588 ▇▇▇▇▇▇▇▃
+ variable missing complete      n       mean        sd      p0       p25
+       id       0   476863 476863 1861594.98 137887.95 1622304 1742231.5
+     p50   p75    p100     hist
+ 1861717 2e+06 2100271 ▇▇▇▇▇▇▇▇
+
+countries table exists
+
+# A tibble: 6 x 4
+       id nct_id      name          removed
+    <int> <chr>       <chr>         <lgl>  
+1 1505961 NCT03759314 Finland       NA     
+2 1505962 NCT03759301 Egypt         NA     
+3 1505963 NCT03759288 United States NA     
+4 1505965 NCT03759249 Germany       NA     
+5 1505966 NCT03759236 United States NA     
+6 1505967 NCT03759223 United States NA     
+Skim summary statistics
+ n obs: 421815 
+ n variables: 4 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+ variable missing complete      n min max empty n_unique
+     name       0   421815 421815   4  44     0      213
+   nct_id       0   421815 421815  11  11     0   261340
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean        sd      p0       p25
+       id       0   421815 421815 1718378.21 122155.86 1505961 1612709.5
+     p50       p75    p100     hist
+ 1718593 1824133.5 1929634 ▇▇▇▇▇▇▇▇
+
+── Variable type:logical ───────────────────────────────────────────────────────────────
+ variable missing complete      n mean                  count
+  removed  394707    27108 421815    1 NA: 394707, TRU: 27108
+
+design_group_interventions table exists
+
+# A tibble: 6 x 4
+       id nct_id      design_group_id intervention_id
+    <int> <chr>                 <int>           <int>
+1 2122687 NCT03759301         1674041         1680364
+2 2122688 NCT03759301         1674042         1680365
+3 2122689 NCT03759288         1674044         1680366
+4 2122690 NCT03759288         1674048         1680366
+5 2122691 NCT03759288         1674043         1680367
+6 2122692 NCT03759288         1674047         1680367
+Skim summary statistics
+ n obs: 624057 
+ n variables: 4 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+ variable missing complete      n min max empty n_unique
+   nct_id       0   624057 624057  11  11     0   227757
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+        variable missing complete      n       mean        sd      p0
+ design_group_id       0   624057 624057 1928546.94 147941.72 1674041
+              id       0   624057 624057 2436212.93 180554.16 2122687
+ intervention_id       0   624057 624057 1912969.3  137883    1680364
+     p25     p50     p75    p100     hist
+ 1801507 1923609 2058397 2179914 ▇▇▇▇▇▆▇▇
+ 2279884 2436455 2592561 2748642 ▇▇▇▇▇▇▇▇
+ 1795227 1907406   2e+06 2187099 ▇▇▇▇▇▇▆▅
+
+documents table exists
+
+# A tibble: 6 x 6
+     id nct_id   document_id document_type        url              comment
+  <int> <chr>    <chr>       <chr>                <chr>            <chr>  
+1 30686 NCT0375… <NA>        Individual Particip… https://clinica… <NA>   
+2 30687 NCT0375… <NA>        Study Protocol       https://clinica… <NA>   
+3 30688 NCT0375… <NA>        Statistical Analysi… https://clinica… <NA>   
+4 30689 NCT0375… <NA>        Informed Consent Fo… https://clinica… <NA>   
+5 30690 NCT0375… <NA>        Clinical Study Repo… https://clinica… <NA>   
+6 30691 NCT0375… <NA>        Study-level clinica… https://clinica… <NA>   
+Skim summary statistics
+ n obs: 9869 
+ n variables: 6 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+      variable missing complete    n min max empty n_unique
+       comment    1013     8856 9869   8 942     0      475
+   document_id    1128     8741 9869   1  30     0     1604
+ document_type       0     9869 9869   4 177     0      244
+        nct_id       0     9869 9869  11  11     0     2343
+           url       0     9869 9869  13 885     0     1025
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete    n  mean      sd    p0   p25   p50   p75
+       id       0     9869 9869 35620 2849.08 30686 33153 35620 38087
+  p100     hist
+ 40554 ▇▇▇▇▇▇▇▇
+
+id_information table exists
+
+# A tibble: 6 x 4
+       id nct_id      id_type      id_value      
+    <int> <chr>       <chr>        <chr>         
+1 1368139 NCT03759314 org_study_id §50, 27.3.2018
+2 1368140 NCT03759301 org_study_id NRC 0214      
+3 1368141 NCT03759288 org_study_id 3150-301-008  
+4 1368143 NCT03759262 org_study_id CHLA-18-00362 
+5 1368144 NCT03759249 org_study_id SLEEPFAMS     
+6 1368145 NCT03759236 org_study_id 48789         
+Skim summary statistics
+ n obs: 402884 
+ n variables: 4 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+ variable missing complete      n min max empty n_unique
+  id_type       0   402884 402884   9  12     0        3
+ id_value       0   402884 402884   1  30     0   375140
+   nct_id       0   402884 402884  11  11     0   291081
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean     sd      p0        p25
+       id       0   402884 402884 1570360.15 116484 1368139 1469550.75
+       p50        p75    p100     hist
+ 1570435.5 1671236.25 1771995 ▇▇▇▇▇▇▇▇
 
 participant_flows table exists
 
 # A tibble: 6 x 4
-     id nct_id   recruitment_details          pre_assignment_details      
-  <int> <chr>    <chr>                        <chr>                       
-1 68842 NCT0367… ""                           ""                          
-2 68843 NCT0364… ""                           ""                          
-3 68846 NCT0358… ""                           ""                          
-4 68847 NCT0358… Participants recruited by w… ""                          
-5 68848 NCT0357… Subject recruitment occurre… Rivaroxaban was administere…
-6 68849 NCT0355… Subject recruitment occurre… 28 subjects were enrolled i…
+      id nct_id   recruitment_details          pre_assignment_details     
+   <int> <chr>    <chr>                        <chr>                      
+1 104003 NCT0367… ""                           ""                         
+2 104004 NCT0365… ""                           ""                         
+3 104005 NCT0364… ""                           ""                         
+4 104006 NCT0364… ""                           ""                         
+5 104007 NCT0361… Obese females (BMI≥30 kg/m2… Out of the 161 obese femal…
+6 104008 NCT0358… ""                           ""                         
 Skim summary statistics
- n obs: 33740 
+ n obs: 33755 
  n variables: 4 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
                variable missing complete     n min max empty n_unique
-                 nct_id       0    33740 33740  11  11     0    33740
- pre_assignment_details       0    33740 33740   0 350 20492    12882
-    recruitment_details       0    33740 33740   0 350 18630    14918
+                 nct_id       0    33755 33755  11  11     0    33755
+ pre_assignment_details       0    33755 33755   0 350 20504    12885
+    recruitment_details       0    33755 33755   0 350 18642    14921
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete     n      mean      sd    p0      p25    p50
+       id       0    33755 33755 120896.22 9749.71 1e+05 112453.5 120896
+      p75   p100     hist
+ 129340.5 137781 ▇▇▇▇▇▇▇▇
+
+baseline_counts table exists
+
+# A tibble: 6 x 7
+      id nct_id    result_group_id ctgov_group_code units     scope  count
+   <int> <chr>               <int> <chr>            <chr>     <chr>  <int>
+1 292404 NCT03670…         2573730 B1               Particip… Overa…   101
+2 292405 NCT03651…         2573734 B1               Particip… Overa…    10
+3 292406 NCT03648…         2573738 B1               Particip… Overa…     0
+4 292407 NCT03647…         2573744 B3               Particip… Overa…    32
+5 292408 NCT03647…         2573745 B2               Particip… Overa…    16
+6 292409 NCT03647…         2573746 B1               Particip… Overa…    16
+Skim summary statistics
+ n obs: 94570 
+ n variables: 7 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+         variable missing complete     n min max empty n_unique
+ ctgov_group_code       0    94570 94570   2   3     0       33
+           nct_id       0    94570 94570  11  11     0    33755
+            scope       0    94570 94570   7   7     0        1
+            units       0    94570 94570   4  28     0       43
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+        variable missing complete     n      mean        sd      p0
+           count       0    94570 94570    472.68  16606.95       0
+              id       0    94570 94570 339739.26  27316.07  292404
+ result_group_id       0    94570 94570  3e+06    240389.76 2573730
+        p25      p50        p75    p100     hist
+      17        48       140    2738161 ▇▁▁▁▁▁▁▁
+  316083.25 339740.5  363398.75  387046 ▇▇▇▇▇▇▇▇
+ 2781143.25  3e+06   3198427.75 3403195 ▇▇▇▇▇▇▇▇
+
+intervention_other_names table exists
+
+# A tibble: 6 x 4
+      id nct_id      intervention_id name      
+   <int> <chr>                 <int> <chr>     
+1 979099 NCT03759301         1680364 Cetrorelix
+2 979100 NCT03759301         1680365 Cetrorelix
+3 979101 NCT03759262         1680371 vitamin D 
+4 979102 NCT03759223         1680375 E-PST     
+5 979103 NCT03759223         1680376 Control   
+6 979104 NCT03759119         1680387 Group 1   
+Skim summary statistics
+ n obs: 253580 
+ n variables: 4 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+ variable missing complete      n min max empty n_unique
+     name       0   253580 253580   1 200     0    94594
+   nct_id       0   253580 253580  11  11     0    89249
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+        variable missing complete      n       mean        sd      p0
+              id       0   253580 253580 1106323.21  73327.24  979099
+ intervention_id       0   253580 253580 1940544.28 137571.75 1680364
+        p25       p50        p75    p100     hist
+   1e+06    1106370.5 1169830.25 1233264 ▇▇▇▇▇▇▇▇
+ 1830100.75 1944608   2053925.75 2187100 ▆▆▇▇▇▇▇▆
+
+pending_results table exists
+
+# A tibble: 6 x 5
+     id nct_id      event     event_date_description event_date
+  <int> <chr>       <chr>     <chr>                  <date>    
+1 67750 NCT03758118 submitted November 28, 2018      2018-11-28
+2 67751 NCT03745183 submitted November 28, 2018      2018-11-28
+3 67752 NCT03738020 submitted November 27, 2018      2018-11-27
+4 67753 NCT03738007 submitted November 27, 2018      2018-11-27
+5 67754 NCT03725085 submitted November 19, 2018      2018-11-19
+6 67755 NCT03723980 submitted November 4, 2018       2018-11-04
+Skim summary statistics
+ n obs: 22760 
+ n variables: 5 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+               variable missing complete     n min max empty n_unique
+                  event       0    22760 22760   8  19     0        3
+ event_date_description       0    22760 22760   7  18     0     2767
+                 nct_id       0    22760 22760  11  11     0     6810
+
+── Variable type:Date ──────────────────────────────────────────────────────────────────
+   variable missing complete     n        min        max     median
+ event_date     797    21963 22760 2008-11-20 2018-11-29 2017-08-22
+ n_unique
+     2766
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
  variable missing complete     n    mean      sd    p0      p25     p50
-       id       0    33740 33740 86093.1 9904.99 68842 77561.75 86113.5
+       id       0    22760 22760 79129.5 6570.39 67750 73439.75 79129.5
       p75  p100     hist
- 94625.25 1e+05 ▇▇▇▇▇▇▇▆
+ 84819.25 90509 ▇▇▇▇▇▇▇▇
 
-browse_interventions table exists
+brief_summaries table exists
+
+# A tibble: 6 x 3
+      id nct_id     description                                           
+   <int> <chr>      <chr>                                                 
+1 977582 NCT035012… "\n      Participants will be chosen through an initi…
+2 977583 NCT035012… "\n      The aim of this study was to evaluate the ef…
+3 977584 NCT035012… "\n      This study evaluate topical anaesthesia appl…
+4 977585 NCT035011… "\n      The investigators will use two types of mate…
+5 977586 NCT035011… "\n      Gait training in stroke is a complex process…
+6 977587 NCT035011… "\n      The purpose of this study is to document the…
+Skim summary statistics
+ n obs: 290305 
+ n variables: 3 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+    variable missing complete      n min  max empty n_unique
+ description       0   290305 290305  15 5540     0   288709
+      nct_id       0   290305 290305  11   11     0   290305
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean       sd     p0   p25     p50
+       id       0   290305 290305 1103450.49 83914.53 957837 1e+06 1103503
+     p75    p100     hist
+ 1176117 1248716 ▇▇▇▇▇▇▇▇
+
+interventions table exists
+
+# A tibble: 6 x 5
+       id nct_id  intervention_ty… name            description            
+    <int> <chr>   <chr>            <chr>           <chr>                  
+1 1683415 NCT037… Drug             Placebos        Placebo                
+2 1726400 NCT034… Drug             Placebo         Placebo QD             
+3 1680559 NCT037… Drug             TAB PIOGLITAZO… INSULIN SENSITIZING AG…
+4 1680452 NCT037… Device           High-Intensity… The High-Intensity Foc…
+5 1680453 NCT037… Drug             Apatinib        30 patients who progre…
+6 1680703 NCT037… Drug             Pomalidomide    Given PO               
+Skim summary statistics
+ n obs: 505557 
+ n variables: 5 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+          variable missing complete      n min  max empty n_unique
+       description   91615   413942 505557   1 1000     0   353593
+ intervention_type       0   505557 505557   4   19     0       11
+              name       0   505557 505557   1  200     0   250010
+            nct_id       0   505557 505557  11   11     0   258753
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete      n       mean        sd      p0     p25
+       id       0   505557 505557 1934093.63 146176.97 1680363 1807541
+     p50     p75    p100     hist
+ 1934220 2060678 2187100 ▇▇▇▇▇▇▇▇
+
+reported_events table exists
+
+# A tibble: 6 x 17
+      id nct_id result_group_id ctgov_group_code time_frame event_type
+   <int> <chr>            <int> <chr>            <chr>      <chr>     
+1 1.34e7 NCT02…         2582826 E7               Non-serio… serious   
+2 1.34e7 NCT02…         2582827 E6               Non-serio… serious   
+3 1.34e7 NCT02…         2582828 E5               Non-serio… serious   
+4 1.34e7 NCT02…         2582829 E4               Non-serio… serious   
+5 1.34e7 NCT02…         2582830 E3               Non-serio… serious   
+6 1.34e7 NCT02…         2582831 E2               Non-serio… serious   
+# ... with 11 more variables: default_vocab <chr>,
+#   default_assessment <chr>, subjects_affected <int>,
+#   subjects_at_risk <int>, description <chr>, event_count <int>,
+#   organ_system <chr>, adverse_event_term <chr>,
+#   frequency_threshold <int>, vocab <chr>, assessment <chr>
+Skim summary statistics
+ n obs: 4235622 
+ n variables: 17 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+           variable missing complete       n min max   empty n_unique
+ adverse_event_term      11  4235611 4235622   1 100       0   102702
+         assessment       0  4235622 4235622   0  25 4198499        3
+   ctgov_group_code       0  4235622 4235622   2   3       0       32
+ default_assessment       0  4235622 4235622   0  25  301758        3
+      default_vocab       0  4235622 4235622   0  20  489787     1390
+        description       0  4235622 4235622   0 500 1868019    10056
+         event_type       0  4235622 4235622   5   7       0        2
+             nct_id       0  4235622 4235622  11  11       0    33538
+       organ_system       0  4235622 4235622   5  67       0       28
+         time_frame       0  4235622 4235622   0 500 1384606    14596
+              vocab 4206829    28793 4235622   1  20       0      818
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+            variable missing complete       n          mean         sd
+         event_count 2837591  1398031 4235622       5.14         56.8 
+ frequency_threshold       0  4235622 4235622       1.49          2.23
+                  id       0  4235622 4235622       1.5e+07 1223730.61
+     result_group_id       0  4235622 4235622 3060722.14     235147.33
+   subjects_affected       2  4235620 4235622       4.72         41.42
+    subjects_at_risk    1614  4234008 4235622     526.75       1831.79
+            p0           p25           p50           p75          p100
+       0             0             1             2         22562      
+       0             0             0             5            20      
+       1.3e+07       1.4e+07       1.5e+07       1.7e+07       1.8e+07
+ 2573733       2864288       3081328       3272568       3403243      
+       0             0             1             2          9360      
+       0            19            66           244        124139      
+     hist
+ ▇▁▁▁▁▁▁▁
+ ▇▃▁▁▁▁▁▁
+ ▇▇▇▇▇▇▇▇
+ ▂▃▅▅▅▅▆▇
+ ▇▁▁▁▁▁▁▁
+ ▇▁▁▁▁▁▁▁
+
+browse_conditions table exists
 
 # A tibble: 6 x 4
-       id nct_id      mesh_term           downcase_mesh_term 
-    <int> <chr>       <chr>               <chr>              
-1 1004009 NCT02768727 Xenon               xenon              
-2 1004509 NCT00924209 Gemcitabine         gemcitabine        
-3 1004510 NCT00924209 Etoposide phosphate etoposide phosphate
-4 1004511 NCT00924209 Cisplatin           cisplatin          
-5 1004512 NCT00924209 Bevacizumab         bevacizumab        
-6 1004513 NCT00924209 Etoposide           etoposide          
+       id nct_id      mesh_term                 downcase_mesh_term       
+    <int> <chr>       <chr>                     <chr>                    
+1 1741860 NCT03742466 Carpal Tunnel Syndrome    carpal tunnel syndrome   
+2 1741861 NCT03742466 Scleroderma, Systemic     scleroderma, systemic    
+3 1741862 NCT03742466 Scleroderma, Diffuse      scleroderma, diffuse     
+4 1741863 NCT03742466 Scleroderma, Localized    scleroderma, localized   
+5 1741864 NCT03742453 Carcinoma                 carcinoma                
+6 1741865 NCT03742453 Carcinoma, Hepatocellular carcinoma, hepatocellular
 Skim summary statistics
- n obs: 300885 
+ n obs: 516751 
  n variables: 4 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
            variable missing complete      n min max empty n_unique
- downcase_mesh_term       0   300885 300885   3 161     0     3164
-          mesh_term       0   300885 300885   3 161     0     3164
-             nct_id       0   300885 300885  11  11     0   129682
+ downcase_mesh_term       0   516751 516751   4  58     0     3886
+          mesh_term       0   516751 516751   4  58     0     3886
+             nct_id       0   516751 516751  11  11     0   235322
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
- variable missing complete      n      mean       sd     p0    p25    p50
-       id       0   300885 300885 828932.45 90815.85 668402 751548 829524
-    p75  p100     hist
- 905749 1e+06 ▇▇▇▇▇▇▇▃
+ variable missing complete      n  mean        sd      p0       p25   p50
+       id       0   516751 516751 2e+06 149398.16 1739679 1869632.5 2e+06
+       p75    p100     hist
+ 2128332.5 2257562 ▇▇▇▇▇▇▇▇
 
-facilities table exists
-
-# A tibble: 6 x 8
-       id nct_id      status name  city          state     zip   country
-    <int> <chr>       <chr>  <chr> <chr>         <chr>     <chr> <chr>  
-1 7450630 NCT00501059 ""     <NA>  Thedinghausen ""        27321 Germany
-2 7450631 NCT00501059 ""     <NA>  Bishopstown   Cork      ""    Ireland
-3 7450632 NCT00501059 ""     <NA>  Kilmallock    Limerick  ""    Ireland
-4 7450633 NCT00501059 ""     <NA>  Rathkeale     Limerick  ""    Ireland
-5 7450634 NCT00501059 ""     <NA>  Tallow        Waterford ""    Ireland
-6 7450635 NCT00501059 ""     <NA>  Enniscorthy   Wexford   ""    Ireland
-Skim summary statistics
- n obs: 2076506 
- n variables: 8 
-
-── Variable type:character ─────────────────────────────────────────────────────────────
- variable missing complete       n min max   empty n_unique
-     city       0  2076506 2076506   0  63     106    58951
-  country       0  2076506 2076506   0  42     106      207
-     name  223041  1853465 2076506   1 255       0   453071
-   nct_id       0  2076506 2076506  11  11       0   256312
-    state       0  2076506 2076506   0  62  835040    10597
-   status       0  2076506 2076506   0  23 1685647        9
-      zip       0  2076506 2076506   0  30  464028    72004
-
-── Variable type:integer ───────────────────────────────────────────────────────────────
- variable missing complete       n       mean        sd      p0        p25
-       id       0  2076506 2076506 7128127.64 732584.89 5842260 6547175.25
-       p50        p75    p100     hist
- 7102151.5 7635743.75 8765638 ▆▇▇▇▇▆▂▃
-
-milestones table exists
-
-# A tibble: 6 x 8
-      id nct_id result_group_id ctgov_group_code title period description
-   <int> <chr>            <int> <chr>            <chr> <chr>  <chr>      
-1 694472 NCT03…         1699205 P1               NOT … Overa… ""         
-2 694473 NCT03…         1699205 P1               COMP… Overa… ""         
-3 694474 NCT03…         1699205 P1               STAR… Overa… ""         
-4 694475 NCT03…         1699209 P1               NOT … Overa… ""         
-5 694476 NCT03…         1699209 P1               COMP… Overa… ""         
-6 694477 NCT03…         1699209 P1               STAR… Overa… ""         
-# ... with 1 more variable: count <int>
-Skim summary statistics
- n obs: 338628 
- n variables: 8 
-
-── Variable type:character ─────────────────────────────────────────────────────────────
-         variable missing complete      n min max  empty n_unique
- ctgov_group_code       0   338628 338628   2   3      0       32
-      description       0   338628 338628   0 182 322504    10112
-           nct_id       0   338628 338628  11  11      0    33740
-           period       0   338628 338628   1  40      0     7435
-            title       0   338628 338628   2  40      0     4480
-
-── Variable type:integer ───────────────────────────────────────────────────────────────
-        variable missing complete      n       mean        sd      p0
-           count       0   338628 338628     239.46  30260.17       0
-              id       0   338628 338628  868551.95  1e+05     694472
- result_group_id       0   338628 338628 2121104.48 243872.21 1699205
-        p25       p50        p75          p100     hist
-       1         12        49          1.2e+07 ▇▁▁▁▁▁▁▁
-  782223.75  869041.5  954659.25 1051207       ▇▇▇▇▇▇▇▆
- 1909686    2121377   2325921    2573697       ▇▇▇▇▇▇▇▆
-
-result_agreements table exists
+keywords table exists
 
 # A tibble: 6 x 4
-     id nct_id   pi_employee                   agreement                  
-  <int> <chr>    <chr>                         <chr>                      
-1 68842 NCT0367… All Principal Investigators … There is NOT an agreement …
-2 68843 NCT0364… All Principal Investigators … There is NOT an agreement …
-3 68846 NCT0358… Principal Investigators are … There is NOT an agreement …
-4 68847 NCT0358… All Principal Investigators … There is NOT an agreement …
-5 68848 NCT0357… Principal Investigators are … Conducted in healthy volun…
-6 68849 NCT0355… Principal Investigators are … Conducted in healthy volun…
+       id nct_id      name              downcase_name    
+    <int> <chr>       <chr>             <chr>            
+1 3597072 NCT03394040 Diarrhea          diarrhea         
+2 3597191 NCT03307317 EEG               eeg              
+3 3597654 NCT02530658 DNA               dna              
+4 3598070 NCT00067054 Leukocyte         leukocyte        
+5 3598071 NCT00067054 Healthy Volunteer healthy volunteer
+6 3598072 NCT00067054 HV                hv               
 Skim summary statistics
- n obs: 33740 
+ n obs: 828605 
  n variables: 4 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
-    variable missing complete     n min max empty n_unique
-   agreement     734    33006 33740  15 500     0     2827
-      nct_id       0    33740 33740  11  11     0    33740
- pi_employee       0    33740 33740  82  82     0        2
+      variable missing complete      n min max empty n_unique
+ downcase_name       0   828605 828605   1 160     0   191262
+          name       0   828605 828605   1 160     0   237797
+        nct_id       0   828605 828605  11  11     0   195838
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
- variable missing complete     n    mean      sd    p0      p25     p50
-       id       0    33740 33740 86093.1 9904.99 68842 77561.75 86113.5
-      p75  p100     hist
- 94625.25 1e+05 ▇▇▇▇▇▇▇▆
+ variable missing complete      n       mean        sd      p0   p25
+       id       0   828605 828605 3183467.47 239491.58 2767839 3e+06
+     p50     p75    p100     hist
+ 3183595 3390863 3598091 ▇▇▇▇▇▇▇▇
 
 calculated_values table exists
 
 # A tibble: 6 x 16
       id nct_id number_of_facil… number_of_nsae_… number_of_sae_s…
    <int> <chr>             <int>            <int>            <int>
-1 1.98e7 NCT00…                1               NA               NA
-2 1.98e7 NCT00…                1               NA               NA
-3 1.98e7 NCT00…                1               NA               NA
-4 1.98e7 NCT00…                1               NA               NA
-5 1.98e7 NCT00…                1               NA               NA
-6 1.98e7 NCT00…                1               NA               NA
+1 2.01e7 NCT03…               NA               NA               NA
+2 2.01e7 NCT03…                4               NA               NA
+3 2.01e7 NCT03…                2               NA               NA
+4 2.01e7 NCT03…               NA               NA               NA
+5 2.01e7 NCT03…               NA               NA               NA
+6 2.01e7 NCT03…               NA               NA               NA
 # ... with 11 more variables: registered_in_calendar_year <int>,
 #   nlm_download_date <date>, actual_duration <int>,
 #   were_results_reported <lgl>, months_to_report_results <int>,
@@ -1452,133 +1392,153 @@ calculated_values table exists
 #   minimum_age_num <int>, maximum_age_num <int>, minimum_age_unit <chr>,
 #   maximum_age_unit <chr>
 Skim summary statistics
- n obs: 291016 
+ n obs: 291109 
  n variables: 16 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
          variable missing complete      n min max empty n_unique
- maximum_age_unit  139410   151606 291016   4   8     0       12
- minimum_age_unit   24666   266350 291016   5   7     0        6
-           nct_id       0   291016 291016  11  11     0   291016
+ maximum_age_unit  139449   151660 291109   4   8     0       12
+ minimum_age_unit   24676   266433 291109   5   7     0        6
+           nct_id       0   291109 291109  11  11     0   291109
 
 ── Variable type:Date ──────────────────────────────────────────────────────────────────
           variable missing complete      n        min        max
- nlm_download_date       0   291016 291016 2018-10-31 2018-11-29
+ nlm_download_date       0   291109 291109 2018-11-30 2018-11-30
      median n_unique
- 2018-10-31       16
+ 2018-11-30        1
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
                     variable missing complete      n     mean       sd
-             actual_duration  125437   165579 291016    27.52    27.16
-                          id       0   291016 291016 2e+07    84009.23
-             maximum_age_num  139410   151606 291016    59.4     31.98
-             minimum_age_num   24666   266350 291016    20.15    11.13
-    months_to_report_results  257362    33654 291016    27.36    25.18
-        number_of_facilities   34704   256312 291016     8.1     38.07
-     number_of_nsae_subjects  257493    33523 291016   496.77  2014.65
-      number_of_sae_subjects  257493    33523 291016    99.68   869.1 
- registered_in_calendar_year       0   291016 291016  2012.1      4.47
-    p0   p25   p50   p75  p100     hist
-     0     9    20    37   732 ▇▁▁▁▁▁▁▁
- 2e+07 2e+07 2e+07 2e+07 2e+07 ▇▇▇▇▇▇▇▇
-     1    45    65    75  6569 ▇▁▁▁▁▁▁▁
-     1    18    18    18   730 ▇▁▁▁▁▁▁▁
-  -200    11    18    36   287 ▁▁▁▇▂▁▁▁
-     1     1     1     2  3511 ▇▁▁▁▁▁▁▁
-     0     0    53   301 79635 ▇▁▁▁▁▁▁▁
-     0     0     4    34 73542 ▇▁▁▁▁▁▁▁
-  1999  2009  2013  2016  2018 ▁▁▂▃▃▆▅▇
+             actual_duration  125493   165616 291109    27.52    27.16
+                          id       0   291109 291109 2e+07    84036.07
+             maximum_age_num  139449   151660 291109    59.4     31.98
+             minimum_age_num   24676   266433 291109    20.15    11.13
+    months_to_report_results  257439    33670 291109    27.36    25.18
+        number_of_facilities   34724   256385 291109     8.1     38.07
+     number_of_nsae_subjects  257571    33538 291109   496.77  2014.3 
+      number_of_sae_subjects  257571    33538 291109    99.66   868.91
+ registered_in_calendar_year       0   291109 291109  2012.11     4.47
+    p0   p25   p50      p75  p100     hist
+     0     9    20    37      732 ▇▁▁▁▁▁▁▁
+ 2e+07 2e+07 2e+07 2e+07    2e+07 ▇▇▇▇▇▇▇▇
+     1    45    65    75     6569 ▇▁▁▁▁▁▁▁
+     1    18    18    18      730 ▇▁▁▁▁▁▁▁
+  -200    11    18    36.75   287 ▁▁▁▇▂▁▁▁
+     1     1     1     2     3511 ▇▁▁▁▁▁▁▁
+     0     0    53   301    79635 ▇▁▁▁▁▁▁▁
+     0     0     4    34    73542 ▇▁▁▁▁▁▁▁
+  1999  2009  2013  2016     2018 ▁▁▂▃▃▆▅▇
 
 ── Variable type:logical ───────────────────────────────────────────────────────────────
               variable missing complete      n mean
-   has_single_facility       0   291016 291016 0.61
-       has_us_facility   34718   256298 291016 0.46
- were_results_reported       0   291016 291016 0.12
+   has_single_facility       0   291109 291109 0.61
+       has_us_facility   34738   256371 291109 0.46
+ were_results_reported       0   291109 291109 0.12
                                count
-     TRU: 177255, FAL: 113761, NA: 0
- FAL: 139483, TRU: 116815, NA: 34718
-      FAL: 257276, TRU: 33740, NA: 0
+     TRU: 177308, FAL: 113801, NA: 0
+ FAL: 139534, TRU: 116837, NA: 34738
+      FAL: 257354, TRU: 33755, NA: 0
 
-facility_contacts table exists
+links table exists
 
-# A tibble: 6 x 7
-       id nct_id  facility_id contact_type name      email       phone    
-    <int> <chr>         <int> <chr>        <chr>     <chr>       <chr>    
-1 1575970 NCT037…     8278096 primary      Rose Gal… rose.galvi… 234149   
-2 1575971 NCT037…     8278098 primary      Elisa Sa… mesanchezb… +34 923 …
-3 1575972 NCT037…     8278098 backup       Carmen A… ensayoscli… +3492321…
-4 1639779 NCT037…     8435821 primary      Sanjay R… sanjay.raj… 216-844-…
-5 1639780 NCT037…     8435823 primary      Chuangzh… stccz@139.… 86-13923…
-6 1639781 NCT037…     8435823 backup       Jianzhou… cjzeoeo@gm… 86-13417…
+# A tibble: 6 x 4
+      id nct_id   url                        description                  
+   <int> <chr>    <chr>                      <chr>                        
+1 176241 NCT0375… https://doi.org/10.1161/C… GUSTO bleeding               
+2 176242 NCT0375… http://moffitt.org/clinic… Moffitt Cancer Center Clinic…
+3 176243 NCT0375… https://www.cma.ca/En/Lis… The State of Seniors Health …
+4 176244 NCT0375… http://www.hpcintegration… What Canadians Say: The Way …
+5 176245 NCT0375… https://tspace.library.ut… Episodes of Relationship Com…
+6 176247 NCT0375… https://www.ncbi.nlm.nih.… Rationale and evidence for t…
 Skim summary statistics
- n obs: 255908 
- n variables: 7 
+ n obs: 50716 
+ n variables: 4 
+
+── Variable type:character ─────────────────────────────────────────────────────────────
+    variable missing complete     n min max empty n_unique
+ description    4992    45724 50716   1 254     0    19285
+      nct_id       0    50716 50716  11  11     0    37901
+         url       0    50716 50716  12 853     0    25227
+
+── Variable type:integer ───────────────────────────────────────────────────────────────
+ variable missing complete     n  mean       sd     p0       p25   p50
+       id       0    50716 50716 2e+05 14666.74 176241 189043.75 2e+05
+       p75   p100     hist
+ 214431.25 227120 ▇▇▇▇▇▇▇▇
+
+central_contacts table exists
+
+# A tibble: 6 x 6
+      id nct_id    contact_type name            phone     email           
+   <int> <chr>     <chr>        <chr>           <chr>     <chr>           
+1 407012 NCT03759… primary      Marja Mäkinen,… +3587754… marja.makinen@h…
+2 407013 NCT03759… backup       Maaret Castrén… <NA>      maaret.castren@…
+3 407014 NCT03759… primary      Emad RH Issak,… +2012722… dr.emad.r.h.iss…
+4 407015 NCT03759… backup       Mohamed M Shaf… +2010016… drmshafeek44@ho…
+5 407016 NCT03759… primary      Clinical Trial… 877-277-… IR-CTRegistrati…
+6 407018 NCT03759… primary      Sandy Tran      (323) 36… satran@chla.usc…
+Skim summary statistics
+ n obs: 113033 
+ n variables: 6 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
      variable missing complete      n min max empty n_unique
- contact_type       0   255908 255908   6   7     0        2
-        email   77945   177963 255908   8  85     0   103813
-         name    6927   248981 255908   1 108     0   150131
-       nct_id       0   255908 255908  11  11     0    64752
-        phone   68611   187297 255908   1  37     0    99531
+ contact_type       0   113033 113033   6   7     0        2
+        email    3908   109125 113033   8  68     0    78177
+         name       0   113033 113033   1 131     0    90095
+       nct_id       0   113033 113033  11  11     0    75977
+        phone    8483   104550 113033   1  44     0    77035
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
-    variable missing complete      n       mean        sd      p0
- facility_id       0   255908 255908 6805365.23  1e+06    5842261
-          id       0   255908 255908 1410424.42 163326.41 1199886
-        p25       p50        p75    p100     hist
-   6e+06    6310313.5 7484617.25 8765637 ▇▃▂▁▁▁▁▃
- 1288081.75 1372322.5 1447390.25 1763507 ▇▇▇▆▁▁▂▅
+ variable missing complete      n      mean       sd     p0    p25    p50
+       id       0   113033 113033 463860.24 32736.71 407012 435535 463905
+    p75   p100     hist
+ 492210 520501 ▇▇▇▇▇▇▇▇
 
-baseline_counts table exists
+mesh_headings table exists
 
-# A tibble: 6 x 7
-      id nct_id    result_group_id ctgov_group_code units     scope  count
-   <int> <chr>               <int> <chr>            <chr>     <chr>  <int>
-1 193306 NCT03670…         1699204 B1               Particip… Overa…   101
-2 193307 NCT03648…         1699208 B1               Particip… Overa…     0
-3 193316 NCT03585…         1699274 B3               Particip… Overa…    81
-4 193317 NCT03585…         1699275 B2               Particip… Overa…    40
-5 193318 NCT03585…         1699276 B1               Particip… Overa…    41
-6 193319 NCT03582…         1699287 B3               Particip… Overa…    69
+# A tibble: 6 x 4
+     id qualifier heading                subcategory                      
+  <int> <chr>     <chr>                  <chr>                            
+1     1 ""        ""                     2017 MeSH Headings by Subcategory
+2     2 A02       Musculoskeletal System Abdominal Oblique Muscles        
+3     3 A02       Musculoskeletal System Annulus Fibrosus                 
+4     4 A02       Musculoskeletal System Aponeurosis                      
+5     5 A02       Musculoskeletal System Collateral Ligament, Ulnar       
+6     6 A02       Musculoskeletal System Coracoid Process                 
 Skim summary statistics
- n obs: 94508 
- n variables: 7 
+ n obs: 3636 
+ n variables: 4 
 
 ── Variable type:character ─────────────────────────────────────────────────────────────
-         variable missing complete     n min max empty n_unique
- ctgov_group_code       0    94508 94508   2   3     0       33
-           nct_id       0    94508 94508  11  11     0    33740
-            scope       0    94508 94508   7   7     0        1
-            units       0    94508 94508   4  28     0       43
+    variable missing complete    n min max empty n_unique
+     heading       0     3636 3636   0  63     4       88
+   qualifier       0     3636 3636   0   3     4       88
+ subcategory       0     3636 3636   0  68    12      632
 
 ── Variable type:integer ───────────────────────────────────────────────────────────────
-        variable missing complete     n       mean        sd      p0
-           count       0    94508 94508     472.94  16612.39       0
-              id       0    94508 94508  241817.09  27842.27  193306
- result_group_id       0    94508 94508 2125591.68 244775.35 1699204
-        p25       p50        p75    p100     hist
-      17         48       140    2738161 ▇▁▁▁▁▁▁▁
-  217873.75  241915.5  265783.25  292403 ▇▇▇▇▇▇▇▆
- 1914725.25 2126580.5 2334475.75 2573695 ▇▇▇▇▇▇▇▆
+ variable missing complete    n   mean      sd p0    p25    p50     p75
+       id       0     3636 3636 1818.5 1049.77  1 909.75 1818.5 2727.25
+ p100     hist
+ 3636 ▇▇▇▇▇▇▇▇
 
 mesh_terms table exists
 
 # A tibble: 6 x 6
       id qualifier tree_number description mesh_term     downcase_mesh_te…
    <int> <chr>     <chr>       <chr>       <chr>         <chr>            
-1 117489 A01       A01         <NA>        Body Regions  body regions     
-2 117490 A01       A01.111     <NA>        Anatomic Lan… anatomic landmar…
-3 117491 A01       A01.236     <NA>        Breast        breast           
-4 117492 A01       A01.236.249 <NA>        Mammary Glan… mammary glands, …
-5 117493 A01       A01.236.500 <NA>        Nipples       nipples          
-6 117494 A01       A01.378     <NA>        Extremities   extremities      
+1 176233 A01       A01         <NA>        Body Regions  body regions     
+2 176234 A01       A01.111     <NA>        Anatomic Lan… anatomic landmar…
+3 176235 A01       A01.236     <NA>        Breast        breast           
+4 176236 A01       A01.236.249 <NA>        Mammary Glan… mammary glands, …
+5 176237 A01       A01.236.500 <NA>        Nipples       nipples          
+6 176238 A01       A01.378     <NA>        Extremities   extremities      
 ```
 
     Warning in min(characters, na.rm = TRUE): no non-missing arguments to min;
     returning Inf
-    
-    Warning in min(characters, na.rm = TRUE): no non-missing arguments to max;
+
+    Warning in max(characters, na.rm = TRUE): no non-missing arguments to max;
     returning -Inf
 
     Skim summary statistics
@@ -1595,264 +1555,311 @@ mesh_terms table exists
     
     ── Variable type:integer ───────────────────────────────────────────────────────────────
      variable missing complete     n     mean       sd     p0       p25
-           id       0    58744 58744 146860.5 16958.08 117489 132174.75
+           id       0    58744 58744 205604.5 16958.08 176233 190918.75
           p50       p75   p100     hist
-     146860.5 161546.25 176232 ▇▇▇▇▇▇▇▇
+     205604.5 220290.25 234976 ▇▇▇▇▇▇▇▇
     
-    design_group_interventions table exists
+    milestones table exists
     
-    # A tibble: 6 x 4
-           id nct_id      design_group_id intervention_id
-        <int> <chr>                 <int>           <int>
-    1 1411130 NCT03725228         1112406         1116946
-    2 1411131 NCT03725228         1112407         1116947
-    3 1411132 NCT03725215         1112408         1116948
-    4 1411133 NCT03725215         1112409         1116948
-    5 1411134 NCT03725215         1112410         1116948
-    6 1411135 NCT03725215         1112411         1116948
+    # A tibble: 6 x 8
+          id nct_id result_group_id ctgov_group_code title period description
+       <int> <chr>            <int> <chr>            <chr> <chr>  <chr>      
+    1 1.05e6 NCT03…         2573731 P1               NOT … Overa… ""         
+    2 1.05e6 NCT03…         2573731 P1               COMP… Overa… ""         
+    3 1.05e6 NCT03…         2573731 P1               STAR… Overa… ""         
+    4 1.05e6 NCT03…         2573735 P1               NOT … Overa… ""         
+    5 1.05e6 NCT03…         2573735 P1               COMP… Overa… ""         
+    6 1.05e6 NCT03…         2573735 P1               STAR… Overa… ""         
+    # ... with 1 more variable: count <int>
     Skim summary statistics
-     n obs: 623840 
-     n variables: 4 
+     n obs: 338769 
+     n variables: 8 
     
     ── Variable type:character ─────────────────────────────────────────────────────────────
-     variable missing complete      n min max empty n_unique
-       nct_id       0   623840 623840  11  11     0   227671
+             variable missing complete      n min max  empty n_unique
+     ctgov_group_code       0   338769 338769   2   3      0       32
+          description       0   338769 338769   0 182 322645    10112
+               nct_id       0   338769 338769  11  11      0    33755
+               period       0   338769 338769   1  40      0     7438
+                title       0   338769 338769   2  40      0     4480
     
     ── Variable type:integer ───────────────────────────────────────────────────────────────
             variable missing complete      n       mean        sd      p0
-     design_group_id       0   623840 623840 1385648.17 155551.28 1112406
-                  id       0   623840 623840 1748670.95 191335.01 1411130
-     intervention_id       0   623840 623840 1369563.86 149555.3  1116946
-            p25       p50        p75    p100     hist
-     1253180.75 1382618.5 1520913    1673801 ▇▇▇▇▇▇▇▅
-     1585660.75 1749736.5 1909252.25 2122428 ▇▇▇▇▇▇▇▃
-     1244074    1361972.5 1487282    1680168 ▇▇▇▇▇▇▅▃
+               count       0   338769 338769     239.38  30253.87       0
+                  id       0   338769 338769 1220732.39  97839.09 1051208
+     result_group_id       0   338769 338769   3e+06    238188.04 2573731
+         p25     p50     p75          p100     hist
+           1      12      49       1.2e+07 ▇▁▁▁▁▁▁▁
+     1135993 1220742 1305471 1390175       ▇▇▇▇▇▇▇▇
+     2778233   3e+06 3187662 3403198       ▇▇▇▇▇▇▇▇
     
-    intervention_other_names table exists
+    outcome_analyses table exists
     
-    # A tibble: 6 x 4
-          id nct_id      intervention_id name                       
-       <int> <chr>                 <int> <chr>                      
-    1 648347 NCT03725085         1116959 Guaifenesin bi-layer tablet
-    2 648348 NCT03725059         1116961 MK-3475                    
-    3 648349 NCT03725059         1116961 KEYTRUDA®                  
-    4 648350 NCT03725059         1116963 TAXOL®                     
-    5 648351 NCT03725059         1116964 ADRIAMYCIN®                
-    6 648352 NCT03725059         1116965 ELLENCE®                   
+    # A tibble: 6 x 22
+          id nct_id outcome_id non_inferiority… non_inferiority… param_type
+       <int> <chr>       <int> <chr>            <chr>            <chr>     
+    1 436064 NCT03…     779334 Superiority      ""               ""        
+    2 436065 NCT03…     779334 Other            ""               ""        
+    3 436066 NCT03…     779335 Superiority      ""               ""        
+    4 436067 NCT03…     779335 Superiority      ""               ""        
+    5 436068 NCT03…     779335 Other            ""               ""        
+    6 436069 NCT03…     779336 Superiority      ""               ""        
+    # ... with 16 more variables: param_value <dbl>, dispersion_type <chr>,
+    #   dispersion_value <dbl>, p_value_modifier <chr>, p_value <dbl>,
+    #   ci_n_sides <chr>, ci_percent <dbl>, ci_lower_limit <dbl>,
+    #   ci_upper_limit <dbl>, ci_upper_limit_na_comment <chr>,
+    #   p_value_description <chr>, method <chr>, method_description <chr>,
+    #   estimate_description <chr>, groups_description <chr>,
+    #   other_analysis_description <chr>
     Skim summary statistics
-     n obs: 253561 
-     n variables: 4 
+     n obs: 139260 
+     n variables: 22 
     
     ── Variable type:character ─────────────────────────────────────────────────────────────
-     variable missing complete      n min max empty n_unique
-         name       0   253561 253561   1 200     0    94567
-       nct_id       0   253561 253561  11  11     0    89225
+                        variable missing complete      n min max  empty
+                      ci_n_sides       0   139260 139260   0   7  61256
+       ci_upper_limit_na_comment       0   139260 139260   0 174 139219
+                 dispersion_type       0   139260 139260   0  26 113289
+            estimate_description       0   139260 139260   0 250 108799
+              groups_description       0   139260 139260   0 500  59727
+                          method       0   139260 139260   0  40  24742
+              method_description       0   139260 139260   0 150 107071
+                          nct_id       0   139260 139260  11  11      0
+     non_inferiority_description       0   139260 139260   0 500 127924
+            non_inferiority_type       0   139260 139260   5  30      0
+      other_analysis_description       0   139260 139260   0 988 138845
+             p_value_description       0   139260 139260   0 250  97752
+                p_value_modifier  100581    38679 139260   1   2      0
+                      param_type       0   139260 139260   0  40  46261
+     n_unique
+            3
+            9
+            3
+         8742
+        38164
+         2104
+         6707
+        11957
+         4065
+            6
+          253
+        11222
+           10
+         3268
     
     ── Variable type:integer ───────────────────────────────────────────────────────────────
-            variable missing complete      n       mean        sd      p0
-                  id       0   253561 253561  793144.7   84286.12  648347
-     intervention_id       0   253561 253561 1406342.61 150196.18 1116959
-         p25     p50     p75    p100     hist
-      723277  791740  857794  979040 ▇▇▇▇▇▇▂▃
-     1287229 1409722 1525205 1680168 ▅▆▆▇▇▇▆▅
-    
-    outcome_measurements table exists
-    
-    # A tibble: 6 x 19
-          id nct_id outcome_id result_group_id ctgov_group_code classification
-       <int> <chr>       <int>           <int> <chr>            <chr>         
-    1 3.81e6 NCT02…     516671         1705321 O1               Preferred sma…
-    2 3.81e6 NCT02…     516681         1705366 O1               ""            
-    3 3.81e6 NCT02…     516673         1705325 O1               AOM Diagnosed 
-    4 3.81e6 NCT02…     516674         1705326 O2               Unknown       
-    5 3.81e6 NCT02…     516674         1705327 O1               Unknown       
-    6 3.81e6 NCT02…     516674         1705326 O2               Antibiotic no…
-    # ... with 13 more variables: category <chr>, title <chr>,
-    #   description <chr>, units <chr>, param_type <chr>, param_value <chr>,
-    #   param_value_num <dbl>, dispersion_type <chr>, dispersion_value <chr>,
-    #   dispersion_value_num <dbl>, dispersion_lower_limit <dbl>,
-    #   dispersion_upper_limit <dbl>, explanation_of_na <chr>
-    Skim summary statistics
-     n obs: 1831950 
-     n variables: 19 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-              variable missing complete       n min max   empty n_unique
-              category      12  1831938 1831950   0  50 1788131     2811
-        classification       0  1831950 1831950   0  50  346795   354197
-      ctgov_group_code      12  1831938 1831950   2   3       0       39
-           description       0  1831950 1831950   0 999  109163   173425
-       dispersion_type       0  1831950 1831950   0  34  877207       23
-      dispersion_value 1160281   671669 1831950   1  14       0    93395
-     explanation_of_na      12  1831938 1831950   0 250 1797596     5026
-                nct_id       0  1831950 1831950  11  11       0    32562
-            param_type       0  1831950 1831950   0  28     303       10
-           param_value      12  1831938 1831950   1  14       0   105963
-                 title       0  1831950 1831950   2 255       0   192040
-                 units       0  1831950 1831950   0  40     384    20912
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-            variable missing complete       n       mean        sd      p0
-                  id       0  1831950 1831950 4748609.67 543242.56 3800909
-          outcome_id       0  1831950 1831950  645226.25  74351.69  514878
-     result_group_id      12  1831938 1831950 2131429.9  245612.81 1699206
-            p25       p50        p75    p100     hist
-     4283204.25 4751204.5 5213653.75 5745516 ▇▇▇▇▇▇▇▆
-      581901     646518    708810     779325 ▇▇▇▇▇▇▇▆
-     1921674    2136561.5 2343741    2573727 ▇▇▇▇▇▇▇▆
+       variable missing complete      n      mean       sd     p0       p25
+             id       0   139260 139260 505716.38 40210.61 436064 470893.75
+     outcome_id       0   139260 139260 910390.94 72740.63 779334 849845   
+          p50       p75   p100     hist
+     505719.5 540541.25 575367 ▇▇▇▇▇▇▇▇
+     910586   976671.25  1e+06 ▆▆▆▇▆▆▇▇
     
     ── Variable type:numeric ───────────────────────────────────────────────────────────────
-                   variable missing complete       n        mean          sd
-     dispersion_lower_limit 1555627   276323 1831950 1e+05           2.4e+07
-     dispersion_upper_limit 1559371   272579 1831950     1.2e+09     3.3e+11
-       dispersion_value_num 1160794   671156 1831950 55710.15        1.7e+07
-            param_value_num   22676  1809274 1831950 16473.55    1e+07      
-                 p0  p25   p50   p75        p100     hist
-     -3724434       0.33  4.9  46.7  6e+09       ▇▁▁▁▁▁▁▁
-      -172230.54    3.3  22.84 91.6      1.3e+14 ▇▁▁▁▁▁▁▁
-       -10966.01    0.75  3.66 17.25     1.3e+10 ▇▁▁▁▁▁▁▁
-           -4.1e+08 0     4    31.6      6.4e+09 ▇▁▁▁▁▁▁▁
+             variable missing complete      n    mean        sd         p0
+       ci_lower_limit   51884    87376 139260  -51.35   4193.87 -855009   
+           ci_percent   49709    89551 139260   94.19      4.12     -42.88
+       ci_upper_limit   52203    87057 139260  320.51  38705.86  -20139   
+     dispersion_value  113289    25971 139260   17.81    457.09      -1.6 
+              p_value   24742   114518 139260    0.44      6.4      -30.79
+          param_value   46261    92999 139260 2158.2  630389.64  -63419.4 
+        p25   p50   p75        p100     hist
+     -2.76  -0.13  0.8  75583.74    ▁▁▁▁▁▁▁▇
+     95     95    95      595       ▁▇▁▁▁▁▁▁
+      0.19   1.29  6.42 1e+07       ▇▁▁▁▁▁▁▁
+      0.13   0.58  2.92 34677.86    ▇▁▁▁▁▁▁▁
+      0.001  0.07  0.46  1789       ▇▁▁▁▁▁▁▁
+     -0.4    0.43  1.94     1.9e+08 ▇▁▁▁▁▁▁▁
     
-    sponsors table exists
+    design_groups table exists
     
     # A tibble: 6 x 5
-           id nct_id    agency_class lead_or_collabora… name                  
-        <int> <chr>     <chr>        <chr>              <chr>                 
-    1 1081897 NCT03090… Other        lead               Ad scientiam          
-    2 1002601 NCT03725… Other        lead               Brasilia University H…
-    3 1002602 NCT03725… Other        lead               KU Leuven             
-    4 1002603 NCT03725… Other        collaborator       University of Kiel    
-    5 1002604 NCT03725… Industry     lead               AbbVie                
-    6 1002605 NCT03725… Other        lead               University of Califor…
+           id nct_id  group_type   title          description                 
+        <int> <chr>   <chr>        <chr>          <chr>                       
+    1 1674606 NCT037… Active Comp… patients with… <NA>                        
+    2 1686512 NCT036… Placebo Com… C1-2           <NA>                        
+    3 1674607 NCT037… Sham Compar… patients with… <NA>                        
+    4 1674041 NCT037… Active Comp… Growth Hormon… Growth hormone (Somatropin)…
+    5 1674042 NCT037… Placebo Com… Placebo salin… Control group consisting of…
+    6 1674043 NCT037… Experimental (Stage 1) Bra… Intravenous Brazikumab on D…
     Skim summary statistics
-     n obs: 460784 
+     n obs: 504711 
      n variables: 5 
     
     ── Variable type:character ─────────────────────────────────────────────────────────────
-                 variable missing complete      n min max empty n_unique
-             agency_class     803   459981 460784   3   8     0        4
-     lead_or_collaborator       0   460784 460784   4  12     0        2
-                     name       0   460784 460784   2 160     0    53010
-                   nct_id       0   460784 460784  11  11     0   291016
+        variable missing complete      n min max empty n_unique
+     description   70351   434360 504711   1 999     0   402782
+      group_type   65336   439375 504711   4  20     0        9
+          nct_id       0   504711 504711  11  11     0   243367
+           title       0   504711 504711   1  62     0   304351
     
     ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n       mean        sd    p0        p25
-           id       0   460784 460784 1246106.21 138433.92 1e+06 1127453.75
-           p50        p75    p100     hist
-     1246964.5 1363871.25 1509356 ▇▇▇▇▇▇▇▅
+     variable missing complete      n    mean        sd      p0       p25
+           id       0   504711 504711 1927337 145926.62 1674041 1801057.5
+         p50       p75    p100     hist
+     1927464 2053703.5 2179915 ▇▇▇▇▇▇▇▇
     
-    conditions table exists
-    
-    # A tibble: 6 x 4
-           id nct_id     name                      downcase_name              
-        <int> <chr>      <chr>                     <chr>                      
-    1 1620863 NCT032268… Gout                      gout                       
-    2 1621767 NCT019208… Glaucoma                  glaucoma                   
-    3 1622102 NCT000012… Movement Disorder         movement disorder          
-    4 1622103 NCT000013… Immunologic Deficiency S… immunologic deficiency syn…
-    5 1622104 NCT000013… Infection                 infection                  
-    6 1359941 NCT014461… Human Papilloma Virus In… human papilloma virus infe…
-    Skim summary statistics
-     n obs: 476700 
-     n variables: 4 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-          variable missing complete      n min max empty n_unique
-     downcase_name       0   476700 476700   2 160     0    73216
-              name       0   476700 476700   2 160     0    74395
-            nct_id       0   476700 476700  11  11     0   290202
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n       mean        sd      p0        p25
-           id       0   476700 476700 1331816.95 145836.23 1076209 1207430.75
-           p50        p75    p100     hist
-     1332163.5 1453727.25 1622104 ▇▇▇▇▇▇▇▃
-    
-    detailed_descriptions table exists
-    
-    # A tibble: 6 x 3
-          id nct_id     description                                           
-       <int> <chr>      <chr>                                                 
-    1 431173 NCT034294… "\n      Human papillomavirus (HPV) vaccines have pot…
-    2 431174 NCT034293… "\n      Progress in psychiatry will require better m…
-    3 431175 NCT034293… "\n      An initial four firefighters will be evaluat…
-    4 431264 NCT034276… "\n      After enrolled in this study, the patient wa…
-    5 431176 NCT034293… "\n      Many adolescents and young adults living wit…
-    6 431178 NCT034293… "\n      A hundred patients with the American Society…
-    Skim summary statistics
-     n obs: 188328 
-     n variables: 3 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-        variable missing complete      n min   max empty n_unique
-     description       0   188328 188328  13 37641     0   186954
-          nct_id       0   188328 188328  11    11     0   188328
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete      n      mean       sd     p0       p25
-           id       0   188328 188328 514872.82 56904.79 415251 466127.75
-          p50       p75   p100     hist
-     515027.5 562980.25 625988 ▇▇▇▇▇▇▇▃
-    
-    links table exists
-    
-    # A tibble: 6 x 4
-          id nct_id   url                        description                  
-       <int> <chr>    <chr>                      <chr>                        
-    1 117167 NCT0372… http://cumming.ucalgary.c… Study description            
-    2 117169 NCT0372… https://www.crd.york.ac.u… Assessment methods and level…
-    3 117170 NCT0372… https://www.crd.york.ac.u… Psycho-educational intervent…
-    4 117171 NCT0372… https://www.crd.york.ac.u… Impact of psycho-educational…
-    5 117178 NCT0372… http://www.strokesregistr… registry website             
-    6 117179 NCT0372… http://www.egyptianstroke… Egyptian Stroke Network -Ale…
-    Skim summary statistics
-     n obs: 50805 
-     n variables: 4 
-    
-    ── Variable type:character ─────────────────────────────────────────────────────────────
-        variable missing complete     n min max empty n_unique
-     description    5008    45797 50805   1 254     0    19319
-          nct_id       0    50805 50805  11  11     0    37960
-             url       0    50805 50805  12 853     0    25278
-    
-    ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete     n      mean       sd     p0    p25    p50
-           id       0    50805 50805 144991.64 15653.14 117167 131814 145047
-        p75   p100     hist
-     157956 176227 ▇▇▇▇▇▇▇▃
-    
-    pending_results table exists
+    outcome_analysis_groups table exists
     
     # A tibble: 6 x 5
-         id nct_id      event     event_date_description event_date
-      <int> <chr>       <chr>     <chr>                  <date>    
-    1 44871 NCT03700671 submitted October 10, 2018       2018-10-10
-    2 44872 NCT03693950 submitted October 8, 2018        2018-10-08
-    3 44873 NCT03685396 submitted September 26, 2018     2018-09-26
-    4 44874 NCT03671655 submitted October 16, 2018       2018-10-16
-    5 44875 NCT03662334 submitted October 10, 2018       2018-10-10
-    6 44876 NCT03657407 submitted September 6, 2018      2018-09-06
+          id nct_id      outcome_analysis_id result_group_id ctgov_group_code
+       <int> <chr>                     <int>           <int> <chr>           
+    1 842502 NCT03615534              436064         2573768 O4              
+    2 842503 NCT03615534              436064         2573769 O3              
+    3 842504 NCT03615534              436064         2573770 O2              
+    4 842505 NCT03615534              436064         2573771 O1              
+    5 842506 NCT03615534              436065         2573768 O4              
+    6 842507 NCT03615534              436065         2573769 O3              
     Skim summary statistics
-     n obs: 21259 
+     n obs: 269031 
      n variables: 5 
     
     ── Variable type:character ─────────────────────────────────────────────────────────────
-                   variable missing complete     n min max empty n_unique
-                      event       0    21259 21259   8  19     0        3
-     event_date_description       0    21259 21259   7  18     0     2741
-                     nct_id       0    21259 21259  11  11     0     6440
+             variable missing complete      n min max empty n_unique
+     ctgov_group_code       0   269031 269031   2   3     0       39
+               nct_id       0   269031 269031  11  11     0    11957
     
-    ── Variable type:Date ──────────────────────────────────────────────────────────────────
-       variable missing complete     n        min        max     median
-     event_date     798    20461 21259 2008-11-20 2018-11-28 2017-06-23
+    ── Variable type:integer ───────────────────────────────────────────────────────────────
+                variable missing complete      n      mean        sd      p0
+                      id       0   269031 269031 977058.64  77679.81  842502
+     outcome_analysis_id       0   269031 269031 505638.98  40221.68  436064
+         result_group_id       0   269031 269031  3e+06    240932.18 2573768
+           p25    p50       p75    p100     hist
+      909789.5 977063   1e+06   1111617 ▇▇▇▇▇▇▇▇
+      470602.5 505926  540228.5  575367 ▇▇▇▇▇▇▇▇
+     2805680    3e+06 3228488   3403240 ▆▆▆▇▆▆▇▇
+    
+    design_outcomes table exists
+    
+    # A tibble: 6 x 7
+           id nct_id  outcome_type measure  time_frame population description 
+        <int> <chr>   <chr>        <chr>    <chr>      <chr>      <chr>       
+    1 4939633 NCT037… primary      Summary… Days 0-14… <NA>       Summary of …
+    2 4939634 NCT037… secondary    Subject… Days 0-28… <NA>       Subjects ex…
+    3 4939635 NCT037… secondary    Subject… Day 0 - a… <NA>       Subjects ex…
+    4 4939636 NCT037… secondary    Subject… Days 0 - … <NA>       Subject exp…
+    5 4939637 NCT037… secondary    Proport… Days 0, 2… <NA>       Determinati…
+    6 4939638 NCT037… secondary    Final O… Days 0, 2… <NA>       Determinati…
+
+    Warning in min(characters, na.rm = TRUE): no non-missing arguments to min;
+    returning Inf
+    
+    Warning in min(characters, na.rm = TRUE): no non-missing arguments to max;
+    returning -Inf
+
+    Skim summary statistics
+     n obs: 1449626 
+     n variables: 7 
+    
+    ── Variable type:character ─────────────────────────────────────────────────────────────
+         variable missing complete       n min  max empty n_unique
+      description  508666   940960 1449626   1  999     0   789578
+          measure       0  1449626 1449626   1  255     0  1076593
+           nct_id       0  1449626 1449626  11   11     0   273855
+     outcome_type       0  1449626 1449626   5    9     0        3
+       population 1449626        0 1449626 Inf -Inf     0        0
+       time_frame   54051  1395575 1449626   1  255     0   335017
+    
+    ── Variable type:integer ───────────────────────────────────────────────────────────────
+     variable missing complete       n       mean     sd      p0        p25
+           id       0  1449626 1449626 5648293.66 419408 4919736 5285462.25
+           p50   p75    p100     hist
+     5648743.5 6e+06 6374006 ▇▇▇▇▇▇▇▇
+    
+    designs table exists
+    
+    # A tibble: 6 x 14
+          id nct_id allocation intervention_mo… observational_m…
+       <int> <chr>  <chr>      <chr>            <chr>           
+    1 960538 NCT03… <NA>       Single Group As… <NA>            
+    2 960534 NCT03… Randomized Parallel Assign… <NA>            
+    3 960535 NCT03… <NA>       <NA>             Cohort          
+    4 960536 NCT03… Randomized Parallel Assign… <NA>            
+    5 971551 NCT03… <NA>       <NA>             Other           
+    6 978860 NCT03… <NA>       <NA>             Cohort          
+    # ... with 9 more variables: primary_purpose <chr>,
+    #   time_perspective <chr>, masking <chr>, masking_description <chr>,
+    #   intervention_model_description <chr>, subject_masked <lgl>,
+    #   caregiver_masked <lgl>, investigator_masked <lgl>,
+    #   outcomes_assessor_masked <lgl>
+    Skim summary statistics
+     n obs: 291109 
+     n variables: 14 
+    
+    ── Variable type:character ─────────────────────────────────────────────────────────────
+                           variable missing complete      n min  max empty
+                         allocation  114464   176645 291109  10   14     0
+                 intervention_model   66986   224123 291109  19   23     0
+     intervention_model_description  277053    14056 291109   1 1000     0
+                            masking   65570   225539 291109   6   17     0
+                masking_description  283661     7448 291109   1  999     0
+                             nct_id       0   291109 291109  11   11     0
+                observational_model  238755    52354 291109   5   35     0
+                    primary_purpose   68142   222967 291109   5   31     0
+                   time_perspective  235514    55595 291109   5   42     0
      n_unique
-         2740
+            3
+            5
+        13160
+            5
+         6357
+       291109
+           12
+           10
+           12
     
     ── Variable type:integer ───────────────────────────────────────────────────────────────
-     variable missing complete     n    mean   sd    p0     p25   p50     p75
-           id       0    21259 21259 56446.4 6596 44871 50744.5 56555 62163.5
-      p100     hist
-     67749 ▇▇▇▇▇▇▇▇
+     variable missing complete      n       mean       sd     p0   p25     p50
+           id       0   291109 291109 1106531.22 84146.93 960515 1e+06 1106584
+         p75    p100     hist
+     1179399 1252199 ▇▇▇▇▇▇▇▇
+    
+    ── Variable type:logical ───────────────────────────────────────────────────────────────
+                     variable missing complete      n mean
+             caregiver_masked  257256    33853 291109    1
+          investigator_masked  232512    58597 291109    1
+     outcomes_assessor_masked  241319    49790 291109    1
+               subject_masked  219982    71127 291109    1
+                      count
+     NA: 257256, TRU: 33853
+     NA: 232512, TRU: 58597
+     NA: 241319, TRU: 49790
+     NA: 219982, TRU: 71127
+    
+    outcome_counts table exists
+    
+    # A tibble: 6 x 8
+          id nct_id outcome_id result_group_id ctgov_group_code scope units
+       <int> <chr>       <int>           <int> <chr>            <chr> <chr>
+    1 1.83e6 NCT03…     779326         2573732 O1               Meas… Part…
+    2 1.83e6 NCT03…     779327         2573736 O1               Meas… Part…
+    3 1.83e6 NCT03…     779328         2573740 O1               Meas… Part…
+    4 1.83e6 NCT03…     779329         2573741 O1               Meas… Part…
+    5 1.83e6 NCT03…     779330         2573742 O1               Meas… Part…
+    6 1.83e6 NCT03…     779331         2573749 O2               Meas… Part…
+    # ... with 1 more variable: count <int>
+    Skim summary statistics
+     n obs: 588110 
+     n variables: 8 
+    
+    ── Variable type:character ─────────────────────────────────────────────────────────────
+             variable missing complete      n min max empty n_unique
+     ctgov_group_code       0   588110 588110   2   3     0       39
+               nct_id       0   588110 588110  11  11     0    33755
+                scope       0   588110 588110   7   7     0        1
+                units       0   588110 588110   2  40     0      979
+    
+    ── Variable type:integer ───────────────────────────────────────────────────────────────
+            variable missing complete      n       mean        sd      p0
+               count       0   588110 588110     448.83  23423.96       0
+                  id       0   588110 588110 2123225.6  169870.95 1828843
+          outcome_id       0   588110 588110   9e+05     72273.44  779326
+     result_group_id       0   588110 588110   3e+06    239308.09 2573732
+            p25       p50        p75    p100     hist
+          15         43       120    4432481 ▇▁▁▁▁▁▁▁
+       2e+06    2123241.5 2270350.75 2417426 ▇▇▇▇▇▇▇▇
+      840949      9e+05    965800.75   1e+06 ▇▇▇▇▇▇▇▇
+     2780143.25   3e+06   3194444    3403240 ▇▇▇▇▇▇▇▇
 
 ``` r
 if(length(dne)>0){
@@ -1906,7 +1913,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains 21259 outcome analyses from 21259 clinical trials. I'm not sure what each column means...Luckily, this [document](ClinicalTrials.gov Results Data Element...terventional and Observational Studies) contains that information! The different columns list the types of statistical tests used and their parameters. Alot of these parameters are missing. -->
+<!-- This table contains 588110 outcome analyses from 588110 clinical trials. I'm not sure what each column means...Luckily, this [document](ClinicalTrials.gov Results Data Element...terventional and Observational Studies) contains that information! The different columns list the types of statistical tests used and their parameters. Alot of these parameters are missing. -->
 
 <!-- ### facility investigators -->
 
@@ -1922,7 +1929,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains 21259 facility roles for 21259 clinical trials.  -->
+<!-- This table contains 588110 facility roles for 588110 clinical trials.  -->
 
 <!-- ```{r} -->
 
@@ -1946,7 +1953,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains the counts of outcomes, about 21259, for 6440 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. -->
+<!-- This table contains the counts of outcomes, about 588110, for 33755 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. -->
 
 <!-- ### drop withdrawals -->
 
@@ -1962,7 +1969,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains study drop information for 6440 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. -->
+<!-- This table contains study drop information for 33755 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. -->
 
 <!-- ###baseline measurements -->
 
@@ -1978,7 +1985,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains study measurement info for 6440 clinical trials. This table is missing some parameter values and only has information on a relatively few clinical trials. -->
+<!-- This table contains study measurement info for 33755 clinical trials. This table is missing some parameter values and only has information on a relatively few clinical trials. -->
 
 <!-- ### outcome analysis groups -->
 
@@ -1994,7 +2001,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains study outcome analysis information for 6440 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. And I'm not sire what the ctgov_group_code means... -->
+<!-- This table contains study outcome analysis information for 33755 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. And I'm not sire what the ctgov_group_code means... -->
 
 <!-- ### baseline counts -->
 
@@ -2010,7 +2017,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains study baseline counts information for 6440 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean... -->
+<!-- This table contains study baseline counts information for 33755 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean... -->
 
 <!-- ### browse interventions -->
 
@@ -2026,7 +2033,7 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains study baseline counts information for 6440 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean... -->
+<!-- This table contains study baseline counts information for 33755 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean... -->
 
 <!-- ### browse interventions -->
 
@@ -2042,4 +2049,73 @@ if(length(dne)>0){
 
 <!-- ``` -->
 
-<!-- This table contains study baseline counts information for 6440 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean... -->
+<!-- This table contains study baseline counts information for 33755 clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean... -->
+
+## Notes and tables of interest
+
+The primary key to link the tables in this database is *nct\_id*
+
+The *study\_references* table might be interesting to use since it gives
+the PMID number for that clinical trial. The corresponding text can be
+analyzed to discover topics and trends amongst clinical trials, using
+methods like Latent Direchlet Allocation. Or, it might be interesting to
+analyze the missing citations to clinical trials-looks like there’s over
+20K publication recordings missing.
+
+In *responsible\_parties* it might be interesting to see who conducts
+these trials and what that distribution is like. Though, about 27500
+clinical trials don’t have this attribute.
+
+The *design\_outcomes* table doesn’t seem to be documented well…we may
+want to investigate this table a bit more.
+
+The *ipd\_information\_types* table shows the types of clinical trials.
+There’s on about 6.5K names here.
+
+The *overall\_officials* table might be interesting to look at in
+combination with the *responsible\_parties* table. There should be good
+agreement.
+
+The *designs\_table* looks at the experimental design for the clinical
+trial, like if it was an observational study or the methodology used.
+
+The *keywords* table might be interesting to look at. I wonder how
+similar they are to MeSH terms?
+
+The *participant\_flows* table is kind of different-it seems to give a
+text description of the trial recruitment and before patients were
+assigned their study arm to be in.
+
+The *browse\_interventions* table seems to be similar to the *keywords*
+table but here they’re labeled as MeSH terms.
+
+The *facilities* table would be good to look at to find out the location
+of these trials.
+
+The *milestones* table is more fully described
+[here](https://aact.ctti-clinicaltrials.org/points_to_consider). For the
+ctgov\_group\_code, those with P1 are ‘All Milestones &
+Drop\_Withdrawals associated with this study’s experimental group link
+to this row.’ and P2 are ‘All Milestones & Drop\_Withdrawals associated
+with this study’s studies control group link to this row.’. This is one
+of the four results tables.
+
+The *result\_agreements* table is another results table but not about
+groups.
+
+The *calculated\_values* table seems to be a summary table, but not sure
+of what…
+
+The *facility\_contacts* table seems just to have contact info for the
+trial’s facilities.
+
+The *baseline\_counts* table is another results table that I think tells
+you of the number of participants in the control and experimental
+groups. Might be interesting to get the number of participants starting
+out in a trial.
+
+The *mesh\_terms* table gives more details on the mesh terms.
+
+The *design\_group\_interventions* table just contains concept ids. This
+table links to the *intervention\_other\_names* table for the brand name
+drug or device, it seems.

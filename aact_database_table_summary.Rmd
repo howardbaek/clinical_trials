@@ -201,3 +201,45 @@ if(length(dne)>0){
 <!-- ``` -->
 
 <!-- This table contains study baseline counts information for `r length(unique(tab$nct_id))` clinical trials. This table is completely filled but only has information on a relatively few clinical trials. I'm also not sure what these columnns mean... -->
+
+## Notes and tables of interest
+
+The primary key to link  the tables in this database is _nct\_id_
+
+The _study\_references_ table might be interesting to use since it gives the PMID number for that clinical trial. The corresponding text can be analyzed to discover topics and trends amongst clinical trials, using methods like Latent Direchlet Allocation. Or, it might be interesting to analyze the missing citations to clinical trials-looks like there's over 20K publication recordings missing.
+
+In _responsible\_parties_ it might be interesting to see who conducts these trials and what that distribution is like. Though, about 27500 clinical trials don't have this attribute. 
+
+The _design\_outcomes_ table doesn't seem to be documented well...we may want to investigate this table a bit more.
+
+The _ipd\_information\_types_ table shows the types of clinical trials. There's on about 6.5K names here.
+
+The _overall\_officials_ table might be interesting to look at in combination with the _responsible\_parties_ table. There should be good agreement. 
+
+The _designs\_table_ looks at the experimental design for the clinical trial, like if it was an observational study or the methodology used.
+
+The _keywords_ table might be interesting to look at. I wonder how similar they are to MeSH terms?
+
+The _participant\_flows_ table is kind of different-it seems to give a text description of the trial recruitment and before patients were assigned their study arm to be in. 
+
+The _browse\_interventions_ table seems to be similar to the _keywords_ table but here they're labeled as MeSH terms.
+
+The _facilities_ table would be good to look at to find out the location of these trials.
+
+The _milestones_ table is more fully described [here](https://aact.ctti-clinicaltrials.org/points_to_consider). For the ctgov_group_code, those with P1 are 'All Milestones & Drop_Withdrawals associated with this study's experimental group link to this row.' and P2 are 'All Milestones & Drop_Withdrawals associated with this study's studies control group link to this row.'. This is one of the four results tables.
+
+The _result\_agreements_ table is another results table but not about groups. 
+
+The _calculated\_values_ table seems to be a summary table, but not sure of what...
+
+The _facility\_contacts_ table seems just to have contact info for the trial's facilities.
+
+The _baseline\_counts_ table is another results table that I think tells you of the number of participants in the control and experimental groups. Might be interesting to get the number of participants starting out in a trial.
+
+The _mesh\_terms_ table gives more details on the mesh terms. 
+
+The _design\_group\_interventions_ table just contains concept ids. This table links to the _intervention\_other\_names_ table for the brand name drug or device, it seems. 
+
+
+
+
