@@ -1,0 +1,79 @@
+---
+title: "Identifying interesting questions/hypotheses about clinical trials"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+I'm not really sure what exactly to investigate right now, so I'm going to try out a few things and see what's worth pursuing.
+
+```{r,echo=F}
+
+library(tidyverse)
+
+source("helper_functions.R")
+
+```
+## Clinical trial characteristics
+
+I'm going to look at the studfy characteristics of clinical trials using the _studies_ table since it has a lot of attributes that I think would be useful. After looking at my [summary notebook](https://github.com/jasonbaik94/clinical_trials/blob/master/aact_database_table_summary.md), there's data on the study type, the phase of a clinical trial, start and end of duration of the trial, why it was stopped, and others. 
+
+First I load the _studies_ table and get the relevant variables:
+
+```{r}
+
+con <- aact_connector()
+
+studies <- get_table(con,"studies") %>% select(nct_id,study_first_submitted_date,phase,
+                                               completion_date,study_type,
+                                               baseline_population,overall_status,
+                                               why_stopped,is_fda_regulated_drug) %>% 
+  collect() %>% distinct()
+
+studies
+
+```
+
+## Phases of clinical trials
+
+I'm interested in the types of phases given for clinical trials
+
+```{r}
+studies %>% 
+  ggplot() +
+  geom_bar(aes(forcats::fct_infreq(phase),color=phase),fill="gray") +
+  coord_flip() +
+  ylab("Number of clinical trials") +
+  xlab("") +
+  theme(
+    legend.position = "none"
+  )
+```
+
+Three things:
+
+1) Over 15K trials don't have a phase attributed, as either NA or N/A
+
+2) There's a preceding "Phase " before the actual number
+
+3) There's some trials that are combinations of phases. What does that mean?
+
+## Clinical trial phase clean up
+
+1) Separate phase wording from numbers
+
+2) make separate 'early' column for early phase 1 distinction from phase 1
+
+3) make combo phase trials as phase 1 + '_' + phase 2. This will make the whole column a character which I'm ok with-don't want to treat these as continuous or integer but as distinct entities
+
+4) Combine trials without a phase as one NA value not NA or N/A
+
+5) save as a data file (make a data/ directory)
+
+```{r}
+
+```
