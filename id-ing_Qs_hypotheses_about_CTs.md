@@ -7,16 +7,27 @@ I’m not really sure what exactly to investigate right now, so I’m going
 to try out a few things and see what’s worth
     pursuing.
 
-    ## ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
+
+    ## 
+    ## Attaching package: 'data.table'
+
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     between, first, last
+
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     transpose
 
     ## Loading required package: RPostgreSQL
 
@@ -55,23 +66,29 @@ studies <- get_table(con,"studies") %>% select(nct_id,study_first_submitted_date
                                                why_stopped,is_fda_regulated_drug) %>% 
   collect() %>% distinct()
 
+dbDisconnect(con)
+```
+
+    ## [1] TRUE
+
+``` r
 studies
 ```
 
-    ## # A tibble: 291,361 x 9
+    ## # A tibble: 291,790 x 9
     ##    nct_id study_first_sub… phase completion_date study_type
     ##    <chr>  <date>           <chr> <date>          <chr>     
-    ##  1 NCT02… 2014-02-05       <NA>  2015-07-31      Observati…
-    ##  2 NCT02… 2014-12-04       N/A   2015-12-31      Intervent…
-    ##  3 NCT02… 2014-12-05       Phas… 2016-05-31      Intervent…
-    ##  4 NCT02… 2014-12-05       Phas… 2017-12-21      Intervent…
-    ##  5 NCT02… 2014-12-04       Phas… 2020-07-31      Intervent…
-    ##  6 NCT02… 2014-12-05       Phas… 2016-06-30      Intervent…
-    ##  7 NCT02… 2014-12-05       Phas… 2024-12-02      Intervent…
-    ##  8 NCT02… 2014-12-06       N/A   2016-12-31      Intervent…
-    ##  9 NCT02… 2014-12-05       Phas… 2018-05-31      Intervent…
-    ## 10 NCT02… 2014-12-06       <NA>  2019-06-30      Observati…
-    ## # ... with 291,351 more rows, and 4 more variables:
+    ##  1 NCT01… 2013-06-05       Phas… 2017-02-28      Intervent…
+    ##  2 NCT01… 2013-06-06       Phas… 2013-09-12      Intervent…
+    ##  3 NCT01… 2013-06-05       Phas… 2019-06-30      Intervent…
+    ##  4 NCT01… 2013-06-06       <NA>  2013-01-31      Observati…
+    ##  5 NCT01… 2013-06-05       Phas… 2014-08-31      Intervent…
+    ##  6 NCT01… 2013-06-06       <NA>  2015-06-30      Observati…
+    ##  7 NCT01… 2013-05-30       N/A   2013-05-31      Intervent…
+    ##  8 NCT01… 2013-02-19       <NA>  2013-12-31      Observati…
+    ##  9 NCT01… 2013-06-03       Phas… 2017-06-16      Intervent…
+    ## 10 NCT01… 2013-05-23       <NA>  2020-06-30      Observati…
+    ## # ... with 291,780 more rows, and 4 more variables:
     ## #   baseline_population <chr>, overall_status <chr>, why_stopped <chr>,
     ## #   is_fda_regulated_drug <lgl>
 
@@ -116,3 +133,273 @@ Three things:
 4)  Combine trials without a phase as one NA value not NA or N/A
 
 5)  save as a data file (make a data/ directory)
+
+<!-- end list -->
+
+``` r
+phases <- studies$phase
+
+table(phases) 
+```
+
+    ## phases
+    ##   Early Phase 1             N/A         Phase 1 Phase 1/Phase 2 
+    ##            2501           90289           29212            9859 
+    ##         Phase 2 Phase 2/Phase 3         Phase 3         Phase 4 
+    ##           40926            4856           29240           24605
+
+``` r
+phase_splt <- strsplit(phases," ") 
+
+nsplits <- sapply(phase_splt,length)
+
+table(nsplits)
+```
+
+    ## nsplits
+    ##      1      2      3 
+    ## 150591 123983  17216
+
+now I split phases by a space, and so either I get no splits for NA and
+N/A, 1 split for Phase \[1234\], or two splits for Early Phase 1 and
+Phase \[12\]/Phase \[23\].
+
+For the no splits, I need to use one common identifier, NA
+
+``` r
+phases[nsplits==1] <- NA
+```
+
+For 1 split, I need to use just the integer.
+
+``` r
+table(phases[nsplits==2])
+```
+
+    ## 
+    ## Phase 1 Phase 2 Phase 3 Phase 4 
+    ##   29212   40926   29240   24605
+
+``` r
+n2_phase_splt <- strsplit(phases[nsplits==2]," ")
+
+phases[nsplits==2] <- sapply(n2_phase_splt,function(x){x[2]})
+```
+
+For 2 splits, I need to be more crafty. Let’s first deal with early
+phase 1.
+
+``` r
+earlies <- grepl("Early",phases)
+
+table(phases[earlies]) #just checking
+```
+
+    ## 
+    ## Early Phase 1 
+    ##          2501
+
+``` r
+studies <- 
+  studies %>% 
+  mutate(early = earlies)
+
+phases[earlies] <- "1"
+```
+
+Now combo trials.
+
+``` r
+combos <- !earlies & nsplits==3
+
+table(phases[combos]) #just checking
+```
+
+    ## 
+    ## Phase 1/Phase 2 Phase 2/Phase 3 
+    ##            9859            4856
+
+``` r
+tmp <- strsplit(phases[combos]," ")
+
+second <- sapply(tmp,function(x){x[3]})
+
+tmp <- sapply(tmp,function(x){x[2]})
+
+first <- sapply(strsplit(tmp,"/"),function(x){x[1]})
+
+phases[combos] <- paste(first,second,sep="_")
+```
+
+Ok let’s see the cleaned version
+
+``` r
+table(phases)
+```
+
+    ## phases
+    ##     1   1_2     2   2_3     3     4 
+    ## 31713  9859 40926  4856 29240 24605
+
+``` r
+studies <- studies %>% mutate(clean_phase = phases)
+
+studies %>% 
+  ggplot() +
+  geom_bar(aes(forcats::fct_infreq(clean_phase),color=clean_phase),fill="gray") +
+  coord_flip() +
+  ylab("Number of clinical trials") +
+  xlab("") +
+  theme(
+    legend.position = "none"
+  )
+```
+
+![](id-ing_Qs_hypotheses_about_CTs_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+That’s better.
+
+## Cleaning eligibility ages
+
+Thev ages given to the eligibility are all coded differently, but I want
+them all in the same units
+
+``` r
+con <- aact_connector()
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   u = col_character(),
+    ##   pw = col_character()
+    ## )
+    ## Parsed with column specification:
+    ## cols(
+    ##   u = col_character(),
+    ##   pw = col_character()
+    ## )
+
+``` r
+eligibilities <- get_table(con,"eligibilities") %>% select(nct_id,nct_id,minimum_age,maximum_age) %>% 
+  collect() %>% distinct()
+
+dbDisconnect(con)
+```
+
+    ## [1] TRUE
+
+``` r
+transform_trial_age_range <- function(df,...){
+  
+  df %>% 
+    mutate(
+      minimum_age_num = sapply(strsplit(minimum_age," "),function(x){x[1]}),
+      minimum_age_unit = sapply(strsplit(minimum_age," "),function(x){x[2]}),
+      maximum_age_num = sapply(strsplit(maximum_age," "),function(x){x[1]}),
+      maximum_age_unit = sapply(strsplit(maximum_age," "),function(x){x[2]})
+    )
+  
+}
+
+eligibilities_sep <- transform_trial_age_range(eligibilities)
+
+eligibilities_sep$minimum_age_num[eligibilities_sep$minimum_age_num=="N/A"] <- NA
+eligibilities_sep$minimum_age_unit[eligibilities_sep$minimum_age_unit=="N/A"] <- NA
+eligibilities_sep$maximum_age_num[eligibilities_sep$maximum_age_num=="N/A"] <- NA
+eligibilities_sep$maximum_age_unit[eligibilities_sep$maximum_age_unit=="N/A"] <- NA
+
+eligibilities_sep <- eligibilities_sep %>% select(-maximum_age,-minimum_age)
+
+table(eligibilities_sep$minimum_age_unit)
+```
+
+    ## 
+    ##   Days  Month Months  Weeks   Year  Years 
+    ##    192    726   4020    828   1907 259384
+
+``` r
+eligibilities_sep <- eligibilities_sep %>% 
+  rename(
+    maximum_age = maximum_age_num,
+    minimum_age = minimum_age_num
+  )
+
+make_master_eligibility_ages <- function(ct){
+  
+  round_n <- 0
+  
+  ct$minimum_age <- as.integer(ct$minimum_age)
+  ct$maximum_age <- as.integer(ct$maximum_age)
+  
+  ct %>% 
+  
+  mutate(
+    
+    min_minute_years = ifelse(replace_na(stringr::str_detect(ct$minimum_age_unit,"Minute|Minutes"),F),round(minimum_age/60/24/7/52,round_n),minimum_age),
+    min_hour_years = ifelse(replace_na(stringr::str_detect(ct$minimum_age_unit,"Hour|Hours"),F),round(minimum_age/24/7/52,round_n),minimum_age),
+    min_day_years = ifelse(replace_na(stringr::str_detect(ct$minimum_age_unit,"Day|Days"),F),round(minimum_age/365,round_n),minimum_age),
+    min_week_years = ifelse(replace_na(stringr::str_detect(ct$minimum_age_unit,"Week|Weeks"),F),round(minimum_age/52,round_n),minimum_age),
+    min_month_years = ifelse(replace_na(stringr::str_detect(ct$minimum_age_unit,"Month|Months"),F),round(minimum_age/12,round_n),minimum_age),
+    min_year_years = ifelse(replace_na(stringr::str_detect(ct$minimum_age_unit,"Year|Years"),F),minimum_age,minimum_age),
+    
+    min_minutes=as.integer(replace_na(stringr::str_detect(ct$minimum_age_unit,"Minute|Minutes"),F)),
+    min_hours=as.integer(replace_na(stringr::str_detect(ct$minimum_age_unit,"Hour|Hours"),F)),
+    min_days=as.integer(replace_na(stringr::str_detect(ct$minimum_age_unit,"Day|Days"),F)),
+    min_weeks=as.integer(replace_na(stringr::str_detect(ct$minimum_age_unit,"Week|Weeks"),F)),
+    min_months=as.integer(replace_na(stringr::str_detect(ct$minimum_age_unit,"Month|Months"),F)),
+    min_years=as.integer(replace_na(stringr::str_detect(ct$minimum_age_unit,"Year|Years"),F)),
+    
+    max_minute_years = ifelse(replace_na(stringr::str_detect(ct$maximum_age_unit,"Minute|Minutes"),F),round(maximum_age/60/24/7/52,round_n),maximum_age),
+    max_hour_years = ifelse(replace_na(stringr::str_detect(ct$maximum_age_unit,"Hour|Hours"),F),round(maximum_age/24/7/52,round_n),maximum_age),
+    max_day_years = ifelse(replace_na(stringr::str_detect(ct$maximum_age_unit,"Day|Days"),F),round(maximum_age/365,round_n),maximum_age),
+    max_week_years = ifelse(replace_na(stringr::str_detect(ct$maximum_age_unit,"Week|Weeks"),F),round(maximum_age/52,round_n),maximum_age),
+    max_month_years = ifelse(replace_na(stringr::str_detect(ct$maximum_age_unit,"Month|Months"),F),round(maximum_age/12,round_n),maximum_age),
+    max_year_years = ifelse(replace_na(stringr::str_detect(ct$maximum_age_unit,"Year|Years"),F),maximum_age,maximum_age),
+    
+    max_minutes=as.integer(replace_na(stringr::str_detect(ct$maximum_age_unit,"Minute|Minutes"),F)),
+    max_hours=as.integer(replace_na(stringr::str_detect(ct$maximum_age_unit,"Hour|Hours"),F)),
+    max_days=as.integer(replace_na(stringr::str_detect(ct$maximum_age_unit,"Day|Days"),F)),
+    max_weeks=as.integer(replace_na(stringr::str_detect(ct$maximum_age_unit,"Week|Weeks"),F)),
+    max_months=as.integer(replace_na(stringr::str_detect(ct$maximum_age_unit,"Month|Months"),F)),
+    max_years=as.integer(replace_na(stringr::str_detect(ct$maximum_age_unit,"Year|Years"),F)),
+    
+    minimum_master_age = min_minute_years * min_minutes + min_hour_years * min_hours + min_day_years * min_days + min_week_years * min_weeks + min_month_years * min_months + min_year_years * min_years,
+    maximum_master_age = max_minute_years * max_minutes + max_hour_years * max_hours + max_day_years * max_days + max_week_years * max_weeks + max_month_years * max_months + max_year_years * max_years
+    
+  )  %>% 
+  data.table
+
+}
+
+eligibilities_sep_master_dt <- make_master_eligibility_ages(eligibilities_sep) %>% select(nct_id,minimum_master_age,maximum_master_age)
+```
+
+## Joining eligibility age and phases
+
+I’m interested to see who predominantly enters certain trial phases.
+
+``` r
+setkey(eligibilities_sep_master_dt,nct_id)
+
+studies_dt <- data.table(studies)
+
+setkey(studies_dt,nct_id)
+
+study_eligibility_dt <- studies_dt[eligibilities_sep_master_dt][,.(nct_id,clean_phase,minimum_master_age,maximum_master_age)]
+
+head(study_eligibility_dt)
+```
+
+    ##         nct_id clean_phase minimum_master_age maximum_master_age
+    ## 1: NCT00000102         1_2                 14                 35
+    ## 2: NCT00000104        <NA>                 NA                 NA
+    ## 3: NCT00000105        <NA>                 18                 NA
+    ## 4: NCT00000106        <NA>                 18                 65
+    ## 5: NCT00000107        <NA>                 17                 60
+    ## 6: NCT00000108        <NA>                 50                 65
+
+output this for use later
+
+``` r
+study_eligibility_dt %>% write_csv("study_phase_age_eligibility.csv")
+```
