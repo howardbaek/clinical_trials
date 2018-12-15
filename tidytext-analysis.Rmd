@@ -19,8 +19,10 @@ library(RPostgreSQL)
 library(DBI)
 library(broom)
 theme_set(theme_light())
+```
 
 
+```{r}
 drv <- dbDriver('PostgreSQL')
 con <- dbConnect(drv, 
                  dbname="aact",
@@ -32,6 +34,7 @@ con <- dbConnect(drv,
 
 dbTables <- dbListTables(con)
 ```
+
 
 ## Notes about AACT
 The AACT database is updated every night at midnight, so the information in AACT is one day behind that which appears in ClinicalTrials.gov
@@ -124,5 +127,4 @@ top_mesh_terms %>%
   labs(x = "MeSH",
        y = "Beta (Probability of MeSH being generated from topic)") +
   ggtitle("Distribution of MeSH for 4 Topics from LDA")
-
 ```
