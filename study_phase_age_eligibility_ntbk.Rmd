@@ -1,0 +1,193 @@
+---
+title: "Clinical trials, phases, and their types"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This notebook outlines the exploration of the processed data from this [notebook](id-ing_Qs_hypotheses_about_CTs.md)
+
+```{r}
+
+library(tidyverse)
+
+```
+
+## Load data
+
+```{r}
+
+data <- read_csv("study_phase_age_eligibility.csv")
+
+```
+
+## Frequency of trials in different phases
+
+I previously looked at this but I want to put the data here too
+
+```{r}
+
+data %>% 
+  ggplot() +
+  geom_bar(aes(forcats::fct_infreq(clean_phase),color=clean_phase),fill="gray") +
+  coord_flip() +
+  ylab("Number of clinical trials") +
+  xlab("") +
+  theme(
+    legend.position = "none"
+  )
+
+```
+
+## Are trials given for many phases or just one?
+
+```{r}
+
+tmp <- data %>% 
+  distinct(nct_id,clean_phase) %>% 
+  count(nct_id) %>% 
+  arrange(desc(n))
+
+tmp
+
+```
+
+Nope. Trials are only in one phase or phase combo or not given. 
+
+## What is the eligibility age distribution for trials?
+
+```{r}
+
+data %>% 
+  filter(is.na(clean_phase))
+
+data_eligibility_age_gathered <- data %>% 
+  gather(eligibility_age_type,eligibility_age,-nct_id,-clean_phase) 
+
+data_eligibility_age_gathered%>% 
+  ggplot() +
+  geom_vline(xintercept=18,color="darkgray",size=.5) +
+  geom_histogram(aes(eligibility_age,fill=eligibility_age_type),bins=200) +
+  scale_x_log10() +
+  scale_y_log10() +
+  facet_grid(clean_phase~.) +
+  ylab("Number of trials") +
+  xlab("Eligibility age")
+
+```
+
+This may not be the easiest graph to look at, but it gives some good insight.
+
+1) The eligibility is roughly the same for trials without a phase and with a phase.
+
+2) The spike (dark gray line) for the minimum age is expected - it's the legal age for consent to trials will allow them to enroll more easily.
+
+I think there' subtle changes in bar height across the phases, so I think I'll want to look more closely at this.
+
+## Is the minumum age significantly lower across phases?
+
+I'm not interested in the maximum age, just whether younger patients are eligible for trials for which they have historically not been.
+
+
+```{r,fig.height=12}
+df <- data_eligibility_age_gathered %>% 
+  filter(eligibility_age_type=="minimum_master_age") %>% 
+  select(-eligibility_age_type,nct_id) 
+
+df[is.na(df$clean_phase),"clean_phase"] <- "no_phase_given"
+
+df %>% 
+  ggplot() +
+  geom_density(aes(
+    eligibility_age,
+    group=factor(clean_phase),
+    fill=clean_phase),
+    na.rm = F,alpha=.2) +
+  geom_vline(xintercept=18,
+             color="red",
+             size=.2) +
+  scale_fill_brewer(palette="Dark2") +
+  facet_grid(clean_phase~.) +
+  coord_flip()
+
+g <- glm(eligibility_age ~ clean_phase - 1,
+      data=df,
+      family="quasipoisson")
+
+g$coefficients[order(g$coefficients)]
+
+a <- aov(g)
+
+summary(a)
+
+TukeyHSD(a)
+
+plot(TukeyHSD(a))
+
+```
+
+Seems like yes by the difference in peak heights on the graph. I logged the ages so the differences could come out more and I flipped the graph for easier comparison of peak heights. The red line indicates 18 years of age and is just a indicator for me-it lines up perfectly with the peak density.
+
+The glm tells me about how the age distributions differ across the phases. I use family="quasipoisson" because the response is made of integers and I think the dispersion is different across the phases. I took out the intercept so I could see coefficients for all the phases (leaving in the intercept doesn't make much sense). 
+
+I also show the coefficient values for easier interpretation. 
+
+I also perform an anova on the model and do a tukey test to see which distributions are different from particular phases.
+
+The first density plot shows pretty much only that the density at 18 years of age is different, meaning the minimum eligible age distribution does change but not exactly how. The GLM quantifies the association of the phases to the minimum eligibility age giving the first indication that lower phases are associated to lower minimum ages. But is that significant and between which phases? The anova on the model says, overall, yes. The tukey test says that particular phase distributions are significantly different (the right phase has a higher minimum age than the left): 
+
+phases 1 and 2, 
+
+phases 1 and 4, 
+
+phases 1 and NA
+
+phases 1_2 and 2, 
+
+phases 1_2 and 4 (2nd most different), 
+
+phases 1_2 and NA (most different), 
+
+phases 3 and 2, 
+
+phases 2 and 4, 
+
+phases NA and 2
+
+phases 2_3 and 4, 
+
+phases 2_3 and NA and 
+
+phases 3 and 4 
+
+These phases are not significantly different:
+
+phases 1_2 and 1
+
+phases 1 and 2_3
+
+phases 1 and 3
+
+phases 1_2 and 3
+
+phases 2 and 2_3, and
+
+phases 3 and 2_3
+
+## Interpretation and what to do moving forward
+
+This mostly makes sense to me, but I'm sure there's other factors at play that give more intuition to these statistics.
+
+This gives me some indication that more clinical trials that include pediatric patients are in earlier phases and aren't later phases. Later phase clinical trials are supposed to enroll more patients and thus a larger patient age span so that makes sense. Earlier phases clinical trials are more checking for rare adverse reactions or determining efficacy of a drug and its dosage, so I would hope that kids are enrolled in those trials. 
+
+I think at this point I may want to either better define or scope my question to bin pediatric patients or move on to other investigations. Stay tuned. 
+
+
+
+
+
+
