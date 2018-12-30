@@ -1,4 +1,4 @@
-# clinical_trials
+# Analyzing Clinical Trials Data
 
 ## Description
 
@@ -11,4 +11,9 @@ The goal of this repository is to show and share a collection of notebooks that 
 ## Required (Free) AACT-CTTI registration
 
 In order to access the cloud based database, you must [register](https://aact.ctti-clinicaltrials.org/users/sign_up) and use the provided credentials when logging into the cloud server to access database.
+
+## Authors
+
+* Jason Baik (joonwoob@andrew.cmu.edu)
+* Nick Giangreco (nick.giangreco@gmail.com)
 
