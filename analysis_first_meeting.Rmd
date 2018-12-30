@@ -12,6 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Load packages
 ```{r}
 library(tidyverse)
+library(tidytext)
+library(topicmodels)
+
 if(require("RPostgreSQL")){library(RPostgreSQL)}else{install.packages("RPostgreSQL");library(RPostgreSQL)}
 if(require("DBI")){library(DBI)}else{install.packages("DBI");library(DBI)}
 if(require("tidyverse")){library(tidyverse)}else{install.packages("tidyverse");library(tidyverse)}
@@ -26,13 +29,29 @@ con <- dbConnect(drv,
                  )
 
 dbListTables(con) %>% View("List of Tables")
+
+
+
+aact_connect <- function(user, password) {
+
+  drv <- DBI::dbDriver('PostgreSQL')
+  con <- DBI::dbConnect(drv,
+                   dbname = "aact",
+                   host = "aact-db.ctti-clinicaltrials.org",
+                   port = 5432,
+                   user = user,
+                   password = password)
+  
+  return(con)
+}
+
 ```
 
 ### What Nick wants to analyze
 
 * Latent Direchlet Allocation with MeSH terms from trials
 * Assess the life cycle of a clinical trial
-* Aq  ssess the investigation of drugs across clinical trials for different conditions
+* Assess the investigation of drugs across clinical trials for different conditions
 
 ### Description of List of Tables / Columns
 www.ctti-clinicaltrials.org/files/aact201603_comprehensive_data_dictionary_1.xlsx
@@ -96,6 +115,91 @@ milestones ->
 studies -> date values of dates related to study
 detailed_descriptions -> more detailed descriptions...
 documents -> `document_type` seems important / interesting
+
+#### eligibilities
+```{r}
+theme_set(theme_light())
+
+elig <- tbl(con, "eligibilities") %>% 
+  collect() 
+
+names(elig)
+
+## Distribution of Minimum Age for Trial
+elig %>% 
+  count(minimum_age, sort = TRUE) %>% 
+  filter(n > 1000,
+         minimum_age != "N/A") %>% 
+  mutate(minimum_age = as.character(parse_number(minimum_age))) %>% 
+  mutate(minimum_age = fct_reorder(minimum_age, n)) %>% 
+  ggplot(aes(minimum_age, n)) +
+  geom_col() +
+  labs(x = "Minimum Age for Trial",
+       y = "Count") +
+  ggtitle("Distribution of Minimum Age for Trial",
+          subtitle = "Count > 1000")
+```
+
+
+```{r}
+## Distribution of Maximum Age for Trial
+elig %>% 
+  count(maximum_age, sort = TRUE) %>% 
+  filter(n > 1000,
+         maximum_age != "N/A") %>% 
+  mutate(maximum_age = as.character(parse_number(maximum_age))) %>% 
+  mutate(maximum_age = fct_reorder(maximum_age, n)) %>% 
+  ggplot(aes(maximum_age, n)) +
+  geom_col() +
+  labs(x = "Maximum Age for Trial",
+       y = "Count") +
+  ggtitle("Distribution of Maximum Age for Trial")
+
+
+```
+
+```{r}
+data("AssociatedPress")
+AssociatedPress
+
+ap_lda <- LDA(AssociatedPress, k = 2, control = list(seed = 1234))
+
+ap_topics <- tidy(ap_lda, matrix = "beta")
+ap_topics
+
+ap_top_terms <- ap_topics %>% 
+  group_by(topic) %>% 
+  top_n(10, beta) %>% 
+  ungroup() %>% 
+  arrange(topic, -beta)
+
+ap_top_terms %>%
+  mutate(term = reorder(term, beta)) %>%
+  ggplot(aes(term, beta, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  coord_flip()
+```
+
+```{r}
+beta_spread <- ap_topics %>%
+  mutate(topic = paste0("topic", topic)) %>%
+  spread(topic, beta) %>%
+  filter(topic1 > .001 | topic2 > .001) %>%
+  mutate(log_ratio = log2(topic2 / topic1))
+
+beta_spread
+```
+
+```{r}
+ap_documents <- tidy(ap_lda, matrix = "gamma")
+
+tidy(AssociatedPress) %>% 
+  filter(document == 6) %>% 
+  arrange(desc(count))
+```
+
+
 
 ```{r}
 # purrr

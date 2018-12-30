@@ -1,0 +1,208 @@
+---
+title: 'Tagged Terms'
+author: "Jason Baik"
+date: "12/30/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and connect to PostgreSQL database 
+
+```{r, warning=FALSE, message = FALSE}
+library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(RPostgreSQL)
+library(DBI)
+library(broom)
+library(readxl)
+theme_set(theme_light())
+```
+
+
+```{r}
+drv <- dbDriver('PostgreSQL')
+con <- dbConnect(drv, 
+                 dbname="aact",
+                 host="aact-db.ctti-clinicaltrials.org", 
+                 port=5432,
+                 user=readr::read_csv("id_pw.csv")$id, 
+                 password=readr::read_csv("id_pw.csv")$pw
+                 )
+
+# browse_conditions
+browse_conditions <- tbl(con, "browse_conditions") %>% 
+  collect()
+```
+
+
+
+## Using Sheri's Tags
+```{r}
+# Import data
+tagged_mesh_terms <- read_excel("2010_tagged_mesh_and_free_text_terms.xlsx",
+                                sheet = 3) %>%
+  janitor::clean_names() %>% 
+  select(-c(term_type, identifier)) %>% 
+  mutate(term = str_to_title(term))
+
+# Find unique MeSH terms
+tagged_mesh_terms %>% 
+  select(term) %>% 
+  unique() %>% 
+  nrow() # 4070 rows
+  
+browse_conditions %>% 
+  select(mesh_term) %>% 
+  unique() %>% 
+  nrow() # 3898 rows
+
+tagged_mesh_terms %>% 
+  count(term, clinical_domain, sort = TRUE)
+```
+
+Join `tagged_mesh_terms` and `browse_conditions` and get number of unique `clinical_domain`
+```{r}
+browse_conditions %>%
+  select(nct_id, mesh_term) %>% 
+  anti_join(tagged_mesh_terms, by = c("mesh_term" = "term")) %>%
+  select(mesh_term) %>% 
+  unique()
+
+# 2201 mesh_terms didn't join
+browse_conditions %>%
+  select(mesh_term) %>% 
+  unique()
+# 2201 out of 3898 mesh terms didn't join (56.4%)
+```
+
+Let's move on with mesh_terms that joined (44% of mesh_terms in browse_conditions)
+Where # of Topic (Clinical Domains) = 10. 
+```{r}
+browse_conditions_filtered <- browse_conditions %>%
+  select(nct_id, mesh_term) %>% 
+  inner_join(tagged_mesh_terms, by = c("mesh_term" = "term")) %>% 
+  select(-clinical_domain) 
+```
+
+Perform LDA with K = 10
+```{r}
+browse_conditions_filtered_counts <- browse_conditions_filtered %>% 
+  count(nct_id, mesh_term, sort = TRUE) %>% 
+  ungroup()
+
+browse_conditions_dtm <- browse_conditions_filtered_counts %>% 
+  cast_dtm(nct_id, mesh_term, n)
+
+topic_lda <- topicmodels::LDA(browse_conditions_dtm, k = 10, control = list(seed = 1234))
+
+topic_lda_tidy <- tidy(topic_lda)
+
+top_mesh_terms <- topic_lda_tidy %>% 
+    group_by(topic) %>% 
+    top_n(5, beta) %>% 
+    ungroup() %>% 
+    arrange(topic, -beta)
+```
+
+Plot first 5 topics
+```{r}
+top_mesh_terms %>%
+  filter(topic %in% c(1:5)) %>% 
+  mutate(term = reorder(term, beta)) %>% 
+  ggplot(aes(term, beta, fill = term)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free", nrow = 3) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(x = "MeSH",
+       y = "Beta (Probability of MeSH being generated from topic)") +
+  ggtitle("Distribution of MeSH for 10 Topics from LDA")
+```
+
+Compare LDA output to "Ground Truth"
+```{r}
+# MeSH terms in Topic 1
+top_mesh_terms_topic1 <- top_mesh_terms %>% 
+  filter(topic == 1) %>% 
+  select(term) %>% 
+  pull()
+
+
+# Check Topic 1 (See if LDA output matches with the "Ground Truth")
+tagged_mesh_terms %>%
+  filter(term %in% top_mesh_terms_topic1)
+```
+
+* Topic 1: Oncology
+
+```{r}
+# MeSH terms in Topic 2
+top_mesh_terms_topic2 <- top_mesh_terms %>% 
+  filter(topic == 2) %>% 
+  select(term) %>% 
+  pull()
+
+# Check Topic 2
+tagged_mesh_terms %>%
+  filter(term %in% top_mesh_terms_topic2) %>% 
+  count(clinical_domain)
+```
+
+* Topic 2: Cardiology, Oncology, Otolaryngology
+
+```{r}
+# MeSH terms in Topic 3
+top_mesh_terms_topic3 <- top_mesh_terms %>% 
+  filter(topic == 3) %>% 
+  select(term) %>% 
+  pull()
+
+# Check Topic 2
+tagged_mesh_terms %>%
+  filter(term %in% top_mesh_terms_topic3) %>% 
+  count(clinical_domain)
+```
+
+
+* Topic 3: Oncology, General Psych
+
+```{r}
+# MeSH terms in Topic 4
+top_mesh_terms_topic4 <- top_mesh_terms %>% 
+  filter(topic == 4) %>% 
+  select(term) %>% 
+  pull()
+
+# Check Topic 4
+tagged_mesh_terms %>%
+  filter(term %in% top_mesh_terms_topic4) %>% 
+  count(clinical_domain, sort = TRUE)
+```
+
+* Topic 4: Otolaryngology, Oncology, Immuno Rheumatology
+
+Okay...Enough with the copy and pasting. Let's create a function and use `map`
+```{r}
+check_ground_truth <- function(topic_number) {
+  
+  topic_term <- top_mesh_terms %>% 
+    filter(topic == topic_number) %>% 
+    select(term) %>% 
+    pull()
+  
+tagged_mesh_terms %>%
+  filter(term %in% topic_term) %>% 
+  count(clinical_domain, sort = TRUE)
+}
+```
+
+```{r}
+ground_truth <- map(c(1:10), check_ground_truth)
+
+ground_truth[[7]]
+```
+

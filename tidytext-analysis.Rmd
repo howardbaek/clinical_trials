@@ -18,6 +18,7 @@ library(topicmodels)
 library(RPostgreSQL)
 library(DBI)
 library(broom)
+library(readxl)
 theme_set(theme_light())
 ```
 
@@ -94,12 +95,6 @@ topic_lda <- topicmodels::LDA(condition_dtm, k = 4, control = list(seed = 1234))
 
 topic_lda_td <- tidy(topic_lda)
 
-# Spread 
-topic_lda_td %>% 
-  spread(topic, beta) %>% 
-  arrange(desc(`1`))
-# Lymphoma is closely associated with Topic 1 and not much with other three topics.
-
 # Find top 5 terms within each topic:
 top_mesh_terms <- topic_lda_td %>% 
   group_by(topic) %>% 
@@ -112,13 +107,6 @@ top_mesh_terms <- topic_lda_td %>%
 ```{r}
 top_mesh_terms %>%
   mutate(term = reorder(term, beta)) %>% 
-  mutate(topic = case_when(
-    topic == 1 ~ "#1",
-    topic == 2 ~ "#2",
-    topic == 3 ~ "#3",
-    topic == 4 ~ "#4",
-    TRUE ~ "NA Topic"
-  )) %>% 
   ggplot(aes(term, beta, fill = term)) +
   geom_bar(stat = "identity", show.legend = FALSE) +
   facet_wrap(~ topic, scales = "free") +
@@ -128,3 +116,4 @@ top_mesh_terms %>%
        y = "Beta (Probability of MeSH being generated from topic)") +
   ggtitle("Distribution of MeSH for 4 Topics from LDA")
 ```
+

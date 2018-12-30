@@ -42,6 +42,7 @@ dbTables
 
 ```
 
+
 ## Collect AACT tables
 
 Here I'm looping through the tables and collecting their contents from the AACT database.
