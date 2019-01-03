@@ -62,6 +62,9 @@ browse_conditions %>%
 
 tagged_mesh_terms %>% 
   count(term, clinical_domain, sort = TRUE)
+
+tagged_mesh_terms %>% 
+  filter(term == "Neurofibromatosis 2")
 ```
 
 Join `tagged_mesh_terms` and `browse_conditions` and get number of unique `clinical_domain`
