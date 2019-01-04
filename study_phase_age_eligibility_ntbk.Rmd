@@ -178,11 +178,105 @@ phases 2 and 2_3, and
 
 phases 3 and 2_3
 
+## Disproportionate number of adult or pediatric or pediatric inclusive clinical trials at different phases?
+
+```{r}
+
+tmp <- data[complete.cases(data),]
+is = unique(tmp$clean_phase)
+fishers <- list()
+for(i in is){
+  inphase <- factor(tmp$clean_phase==i,c(T,F))
+  pedtrial <- factor(tmp$pediatric_trial,c(T,F))
+  tab <- table(pedtrial,inphase,
+             useNA = "no",dnn =list("Pediatric trial",paste0("Phase_",i)))
+  print(tab)
+  fishers[[i]] <- fisher.test(tab,alternative="less",simulate.p.value = T,B=1e5)
+}
+
+fisher_df <- sapply(fishers,function(x){
+  cis <- x$conf.int
+  e <- x$estimate
+  c(cis[1],e,cis[2],x$p.value)
+}) %>% data.frame
+
+colnames(fisher_df) <- is
+rownames(fisher_df) <- c("lwr","estimate","upr","p.value")
+to_viz <- fisher_df %>% 
+  t %>% 
+  as.data.frame %>% 
+  mutate(phase = is) 
+
+to_viz$phase <- factor(to_viz$phase,
+                       levels=c("Early_1","1","1_2","2","2_3","3","4"))
+to_viz
+
+to_viz %>% 
+  mutate(significant = p.value<0.05) %>% 
+  ggplot() +
+  geom_point(aes(phase,estimate,color=significant)) +
+  geom_errorbar(stat="identity",aes(phase,ymin=lwr,ymax=upr,color=significant),width=.2) + 
+  ylab("Fisher's odds ratio") +
+  xlab("Phase") +
+  theme_classic(base_size=16)
+
+
+```
+
+It seems that it's more likely that earlier phases disproportionally do not have pediatric clinical trials. More often their later phase, but it's not significant.
+
+```{r}
+
+tmp <- data[complete.cases(data),]
+is = unique(tmp$clean_phase)
+fishers <- list()
+for(i in is){
+  inphase <- factor(tmp$clean_phase==i,c(T,F))
+  pedincl <- factor(tmp$pediatric_inclusive,c(T,F))
+  tab <- table(pedincl,inphase,
+             useNA = "no",dnn =list("Pediatric trial",paste0("Phase_",i)))
+  print(tab)
+  fishers[[i]] <- fisher.test(tab,alternative="less",simulate.p.value = T,B=1e5)
+}
+
+fisher_df <- sapply(fishers,function(x){
+  cis <- x$conf.int
+  e <- x$estimate
+  c(cis[1],e,cis[2],x$p.value)
+}) %>% data.frame
+
+colnames(fisher_df) <- is
+rownames(fisher_df) <- c("lwr","estimate","upr","p.value")
+to_viz <- fisher_df %>% 
+  t %>% 
+  as.data.frame %>% 
+  mutate(phase = is) 
+
+to_viz$phase <- factor(to_viz$phase,
+                       levels=c("Early_1","1","1_2","2","2_3","3","4"))
+to_viz
+
+to_viz %>% 
+  mutate(significant = p.value<0.05) %>% 
+  ggplot() +
+  geom_point(aes(phase,estimate,color=significant)) +
+  geom_errorbar(stat="identity",aes(phase,ymin=lwr,ymax=upr,color=significant),width=.2) + 
+  ylab("Fisher's odds ratio") +
+  xlab("Phase") +
+  theme_classic(base_size=16)
+
+
+```
+
+Similar but a bit different.
+
+So drugs are really only done first-in-adults and making sure they're ok in adults then they're considered for giving to children. 
+
 ## Interpretation and what to do moving forward
 
 This mostly makes sense to me, but I'm sure there's other factors at play that give more intuition to these statistics.
 
-This gives me some indication that more clinical trials that include pediatric patients are in earlier phases and aren't later phases. Later phase clinical trials are supposed to enroll more patients and thus a larger patient age span so that makes sense. Earlier phases clinical trials are more checking for rare adverse reactions or determining efficacy of a drug and its dosage, so I would hope that kids are enrolled in those trials. 
+This gives me some indication that more (a disproportionate amount) clinical trials that include pediatric patients are in earlier phases and aren't later phases. Later phase clinical trials are supposed to enroll more patients and thus a larger patient age span so that makes sense. Earlier phases clinical trials are more checking for rare adverse reactions or determining efficacy of a drug and its dosage, so I would hope that kids are enrolled in those trials. 
 
 I think at this point I may want to either better define or scope my question to bin pediatric patients or move on to other investigations. Stay tuned. 
 
