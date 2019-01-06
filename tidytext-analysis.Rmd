@@ -2,6 +2,7 @@
 title: "tidytext Anaylsis"
 author: "Jason Baik"
 date: "12/2/2018"
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -37,7 +38,7 @@ dbTables <- dbListTables(con)
 ```
 
 
-## Notes about AACT
+## Notes about AACT (Source: https://aact.ctti-clinicaltrials.org/points_to_consider)
 The AACT database is updated every night at midnight, so the information in AACT is one day behind that which appears in ClinicalTrials.gov
 
 Tables with `MeSH terms` as a variable: intervention_browse, condition_browse, mesh_thesaurus.
