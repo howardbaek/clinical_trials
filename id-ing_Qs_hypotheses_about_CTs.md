@@ -7,14 +7,14 @@ I’m not really sure what exactly to investigate right now, so I’m going
 to try out a few things and see what’s worth
     pursuing.
 
-    ## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ───────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -75,20 +75,20 @@ dbDisconnect(con)
 studies
 ```
 
-    ## # A tibble: 291,790 x 9
+    ## # A tibble: 292,680 x 9
     ##    nct_id study_first_sub… phase completion_date study_type
     ##    <chr>  <date>           <chr> <date>          <chr>     
-    ##  1 NCT01… 2013-06-05       Phas… 2017-02-28      Intervent…
-    ##  2 NCT01… 2013-06-06       Phas… 2013-09-12      Intervent…
-    ##  3 NCT01… 2013-06-05       Phas… 2019-06-30      Intervent…
-    ##  4 NCT01… 2013-06-06       <NA>  2013-01-31      Observati…
-    ##  5 NCT01… 2013-06-05       Phas… 2014-08-31      Intervent…
-    ##  6 NCT01… 2013-06-06       <NA>  2015-06-30      Observati…
-    ##  7 NCT01… 2013-05-30       N/A   2013-05-31      Intervent…
-    ##  8 NCT01… 2013-02-19       <NA>  2013-12-31      Observati…
-    ##  9 NCT01… 2013-06-03       Phas… 2017-06-16      Intervent…
-    ## 10 NCT01… 2013-05-23       <NA>  2020-06-30      Observati…
-    ## # ... with 291,780 more rows, and 4 more variables:
+    ##  1 NCT03… 2017-05-08       N/A   2019-12-31      Intervent…
+    ##  2 NCT03… 2017-05-08       N/A   2018-09-30      Intervent…
+    ##  3 NCT03… 2017-05-12       N/A   2018-05-30      Intervent…
+    ##  4 NCT03… 2017-05-16       <NA>  NA              N/A       
+    ##  5 NCT03… 2017-05-15       N/A   2018-06-18      Intervent…
+    ##  6 NCT03… 2017-05-15       Phas… 2017-03-02      Intervent…
+    ##  7 NCT03… 2017-05-15       N/A   2019-09-30      Intervent…
+    ##  8 NCT03… 2017-05-12       N/A   2019-12-31      Intervent…
+    ##  9 NCT03… 2017-05-12       <NA>  2018-05-01      Observati…
+    ## 10 NCT03… 2017-03-17       <NA>  2019-09-30      Observati…
+    ## # ... with 292,670 more rows, and 4 more variables:
     ## #   baseline_population <chr>, overall_status <chr>, why_stopped <chr>,
     ## #   is_fda_regulated_drug <lgl>
 
@@ -144,9 +144,9 @@ table(phases)
 
     ## phases
     ##   Early Phase 1             N/A         Phase 1 Phase 1/Phase 2 
-    ##            2501           90289           29212            9859 
+    ##            2514           90680           29280            9890 
     ##         Phase 2 Phase 2/Phase 3         Phase 3         Phase 4 
-    ##           40926            4856           29240           24605
+    ##           40993            4864           29295           24660
 
 ``` r
 phase_splt <- strsplit(phases," ") 
@@ -158,7 +158,7 @@ table(nsplits)
 
     ## nsplits
     ##      1      2      3 
-    ## 150591 123983  17216
+    ## 151184 124228  17268
 
 now I split phases by a space, and so either I get no splits for NA and
 N/A, 1 split for Phase \[1234\], or two splits for Early Phase 1 and
@@ -178,7 +178,7 @@ table(phases[nsplits==2])
 
     ## 
     ## Phase 1 Phase 2 Phase 3 Phase 4 
-    ##   29212   40926   29240   24605
+    ##   29280   40993   29295   24660
 
 ``` r
 n2_phase_splt <- strsplit(phases[nsplits==2]," ")
@@ -197,14 +197,10 @@ table(phases[earlies]) #just checking
 
     ## 
     ## Early Phase 1 
-    ##          2501
+    ##          2514
 
 ``` r
-studies <- 
-  studies %>% 
-  mutate(early = earlies)
-
-phases[earlies] <- "1"
+phases[earlies] <- "Early_1"
 ```
 
 Now combo trials.
@@ -217,7 +213,7 @@ table(phases[combos]) #just checking
 
     ## 
     ## Phase 1/Phase 2 Phase 2/Phase 3 
-    ##            9859            4856
+    ##            9890            4864
 
 ``` r
 tmp <- strsplit(phases[combos]," ")
@@ -238,8 +234,8 @@ table(phases)
 ```
 
     ## phases
-    ##     1   1_2     2   2_3     3     4 
-    ## 31713  9859 40926  4856 29240 24605
+    ##       1     1_2       2     2_3       3       4 Early_1 
+    ##   29280    9890   40993    4864   29295   24660    2514
 
 ``` r
 studies <- studies %>% mutate(clean_phase = phases)
@@ -315,7 +311,7 @@ table(eligibilities_sep$minimum_age_unit)
 
     ## 
     ##   Days  Month Months  Weeks   Year  Years 
-    ##    192    726   4020    828   1907 259384
+    ##    192    729   4031    829   1911 260172
 
 ``` r
 eligibilities_sep <- eligibilities_sep %>% 
@@ -397,6 +393,17 @@ head(study_eligibility_dt)
     ## 4: NCT00000106        <NA>                 18                 65
     ## 5: NCT00000107        <NA>                 17                 60
     ## 6: NCT00000108        <NA>                 50                 65
+
+## Designate pediatric clinical trials and trials inclusive of pediatric patients
+
+``` r
+study_eligibility_dt[,
+                     `:=`(pediatric_trial = maximum_master_age < 18,
+                          pediatric_inclusive = minimum_master_age < 18)
+                     ]
+```
+
+## Output
 
 output this for use later
 

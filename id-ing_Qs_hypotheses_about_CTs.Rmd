@@ -119,11 +119,7 @@ earlies <- grepl("Early",phases)
 
 table(phases[earlies]) #just checking
 
-studies <- 
-  studies %>% 
-  mutate(early = earlies)
-
-phases[earlies] <- "1"
+phases[earlies] <- "Early_1"
 
 ```
 
@@ -278,6 +274,17 @@ study_eligibility_dt <- studies_dt[eligibilities_sep_master_dt][,.(nct_id,clean_
 head(study_eligibility_dt)
 
 ```
+
+## Designate pediatric clinical trials and trials inclusive of pediatric patients
+
+```{r}
+
+study_eligibility_dt[,
+                     `:=`(pediatric_trial = maximum_master_age < 18,
+                          pediatric_inclusive = minimum_master_age < 18)
+                     ]
+```
+## Output
 
 output this for use later
 
