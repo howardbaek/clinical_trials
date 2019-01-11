@@ -1,65 +1,37 @@
-Identifying interesting questions/hypotheses about clinical trials
-================
+---
+title: "Identifying interesting questions/hypotheses about clinical trials"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## Introduction
 
-I’m not really sure what exactly to investigate right now, so I’m going
-to try out a few things and see what’s worth
-    pursuing.
+I'm not really sure what exactly to investigate right now, so I'm going to try out a few things and see what's worth pursuing.
 
-    ## ── Attaching packages ────────────────────────────────────── tidyverse 1.2.1 ──
+```{r,echo=F}
 
-    ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
-    ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
+library(tidyverse)
+library(data.table)
 
-    ## ── Conflicts ───────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
+source("helper_functions.R")
 
-    ## 
-    ## Attaching package: 'data.table'
+theme_set(theme_bw())
 
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     between, first, last
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     transpose
-
-    ## Loading required package: RPostgreSQL
-
-    ## Loading required package: DBI
+```
 
 ## Clinical trial characteristics
 
-I’m going to look at the studfy characteristics of clinical trials using
-the *studies* table since it has a lot of attributes that I think would
-be useful. After looking at my [summary
-notebook](https://github.com/jasonbaik94/clinical_trials/blob/master/aact_database_table_summary.md),
-there’s data on the study type, the phase of a clinical trial, start and
-end of duration of the trial, why it was stopped, and others.
+I'm going to look at the study characteristics of clinical trials using the _studies_ table since it has a lot of attributes that I think would be useful. After looking at my [summary notebook](https://github.com/jasonbaik94/clinical_trials/blob/master/aact_database_table_summary.md), there's data on the study type, the phase of a clinical trial, start and end of duration of the trial, why it was stopped, and others. 
 
-First I load the *studies* table and get the relevant variables:
+First I load the _studies_ table and get the relevant variables:
 
-``` r
+```{r}
+
 con <- aact_connector()
-```
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   u = col_character(),
-    ##   pw = col_character()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   u = col_character(),
-    ##   pw = col_character()
-    ## )
-
-``` r
 studies <- get_table(con,"studies") %>% select(nct_id,study_first_submitted_date,phase,
                                                completion_date,study_type,
                                                baseline_population,overall_status,
@@ -67,36 +39,16 @@ studies <- get_table(con,"studies") %>% select(nct_id,study_first_submitted_date
   collect() %>% distinct()
 
 dbDisconnect(con)
-```
 
-    ## [1] TRUE
-
-``` r
 studies
-```
 
-    ## # A tibble: 294,117 x 9
-    ##    nct_id study_first_sub… phase completion_date study_type
-    ##    <chr>  <date>           <chr> <date>          <chr>     
-    ##  1 NCT00… 2001-02-01       Phas… 1997-02-28      Intervent…
-    ##  2 NCT00… 2001-02-02       Phas… 2007-11-30      Intervent…
-    ##  3 NCT00… 2001-02-02       Phas… 2008-11-30      Intervent…
-    ##  4 NCT00… 2001-02-02       N/A   2001-02-28      Intervent…
-    ##  5 NCT00… 2001-02-02       Phas… NA              Intervent…
-    ##  6 NCT00… 2001-02-02       N/A   NA              Intervent…
-    ##  7 NCT00… 2001-02-02       Phas… NA              Intervent…
-    ##  8 NCT00… 2001-02-02       N/A   2008-10-31      Intervent…
-    ##  9 NCT00… 2001-02-02       N/A   NA              Intervent…
-    ## 10 NCT00… 2001-02-02       Phas… 2011-05-31      Intervent…
-    ## # ... with 294,107 more rows, and 4 more variables:
-    ## #   baseline_population <chr>, overall_status <chr>, why_stopped <chr>,
-    ## #   is_fda_regulated_drug <lgl>
+```
 
 ## Phases of clinical trials
 
-I’m interested in the types of phases given for clinical trials
+I'm interested in the types of phases given for clinical trials
 
-``` r
+```{r}
 studies %>% 
   ggplot() +
   geom_bar(aes(forcats::fct_infreq(phase),color=phase),fill="gray") +
@@ -108,114 +60,77 @@ studies %>%
   )
 ```
 
-![](id-ing_Qs_hypotheses_about_CTs_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
 Three things:
 
-1)  Over 15K trials don’t have a phase attributed, as either NA or N/A
+1) Over 15K trials don't have a phase attributed, as either NA or N/A
 
-2)  There’s a preceding “Phase” before the actual number
+2) There's a preceding "Phase " before the actual number
 
-3)  There’s some trials that are combinations of phases. What does that
-    mean?
+3) There's some trials that are combinations of phases. What does that mean?
 
 ## Clinical trial phase clean up
 
-1)  Separate phase wording from numbers
+1) Separate phase wording from numbers
 
-2)  make separate ‘early’ column for early phase 1 distinction from
-    phase 1
+2) make separate 'early' column for early phase 1 distinction from phase 1
 
-3)  make combo phase trials as phase 1 + ’\_’ + phase 2. This will make
-    the whole column a character which I’m ok with-don’t want to treat
-    these as continuous or integer but as distinct entities
+3) make combo phase trials as phase 1 + '_' + phase 2. This will make the whole column a character which I'm ok with-don't want to treat these as continuous or integer but as distinct entities
 
-4)  Combine trials without a phase as one NA value not NA or N/A
+4) Combine trials without a phase as one NA value not NA or N/A
 
-5)  save as a data file (make a data/ directory)
+5) save as a data file (make a data/ directory)
 
-<!-- end list -->
+```{r}
 
-``` r
 phases <- studies$phase
 
 table(phases) 
-```
 
-    ## phases
-    ##   Early Phase 1             N/A         Phase 1 Phase 1/Phase 2 
-    ##            2526           91314           29395            9934 
-    ##         Phase 2 Phase 2/Phase 3         Phase 3         Phase 4 
-    ##           41112            4886           29351           24742
-
-``` r
 phase_splt <- strsplit(phases," ") 
 
 nsplits <- sapply(phase_splt,length)
 
 table(nsplits)
+
 ```
 
-    ## nsplits
-    ##      1      2      3 
-    ## 152171 124600  17346
-
-now I split phases by a space, and so either I get no splits for NA and
-N/A, 1 split for Phase \[1234\], or two splits for Early Phase 1 and
-Phase \[12\]/Phase \[23\].
+now I split phases by a space, and so either I get no splits for NA and N/A, 1 split for Phase [1234], or two splits for Early Phase 1 and Phase [12]/Phase [23].
 
 For the no splits, I need to use one common identifier, NA
 
-``` r
+```{r}
 phases[nsplits==1] <- NA
 ```
 
 For 1 split, I need to use just the integer.
 
-``` r
+```{r}
 table(phases[nsplits==2])
-```
 
-    ## 
-    ## Phase 1 Phase 2 Phase 3 Phase 4 
-    ##   29395   41112   29351   24742
-
-``` r
 n2_phase_splt <- strsplit(phases[nsplits==2]," ")
 
 phases[nsplits==2] <- sapply(n2_phase_splt,function(x){x[2]})
 ```
 
-For 2 splits, I need to be more crafty. Let’s first deal with early
-phase 1.
+For 2 splits, I need to be more crafty. Let's first deal with early phase 1.
 
-``` r
+```{r}
 earlies <- grepl("Early",phases)
 
 table(phases[earlies]) #just checking
-```
 
-    ## 
-    ## Early Phase 1 
-    ##          2526
-
-``` r
 phases[earlies] <- "Early_1"
+
 ```
 
 Now combo trials.
 
-``` r
+```{r}
+
 combos <- !earlies & nsplits==3
 
 table(phases[combos]) #just checking
-```
 
-    ## 
-    ## Phase 1/Phase 2 Phase 2/Phase 3 
-    ##            9934            4886
-
-``` r
 tmp <- strsplit(phases[combos]," ")
 
 second <- sapply(tmp,function(x){x[3]})
@@ -227,17 +142,12 @@ first <- sapply(strsplit(tmp,"/"),function(x){x[1]})
 phases[combos] <- paste(first,second,sep="_")
 ```
 
-Ok let’s see the cleaned version
+Ok let's see the cleaned version
 
-``` r
+```{r}
+
 table(phases)
-```
 
-    ## phases
-    ##       1     1_2       2     2_3       3       4 Early_1 
-    ##   29395    9934   41112    4886   29351   24742    2526
-
-``` r
 studies <- studies %>% mutate(clean_phase = phases)
 
 studies %>% 
@@ -249,42 +159,24 @@ studies %>%
   theme(
     legend.position = "none"
   )
+
 ```
 
-![](id-ing_Qs_hypotheses_about_CTs_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
-
-That’s better.
+That's better.
 
 ## Cleaning eligibility ages
 
-Thev ages given to the eligibility are all coded differently, but I want
-them all in the same units
+Thev ages given to the eligibility are all coded differently, but I want them all in the same units
 
-``` r
+```{r}
+
 con <- aact_connector()
-```
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   u = col_character(),
-    ##   pw = col_character()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   u = col_character(),
-    ##   pw = col_character()
-    ## )
-
-``` r
 eligibilities <- get_table(con,"eligibilities") %>% select(nct_id,nct_id,minimum_age,maximum_age) %>% 
   collect() %>% distinct()
 
 dbDisconnect(con)
-```
 
-    ## [1] TRUE
-
-``` r
 transform_trial_age_range <- function(df,...){
   
   df %>% 
@@ -307,13 +199,7 @@ eligibilities_sep$maximum_age_unit[eligibilities_sep$maximum_age_unit=="N/A"] <-
 eligibilities_sep <- eligibilities_sep %>% select(-maximum_age,-minimum_age)
 
 table(eligibilities_sep$minimum_age_unit)
-```
 
-    ## 
-    ##   Days  Month Months  Weeks   Year  Years 
-    ##    193    737   4043    831   1926 261486
-
-``` r
 eligibilities_sep <- eligibilities_sep %>% 
   rename(
     maximum_age = maximum_age_num,
@@ -368,13 +254,15 @@ make_master_eligibility_ages <- function(ct){
 }
 
 eligibilities_sep_master_dt <- make_master_eligibility_ages(eligibilities_sep) %>% select(nct_id,minimum_master_age,maximum_master_age)
+
 ```
 
 ## Joining eligibility age and phases
 
-I’m interested to see who predominantly enters certain trial phases.
+I'm interested to see who predominantly enters certain trial phases.
 
-``` r
+```{r}
+
 setkey(eligibilities_sep_master_dt,nct_id)
 
 studies_dt <- data.table(studies)
@@ -384,29 +272,24 @@ setkey(studies_dt,nct_id)
 study_eligibility_dt <- studies_dt[eligibilities_sep_master_dt][,.(nct_id,clean_phase,minimum_master_age,maximum_master_age)]
 
 head(study_eligibility_dt)
-```
 
-    ##         nct_id clean_phase minimum_master_age maximum_master_age
-    ## 1: NCT00000102         1_2                 14                 35
-    ## 2: NCT00000104        <NA>                 NA                 NA
-    ## 3: NCT00000105        <NA>                 18                 NA
-    ## 4: NCT00000106        <NA>                 18                 65
-    ## 5: NCT00000107        <NA>                 17                 60
-    ## 6: NCT00000108        <NA>                 50                 65
+```
 
 ## Designate pediatric clinical trials and trials inclusive of pediatric patients
 
-``` r
+```{r}
+
 study_eligibility_dt[,
                      `:=`(pediatric_trial = maximum_master_age < 18,
                           pediatric_inclusive = minimum_master_age < 18)
                      ]
 ```
-
 ## Output
 
 output this for use later
 
-``` r
+```{r}
+
 study_eligibility_dt %>% write_csv("study_phase_age_eligibility.csv")
+
 ```
