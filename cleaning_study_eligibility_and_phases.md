@@ -35,7 +35,7 @@ to try out a few things and see what’s worth
 
 ## Clinical trial characteristics
 
-I’m going to look at the studfy characteristics of clinical trials using
+I’m going to look at the study characteristics of clinical trials using
 the *studies* table since it has a lot of attributes that I think would
 be useful. After looking at my [summary
 notebook](https://github.com/jasonbaik94/clinical_trials/blob/master/aact_database_table_summary.md),
