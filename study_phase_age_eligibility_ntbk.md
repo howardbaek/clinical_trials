@@ -4,7 +4,7 @@ Clinical trials, phases, and their types
 ## Introduction
 
 This notebook outlines the exploration of the processed data from this
-[notebook](id-ing_Qs_hypotheses_about_CTs.md)
+[notebook](cleaning_study_eligibility_and_phases.md)
 
 ``` r
 library(tidyverse)
@@ -37,6 +37,14 @@ data <- read_csv("study_phase_age_eligibility.csv")
     ##   pediatric_inclusive = col_logical()
     ## )
 
+``` r
+data <- data %>% 
+  mutate(
+    clean_phase = ifelse(is.na(clean_phase),"no_phase_given",clean_phase)
+    )
+data$clean_phase <- factor(data$clean_phase,levels=c("Early_1","1","1_2","2","2_3","3","4","no_phase_given"))
+```
+
 ## Frequency of trials in different phases
 
 I previously looked at this but I want to put the data here too
@@ -44,7 +52,7 @@ I previously looked at this but I want to put the data here too
 ``` r
 data %>% 
   ggplot() +
-  geom_bar(aes(forcats::fct_infreq(clean_phase),color=clean_phase),fill="gray") +
+  geom_bar(aes(clean_phase,color=clean_phase),fill="gray") +
   coord_flip() +
   ylab("Number of clinical trials") +
   xlab("") +
@@ -63,23 +71,14 @@ tmp <- data %>%
   count(nct_id) %>% 
   arrange(desc(n))
 
-tmp
+tmp %>% group_by(n) %>% count()
 ```
 
-    ## # A tibble: 292,680 x 2
-    ##    nct_id          n
-    ##    <chr>       <int>
-    ##  1 NCT00000102     1
-    ##  2 NCT00000104     1
-    ##  3 NCT00000105     1
-    ##  4 NCT00000106     1
-    ##  5 NCT00000107     1
-    ##  6 NCT00000108     1
-    ##  7 NCT00000110     1
-    ##  8 NCT00000111     1
-    ##  9 NCT00000112     1
-    ## 10 NCT00000113     1
-    ## # ... with 292,670 more rows
+    ## # A tibble: 1 x 2
+    ## # Groups:   n [1]
+    ##       n     nn
+    ##   <int>  <int>
+    ## 1     1 294117
 
 Nope. Trials are only in one phase or phase combo or not given.
 
@@ -90,44 +89,33 @@ data %>%
   filter(is.na(clean_phase))
 ```
 
-    ## # A tibble: 151,184 x 6
-    ##    nct_id clean_phase minimum_master_… maximum_master_… pediatric_trial
-    ##    <chr>  <chr>                  <int>            <int> <lgl>          
-    ##  1 NCT00… <NA>                      NA               NA NA             
-    ##  2 NCT00… <NA>                      18               NA NA             
-    ##  3 NCT00… <NA>                      18               65 FALSE          
-    ##  4 NCT00… <NA>                      17               60 FALSE          
-    ##  5 NCT00… <NA>                      50               65 FALSE          
-    ##  6 NCT00… <NA>                      18               49 FALSE          
-    ##  7 NCT00… <NA>                       8               18 FALSE          
-    ##  8 NCT00… <NA>                      50               NA NA             
-    ##  9 NCT00… <NA>                      NA                1 TRUE           
-    ## 10 NCT00… <NA>                      18               46 FALSE          
-    ## # ... with 151,174 more rows, and 1 more variable:
-    ## #   pediatric_inclusive <lgl>
+    ## # A tibble: 0 x 6
+    ## # ... with 6 variables: nct_id <chr>, clean_phase <fct>,
+    ## #   minimum_master_age <int>, maximum_master_age <int>,
+    ## #   pediatric_trial <lgl>, pediatric_inclusive <lgl>
 
 ``` r
 data_eligibility_age_gathered <- data %>% 
-  gather(eligibility_age_type,eligibility_age,-nct_id,-clean_phase) 
+  gather(eligibility_age_type,eligibility_age,-nct_id,-clean_phase,-pediatric_trial,-pediatric_inclusive) 
 
-data_eligibility_age_gathered%>% 
+data_eligibility_age_gathered %>% 
+  group_by(clean_phase,eligibility_age_type) %>% 
+  count(eligibility_age) %>% 
   ggplot() +
-  geom_vline(xintercept=18,color="darkgray",size=.5) +
-  geom_histogram(aes(eligibility_age,fill=eligibility_age_type),bins=200) +
-  scale_x_log10() +
+  geom_histogram(aes(eligibility_age,n,
+               fill=eligibility_age_type,
+               group=eligibility_age_type),
+           stat="identity",position="dodge") +
   scale_y_log10() +
   facet_grid(clean_phase~.) +
-  ylab("Number of trials") +
-  xlab("Eligibility age")
+  ylab("Number of trials\nlog10 scale") +
+  xlab("Eligibility age") +
+  theme_bw()
 ```
 
-    ## Warning: Transformation introduced infinite values in continuous x-axis
+    ## Warning: Ignoring unknown parameters: binwidth, bins, pad
 
-    ## Warning: Removed 704009 rows containing non-finite values (stat_bin).
-
-    ## Warning: Transformation introduced infinite values in continuous y-axis
-
-    ## Warning: Removed 5321 rows containing missing values (geom_bar).
+    ## Warning: Removed 16 rows containing missing values (geom_bar).
 
 ![](study_phase_age_eligibility_ntbk_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
@@ -141,7 +129,10 @@ insight.
     the legal age for consent to trials will allow them to enroll more
     easily.
 
-I think there’ subtle changes in bar height across the phases, so I
+3)  where trials begin eligibility and end eligibility makes sense -
+    there’s more blue bars early on, red bars later on, and vice versa.
+
+I think there’s subtle changes in bar height across the phases, so I
 think I’ll want to look more closely at this.
 
 ## Is the minumum age significantly lower across phases?
@@ -153,8 +144,6 @@ eligible for trials for which they have historically not been.
 df <- data_eligibility_age_gathered %>% 
   filter(eligibility_age_type=="minimum_master_age") %>% 
   select(-eligibility_age_type,nct_id) 
-
-df[is.na(df$clean_phase),"clean_phase"] <- "no_phase_given"
 
 df %>% 
   ggplot() +
@@ -171,7 +160,7 @@ df %>%
   coord_flip()
 ```
 
-    ## Warning: Removed 24816 rows containing non-finite values (stat_density).
+    ## Warning: Removed 24901 rows containing non-finite values (stat_density).
 
 ![](study_phase_age_eligibility_ntbk_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
@@ -184,13 +173,13 @@ g$coefficients[order(g$coefficients)]
 ```
 
     ##            clean_phase1_2              clean_phase1 
-    ##                  2.933763                  2.945786 
+    ##                  2.933721                  2.945740 
     ##              clean_phase3            clean_phase2_3 
-    ##                  2.952893                  2.963528 
+    ##                  2.952901                  2.962898 
     ##              clean_phase2        clean_phaseEarly_1 
-    ##                  2.970834                  2.999241 
+    ##                  2.970488                  2.999266 
     ##              clean_phase4 clean_phaseno_phase_given 
-    ##                  3.006272                  3.014403
+    ##                  3.006053                  3.014538
 
 ``` r
 a <- aov(g)
@@ -199,54 +188,25 @@ summary(a)
 ```
 
     ##                 Df    Sum Sq  Mean Sq F value Pr(>F)    
-    ## clean_phase      8 106088189 13261024  112569 <2e-16 ***
-    ## Residuals   267856  31554352      118                   
+    ## clean_phase      8 106630036 13328754  113162 <2e-16 ***
+    ## Residuals   269208  31708622      118                   
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 24816 observations deleted due to missingness
+    ## 24901 observations deleted due to missingness
 
 ``` r
-TukeyHSD(a)
-```
+thd <- TukeyHSD(a)
 
-    ##   Tukey multiple comparisons of means
-    ##     95% family-wise confidence level
-    ## 
-    ## Fit: aov(formula = g)
-    ## 
-    ## $clean_phase
-    ##                              diff         lwr         upr     p adj
-    ## 1_2-1                  -0.2273770 -0.61948516  0.16473120 0.6490107
-    ## 2-1                     0.4825814  0.22552722  0.73963552 0.0000004
-    ## 2_3-1                   0.3405707 -0.18499101  0.86613240 0.5064607
-    ## 3-1                     0.1357007 -0.14230616  0.41370747 0.8187013
-    ## 4-1                     1.1863022  0.89595077  1.47665361 0.0000000
-    ## Early_1-1               1.0446947  0.34585833  1.74353107 0.0001585
-    ## no_phase_given-1        1.3513133  1.13603892  1.56658770 0.0000000
-    ## 2-1_2                   0.7099583  0.33129250  1.08862420 0.0000004
-    ## 2_3-1_2                 0.5679477 -0.02663293  1.16252828 0.0735217
-    ## 3-1_2                   0.3630776 -0.03011287  0.75626815 0.0952069
-    ## 4-1_2                   1.4136792  1.01166557  1.81569278 0.0000000
-    ## Early_1-1_2             1.2720717  0.51995250  2.02419086 0.0000082
-    ## no_phase_given-1_2      1.5786903  1.22704550  1.93033507 0.0000000
-    ## 2_3-2                  -0.1420107 -0.65762109  0.37359975 0.9911516
-    ## 3-2                    -0.3468807 -0.60558283 -0.08817859 0.0012512
-    ## 4-2                     0.7037208  0.43179630  0.97564535 0.0000000
-    ## Early_1-2               0.5621133 -0.12927026  1.25349692 0.2109249
-    ## no_phase_given-2        0.8687319  0.67904255  1.05842132 0.0000000
-    ## 3-2_3                  -0.2048700 -0.73123973  0.32149966 0.9378890
-    ## 4-2_3                   0.8457315  0.31273879  1.37872419 0.0000414
-    ## Early_1-2_3             0.7041240 -0.12542379  1.53367179 0.1659070
-    ## no_phase_given-2_3      1.0107426  0.51463745  1.50684777 0.0000000
-    ## 4-3                     1.0506015  0.75879012  1.34241294 0.0000000
-    ## Early_1-3               0.9089940  0.20954981  1.60843826 0.0020897
-    ## no_phase_given-3        1.2156126  0.99837311  1.43285219 0.0000000
-    ## Early_1-4              -0.1416075 -0.84604939  0.56283440 0.9987724
-    ## no_phase_given-4        0.1650111 -0.06781752  0.39783976 0.3838457
-    ## no_phase_given-Early_1  0.3066186 -0.37034335  0.98358057 0.8698062
+thd_df <- data.frame(thd$clean_phase)
+thd_df$phase_combo <- rownames(thd_df)
 
-``` r
-plot(TukeyHSD(a))
+thd_df %>% 
+  filter(p.adj<0.05) %>% 
+  ggplot(aes(phase_combo)) + 
+  geom_point(aes(phase_combo,diff)) +
+  geom_errorbar(aes(x=forcats::fct_reorder(phase_combo,diff),ymin=lwr,ymax=upr)) +
+  geom_hline(yintercept=0,color="black") +
+  coord_flip()
 ```
 
 ![](study_phase_age_eligibility_ntbk_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
@@ -275,47 +235,12 @@ the phases to the minimum eligibility age giving the first indication
 that lower phases are associated to lower minimum ages. But is that
 significant and between which phases? The anova on the model says,
 overall, yes. The tukey test says that particular phase distributions
-are significantly different (the right phase has a higher minimum age
-than the left):
-
-phases 1 and 2,
-
-phases 1 and 4,
-
-phases 1 and NA
-
-phases 1\_2 and 2,
-
-phases 1\_2 and 4 (2nd most different),
-
-phases 1\_2 and NA (most different),
-
-phases 3 and 2,
-
-phases 2 and 4,
-
-phases NA and 2
-
-phases 2\_3 and 4,
-
-phases 2\_3 and NA and
-
-phases 3 and 4
-
-These phases are not significantly different:
-
-phases 1\_2 and 1
-
-phases 1 and 2\_3
-
-phases 1 and 3
-
-phases 1\_2 and 3
-
-phases 2 and 2\_3, and
-
-phases 3 and
-2\_3
+are significantly different. On the plot, those to the right of zero are
+saying the age distribution is significantly larger (p.adj\<0.05) in the
+second phase compared to the first. Those to the left are the opposite -
+the age distribution is significantly younger compared to the first.
+These may not contain 0, but they still aren’t \>1 or \< -1
+:/
 
 ## Disproportionate number of adult or pediatric or pediatric inclusive clinical trials at different phases?
 
@@ -334,33 +259,37 @@ for(i in is){
 ```
 
     ##                Phase_1_2
+    ## Pediatric trial   TRUE  FALSE
+    ##           TRUE     313  13088
+    ##           FALSE   4331 127356
+    ##                Phase_no_phase_given
     ## Pediatric trial  TRUE FALSE
-    ##           TRUE    311  5748
-    ##           FALSE  4314 61992
+    ##           TRUE   7319  6082
+    ##           FALSE 65130 66557
     ##                Phase_3
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE   2060  3999
-    ##           FALSE 11333 54973
+    ## Pediatric trial   TRUE  FALSE
+    ##           TRUE    2058  11343
+    ##           FALSE  11360 120327
     ##                Phase_2
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE   1315  4744
-    ##           FALSE 17099 49207
+    ## Pediatric trial   TRUE  FALSE
+    ##           TRUE    1323  12078
+    ##           FALSE  17160 114527
     ##                Phase_1
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE    599  5460
-    ##           FALSE 17387 48919
+    ## Pediatric trial   TRUE  FALSE
+    ##           TRUE     600  12801
+    ##           FALSE  17474 114213
     ##                Phase_4
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE   1424  4635
-    ##           FALSE 12200 54106
+    ## Pediatric trial   TRUE  FALSE
+    ##           TRUE    1433  11968
+    ##           FALSE  12242 119445
     ##                Phase_2_3
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE    262  5797
-    ##           FALSE  2573 63733
+    ## Pediatric trial   TRUE  FALSE
+    ##           TRUE     266  13135
+    ##           FALSE   2584 129103
     ##                Phase_Early_1
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE     88  5971
-    ##           FALSE  1400 64906
+    ## Pediatric trial   TRUE  FALSE
+    ##           TRUE      89  13312
+    ##           FALSE   1406 130281
 
 ``` r
 fisher_df <- sapply(fishers,function(x){
@@ -382,13 +311,14 @@ to_viz
 ```
 
     ##   lwr  estimate       upr       p.value   phase
-    ## 1   0 0.7775005 0.8593803  9.564649e-06     1_2
-    ## 2   0 2.4986086 2.6218567  1.000000e+00       3
-    ## 3   0 0.7977127 0.8416748  7.157359e-13       2
-    ## 4   0 0.3086817 0.3319748 1.772430e-207       1
-    ## 5   0 1.3625223 1.4364565  1.000000e+00       4
-    ## 6   0 1.1194720 1.2499323  9.574181e-01     2_3
-    ## 7   0 0.6832868 0.8219371  1.799430e-04 Early_1
+    ## 1   0 0.7032396 0.7758827  2.765181e-10     1_2
+    ## 2   0 1.2297483 1.2673536  1.000000e+00    <NA>
+    ## 3   0 1.9217938 2.0058417  1.000000e+00       3
+    ## 4   0 0.7310684 0.7683591  2.486293e-27       2
+    ## 5   0 0.3063573 0.3287306 1.171088e-237       1
+    ## 6   0 1.1682363 1.2266876  9.999999e-01       4
+    ## 7   0 1.0118025 1.1272625  5.875259e-01     2_3
+    ## 8   0 0.6195040 0.7438606  1.918243e-06 Early_1
 
 ``` r
 to_viz %>% 
@@ -396,114 +326,22 @@ to_viz %>%
   ggplot() +
   geom_point(aes(phase,estimate,color=significant)) +
   geom_errorbar(stat="identity",aes(phase,ymin=lwr,ymax=upr,color=significant),width=.2) + 
-  ylab("Fisher's odds ratio") +
+  ylab("Chi squared statistic") +
   xlab("Phase") +
   theme_classic(base_size=16)
 ```
 
 ![](study_phase_age_eligibility_ntbk_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-It seems that it’s more likely that earlier phases disproportionally do
-not have pediatric clinical trials. More often their later phase, but
-it’s not significant.
+Seems like I can’t interpret much from this…
 
-``` r
-tmp <- data[complete.cases(data),]
-is = unique(tmp$clean_phase)
-fishers <- list()
-for(i in is){
-  inphase <- factor(tmp$clean_phase==i,c(T,F))
-  pedincl <- factor(tmp$pediatric_inclusive,c(T,F))
-  tab <- table(pedincl,inphase,
-             useNA = "no",dnn =list("Pediatric trial",paste0("Phase_",i)))
-  print(tab)
-  fishers[[i]] <- fisher.test(tab,alternative="less",simulate.p.value = T,B=1e5)
-}
-```
-
-    ##                Phase_1_2
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE    909 11412
-    ##           FALSE  3716 56328
-    ##                Phase_3
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE   3585  8736
-    ##           FALSE  9808 50236
-    ##                Phase_2
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE   3072  9249
-    ##           FALSE 15342 44702
-    ##                Phase_1
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE   1493 10828
-    ##           FALSE 16493 43551
-    ##                Phase_4
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE   2430  9891
-    ##           FALSE 11194 48850
-    ##                Phase_2_3
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE    613 11708
-    ##           FALSE  2222 57822
-    ##                Phase_Early_1
-    ## Pediatric trial  TRUE FALSE
-    ##           TRUE    219 12102
-    ##           FALSE  1269 58775
-
-``` r
-fisher_df <- sapply(fishers,function(x){
-  cis <- x$conf.int
-  e <- x$estimate
-  c(cis[1],e,cis[2],x$p.value)
-}) %>% data.frame
-
-colnames(fisher_df) <- is
-rownames(fisher_df) <- c("lwr","estimate","upr","p.value")
-to_viz <- fisher_df %>% 
-  t %>% 
-  as.data.frame %>% 
-  mutate(phase = is) 
-
-to_viz$phase <- factor(to_viz$phase,
-                       levels=c("Early_1","1","1_2","2","2_3","3","4"))
-to_viz
-```
-
-    ##   lwr  estimate       upr       p.value   phase
-    ## 1   0 1.2073953 1.2867430  9.999994e-01     1_2
-    ## 2   0 2.1018759 2.1823201  1.000000e+00       3
-    ## 3   0 0.9677676 1.0050045  7.707046e-02       2
-    ## 4   0 0.3640986 0.3820602 1.358236e-319       1
-    ## 5   0 1.0721309 1.1173059  9.973881e-01       4
-    ## 6   0 1.3624620 1.4724164  1.000000e+00     2_3
-    ## 7   0 0.8381453 0.9478360  8.309907e-03 Early_1
-
-``` r
-to_viz %>% 
-  mutate(significant = p.value<0.05) %>% 
-  ggplot() +
-  geom_point(aes(phase,estimate,color=significant)) +
-  geom_errorbar(stat="identity",aes(phase,ymin=lwr,ymax=upr,color=significant),width=.2) + 
-  ylab("Fisher's odds ratio") +
-  xlab("Phase") +
-  theme_classic(base_size=16)
-```
-
-![](study_phase_age_eligibility_ntbk_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
-
-Similar but a bit different \#\# Interpretation and what to do moving
-forward
+## Interpretation and what to do moving forward
 
 This mostly makes sense to me, but I’m sure there’s other factors at
 play that give more intuition to these statistics.
 
-This gives me some indication that more (a disproportionate amount)
-clinical trials that include pediatric patients are in earlier phases
-and aren’t later phases. Later phase clinical trials are supposed to
-enroll more patients and thus a larger patient age span so that makes
-sense. Earlier phases clinical trials are more checking for rare adverse
-reactions or determining efficacy of a drug and its dosage, so I would
-hope that kids are enrolled in those trials.
+This doesn’t give me much indication of clinical trials including
+pediatric patients in earlier phases and aren’t later phases.
 
 I think at this point I may want to either better define or scope my
 question to bin pediatric patients or move on to other investigations.
