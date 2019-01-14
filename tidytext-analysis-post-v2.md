@@ -1,45 +1,14 @@
----
-title: "Analysis V2"
-author: "Jason Baik"
-date: "1/6/2019"
-output: github_document
----
+Analysis V2
+================
+Jason Baik
+1/6/2019
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## Data Import
-```{r, include=FALSE}
-library(tidyverse)
-library(tidytext)
-library(topicmodels)
-library(RPostgreSQL)
-library(DBI)
-library(broom)
-library(readxl)
-library(tm)
-theme_set(theme_light())
-
-# Connect to PostgreSQL database
-drv <- dbDriver('PostgreSQL')
-con <- dbConnect(drv, 
-                 dbname="aact",
-                 host="aact-db.ctti-clinicaltrials.org", 
-                 port=5432,
-                 user=readr::read_csv("id_pw.csv")$id, 
-                 password=readr::read_csv("id_pw.csv")$pw
-                 )
-
-# Import datatable of MeSH terms called browse_conditions
-browse_conditions <- tbl(con, "browse_conditions") %>% 
-  collect()
-```
-
+Data Import
+-----------
 
 ### Try joining on lower case MeSH terms
 
-```{r}
+``` r
 tagged_mesh_terms_lowercase <- read_excel("2010_tagged_mesh_and_free_text_terms.xlsx",
                                           sheet = 3) %>%
   janitor::clean_names() %>% 
@@ -47,14 +16,14 @@ tagged_mesh_terms_lowercase <- read_excel("2010_tagged_mesh_and_free_text_terms.
   distinct()
 ```
 
+Data Prep before LDA
+--------------------
 
-## Data Prep before LDA
+1.  Take out comma and word after comma. (`str_replace`) for both `browse_conditions` and `tagged_mesh_terms_lowercase`
+2.  `inner_join` both datasets
+3.  Run `distinct` on merged dataset
 
-1) Take out comma and word after comma. (`str_replace`) for both `browse_conditions` and `tagged_mesh_terms_lowercase`
-2) `inner_join` both datasets
-3) Run `distinct` on merged dataset
-
-```{r}
+``` r
 tagged_mesh_terms_lowercase_replaced <- tagged_mesh_terms_lowercase %>% 
   mutate(term = str_replace_all(term,
                                 "(.*),.*",
@@ -68,9 +37,10 @@ mesh <- browse_conditions %>%
   distinct() 
 ```
 
-## LDA
+LDA
+---
 
-```{r}
+``` r
 mesh_count <- mesh %>% 
   count(nct_id, downcase_mesh_term, sort = TRUE) %>% 
   ungroup()
@@ -107,14 +77,27 @@ mesh_top5 %>%
   ggtitle("Distribution of MeSH")
 ```
 
+![](tidytext-analysis-post-v2_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 Now comes the fun part: comparison between LDA's categorization of topics and Duke researchers' categorization (the ground truth)
 
 Create a function and `map` over it.
-```{r}
+
+``` r
 mesh_top5 %>% 
   filter(topic == 1) 
+```
 
+    ## # A tibble: 5 x 3
+    ##   topic term                    beta
+    ##   <int> <chr>                  <dbl>
+    ## 1     1 osteoarthritis        0.0634
+    ## 2     1 infarction            0.0605
+    ## 3     1 myocardial infarction 0.0537
+    ## 4     1 depressive disorder   0.0524
+    ## 5     1 depression            0.0522
+
+``` r
 tagged_mesh_terms_lowercase_replaced %>% 
   count(clinical_domain, term, sort = TRUE) %>% 
   group_by(clinical_domain) %>% 
@@ -123,3 +106,19 @@ tagged_mesh_terms_lowercase_replaced %>%
   # Group by clinical_domain and then arrange by descending order of ground_truth_beta_percentage
   arrange(clinical_domain, -ground_truth_beta_percentage)
 ```
+
+    ## # A tibble: 4,263 x 3
+    ## # Groups:   clinical_domain [10]
+    ##    clinical_domain term             ground_truth_beta_percentage
+    ##    <chr>           <chr>                                   <dbl>
+    ##  1 cardiology      tachycardia                             2.02 
+    ##  2 cardiology      echocardiography                        1.21 
+    ##  3 cardiology      aneurysm                                1.01 
+    ##  4 cardiology      cardiomyopathy                          1.01 
+    ##  5 cardiology      heart failure                           0.806
+    ##  6 cardiology      angioplasty                             0.605
+    ##  7 cardiology      aortic aneurysm                         0.605
+    ##  8 cardiology      aortic stenosis                         0.605
+    ##  9 cardiology      atrial function                         0.605
+    ## 10 cardiology      cardiac output                          0.605
+    ## # … with 4,253 more rows
