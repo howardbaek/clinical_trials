@@ -1,0 +1,164 @@
+---
+title: "Analysis V2"
+author: "Jason Baik"
+date: "1/6/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Import
+```{r, include=FALSE}
+library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(RPostgreSQL)
+library(DBI)
+library(broom)
+library(readxl)
+library(tm)
+theme_set(theme_light())
+
+# Connect to PostgreSQL database
+drv <- dbDriver('PostgreSQL')
+con <- dbConnect(drv, 
+                 dbname="aact",
+                 host="aact-db.ctti-clinicaltrials.org", 
+                 port=5432,
+                 user=readr::read_csv("id_pw.csv")$id, 
+                 password=readr::read_csv("id_pw.csv")$pw
+                 )
+
+# Import datatable of MeSH terms called browse_conditions
+browse_conditions <- tbl(con, "browse_conditions") %>% 
+  collect()
+```
+
+
+### Try joining on lower case MeSH terms
+
+```{r}
+tagged_mesh_terms_lowercase <- read_excel("2010_tagged_mesh_and_free_text_terms.xlsx",
+                                          sheet = 3) %>%
+  janitor::clean_names() %>% 
+  select(-c(term_type, identifier)) %>% 
+  distinct()
+```
+
+
+## Data Prep before LDA
+
+1) Take out comma and word after comma. (`str_replace`) for both `browse_conditions` and `tagged_mesh_terms_lowercase`
+2) `inner_join` both datasets
+3) Run `distinct` on merged dataset
+
+```{r}
+tagged_mesh_terms_lowercase_replaced <- tagged_mesh_terms_lowercase %>% 
+  mutate(term = str_replace_all(term,
+                                "(.*),.*",
+                                "\\1"))
+
+mesh <- browse_conditions %>% 
+  mutate(downcase_mesh_term = str_replace_all(downcase_mesh_term,
+                                              "(.*),.*", "\\1")) %>%
+  inner_join(tagged_mesh_terms_lowercase_replaced, by = c("downcase_mesh_term" = "term")) %>%
+  select(nct_id, downcase_mesh_term) %>% 
+  distinct() 
+```
+
+## LDA
+
+```{r}
+mesh_count <- mesh %>% 
+  count(nct_id, downcase_mesh_term, sort = TRUE) %>% 
+  ungroup()
+
+# Create DocumentTermMatrix in order to put dataset into the LDA algorithm from the topicmodels package
+mesh_dtm <- mesh_count %>%
+  cast_dtm(nct_id, downcase_mesh_term, n)
+
+# This take a few minutes
+mesh_lda <- topicmodels::LDA(mesh_dtm, k = 10, control = list(seed = 1234))
+
+ # Use the broom package to mutate beta, the probability of that term being generated from that topic.
+mesh_tidy <- tidy(mesh_lda)
+
+# Use top_n() to find top 5 terms within each topic
+mesh_top5 <- mesh_tidy %>% 
+    group_by(topic) %>% 
+    top_n(5, beta) %>% 
+    ungroup() %>% 
+    arrange(topic, -beta)
+
+# Visualize mesh_top5
+mesh_top5 %>%
+  mutate(term = reorder(term, beta)) %>% 
+  ggplot(aes(term, beta, fill = term)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free", nrow = 3) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
+  labs(x = "MeSH",
+       y = "Beta (Probability of MeSH being generated from topic)",
+       caption = "@jsonbaik") +
+  ggtitle("Distribution of MeSH")
+```
+
+
+Now comes the fun part: comparison between LDA's categorization of topics and Duke researchers' categorization (the ground truth)
+
+Create a function and `map` over it.
+```{r}
+mesh_top5 %>% 
+  filter(topic == 1) 
+
+tagged_mesh_terms_lowercase_replaced %>% 
+  count(clinical_domain, term, sort = TRUE) %>% 
+  group_by(clinical_domain) %>% 
+  mutate(ground_truth_beta_percentage = 100 * (n / sum(n))) %>% 
+  select(-n) %>% 
+  # Group by clinical_domain and then arrange by descending order of ground_truth_beta_percentage
+  arrange(clinical_domain, -ground_truth_beta_percentage)
+```
+
+
+
+
+
+
+
+
+
+Problem: Some of these MeSH terms have multiple clinical domains tagged
+
+```{r}
+# For each clinical_domain, arrange terms by decreasing order of percentage_term
+distribution_term <- tagged_mesh_terms %>%
+  count(clinical_domain, term) %>% 
+  group_by(clinical_domain) %>% 
+  mutate(percentage_term = (n / sum(n)) * 100) %>% 
+  arrange(clinical_domain, -percentage_term)
+```
+
+```{r}
+# Top 5 terms for each clinical domain in terms of percentage_term 
+top5_terms <- tagged_mesh_terms %>%
+  count(clinical_domain, term) %>% 
+  group_by(clinical_domain) %>% 
+  mutate(percentage_term = (n / sum(n)) * 100) %>% 
+  top_n(5, percentage_term) %>% 
+  # Arrange percentage terms in decreasing order
+  arrange(clinical_domain, -percentage_term)
+```
+
+```{r}
+top5_terms %>% 
+  filter(!(clinical_domain %in% c("oncology_general", "oncology_specific"))) %>% 
+  ggplot(aes(x = term, y = percentage_term, fill = term)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~clinical_domain, nrow = 4, scales = "free")
+```

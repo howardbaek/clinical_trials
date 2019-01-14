@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-I will be analyzing MeSH (Medical Subject Headings), which are terms from the [National Library of Medicine's vocabularly](http://research.library.gsu.edu/c.php?g=115556&p=753156). Each clinical trial is assigned several MeSH to characterize the trial. A question that I will be tackling is: Can we use topic modeling techniques such as latent dirichlet allocation to categorize these MeSH terms into different topics?   
+I will be analyzing MeSH (Medical Subject Headings), which are terms from the [National Library of Medicine's vocabularly](http://research.library.gsu.edu/c.php?g=115556&p=753156). Each clinical trial is assigned several MeSH to characterize the trial. A question that I will be tackling is: Can we use latent dirichlet allocation to categorize these MeSH terms into different topics?   
 
 The dataset I'll be working with is extracted from [ClinicalTrials.gov](https://clinicaltrials.gov/), "a database of privately and publicly funded clinical studies conducted around the world". I grabbed it from PostgreSQL database using the `DBI` package, which connects to [AACT](https://aact.ctti-clinicaltrials.org/), a public database that contains information from ClinicalTrials.gov. For simplicity, I wrapped the steps needed to extract data from this database in a package called [aactr](https://github.com/jasonbaik94/aactr)
 
@@ -23,6 +23,7 @@ library(RPostgreSQL)
 library(DBI)
 library(broom)
 library(readxl)
+library(tm)
 theme_set(theme_light())
 
 # Connect to PostgreSQL database
@@ -48,7 +49,8 @@ tagged_mesh_terms <- read_excel("2010_tagged_mesh_and_free_text_terms.xlsx",
                                 sheet = 3) %>%
   janitor::clean_names() %>% 
   select(-c(term_type, identifier)) %>% 
-  mutate(term = str_to_title(term))
+  mutate(term = str_to_title(term)) %>% 
+  distinct()
 ```
 
 
@@ -57,10 +59,15 @@ Now, I want to work with only the available MeSH terms from AACT that the Duke r
 browse_conditions_filtered <- browse_conditions %>%
   select(nct_id, mesh_term) %>% 
   inner_join(tagged_mesh_terms, by = c("mesh_term" = "term")) %>% 
-  select(-clinical_domain) 
+  select(-clinical_domain) %>% 
+  distinct()
 ```
 
+* 300842 rows
+
 Around 44% of the MeSH terms in `browse_conditions` joined with `tagged_mesh_terms`. That's alot higher than I expected. Let's use these terms in our LDA algorithm and set K = 10 since `tagged_mesh_terms` has 10 unique tags (clinical domains). I'm following this [vignette from the tidytext package](https://cran.r-project.org/web/packages/tidytext/vignettes/topic_modeling.html)
+
+
 
 ```{r}
 browse_conditions_filtered_counts <- browse_conditions_filtered %>% 
@@ -120,7 +127,7 @@ top_mesh_terms %>%
 
 ```
 
-Now comes the fun part: comparison between LDA's categorization of topics and Duke researchers' categorization. 
+Now comes the fun part: comparison between LDA's categorization of topics and Duke researchers' categorization (the ground truth)
 Create a function and `map` over it.
 ```{r}
 check_ground_truth <- function(topic_number) {
@@ -194,7 +201,5 @@ topic3_term <- top_mesh_terms %>%
 ```{r}
 tagged_mesh_terms %>%
   filter(term %in% topic3_term)  
-  
-  
 ```
 
