@@ -1,0 +1,86 @@
+---
+title: "Types of drugs tested in clinical trials"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Here, I'm investigating the types of drugs tested in drug intervention clinical trials. 
+
+Often, drugs are mapped to identifiers so that ambiguity can be alleviated when identifying drugs. The identifiers belong to certain standard vocabulary. A well known and used vocabulary is RxNorm - this vocabulary distinguishes drugs based on their formulation type. Another vocabulary is the Anatomical Therapeutic Class (ATC) - this v ocabulary categories drugs based on their mechanism of action. 
+
+For this notebook, I am going to map the drug names to vocabularies.
+
+First, looks like I need to know whether a drug trial has a drug intervention - that's in the _interventions_ table.
+
+I want to use my cleaned _study\_phase\_age\_elibility.csv_ file too - I'll join the two. 
+
+```{r}
+library(tidyverse)
+source("helper_functions.R")
+```
+```{r}
+
+cleaned_study_age_phase_data <- read_csv("study_phase_age_eligibility.csv")
+
+con <- aact_connector()
+
+interventions <- get_table(con,"interventions") %>% filter(intervention_type=="Drug") %>% collect()
+
+joined <- left_join(cleaned_study_age_phase_data,interventions)
+
+```
+
+Now I need the RxNorm id of the drug. I don't think it's in the database right now...well, I can join by name for now. Not sure how useful that'll be.
+
+```{r}
+
+joined
+
+concept <- read_tsv("../../Research/Projects/pediatrics/vocabulary_download_v5_{d62de2e4-9825-4917-8ccb-d92395a5778e}_1535207123450/CONCEPT.csv") %>% filter(vocabulary_id=="ATC" | vocabulary_id=="RxNorm")
+
+joined_to_drug_id <- left_join(joined,concept,by=c("name"="concept_name"))
+```
+
+Are these drugs mapped to RxNorm or ATC vocabularies?
+
+```{r}
+
+table(joined_to_drug_id$vocabulary_id)
+
+```
+
+Many to RxNorm and ATC. 
+
+For ATC encoded drugs, what subclass do they map to?
+
+```{r}
+
+joined_to_drug_id %>% 
+        filter(vocabulary_id=="ATC") %>% 
+        count(concept_class_id) %>% 
+  arrange(desc(n))
+
+```
+
+ATC 4th or 5th, so the most specific ATC categories.
+
+
+For RxNorm encoded drugs, what subclass do they map to?
+
+```{r}
+
+joined_to_drug_id %>% 
+        filter(vocabulary_id=="RxNorm") %>% 
+        count(concept_class_id) %>% 
+  arrange(desc(n))
+
+```
+
+It ranges from the very specific drug ingredients to the brand or clinical drug forms.
+
+Great. The issue is I don't know how faithful the mapping is since I'm joining by name. Which can be ambiguous.
