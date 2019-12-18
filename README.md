@@ -14,6 +14,6 @@ In order to access the cloud based database, you must [register](https://aact.ct
 
 ## Authors
 
-* Jason Baik (joonwoob@andrew.cmu.edu)
+* Howard Baek (howardba@uw.edu)
 * Nick Giangreco (nick.giangreco@gmail.com)
 
